@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Theme} from "../../../utils";
 import clsx from "clsx";
 import {ViewWrapper} from "../../../Components/ViewWrapper";
 import Board from "./Board";
+import Settings from "./Settings";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,16 +25,21 @@ const useStyles = makeStyles(theme => ({
 
 export default () => {
     document.title = "Sudoku";
+    const [language, setLanguage] = useState(null);
     const classes = useStyles(Theme);
+    const settings = Settings(language, setLanguage);
 
     const handleClick = () => {
 
     }
-
+    const getSettings = () => {
+        return settings;
+    };
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <ViewWrapper
+                    settings={getSettings}
                 />
             </div>
             <div className={clsx(classes.row)}>

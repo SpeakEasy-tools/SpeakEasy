@@ -91,7 +91,7 @@ export default () => {
                         >
                             <ListItemIcon>
                                 <Avatar>
-                                    <img src={user.photoURL} alt='User photo'/>
+                                    <img style={{maxWidth: "100%"}} src={user.photoURL} alt='User photo'/>
                                 </Avatar>
                             </ListItemIcon>
                         </ListItem>

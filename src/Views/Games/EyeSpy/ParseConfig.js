@@ -8,7 +8,7 @@ export default (configs) => {
         let cs = configs.map(c => {
             if (!('config' in c)) return;
             let newConfig = JSON.parse(c['config']);
-            delete c['config'];
+            // delete c['config'];
 
             let gmap = {};
             if ('gmap' in newConfig) {
@@ -40,7 +40,19 @@ export default (configs) => {
             }
             delete newConfig['pois'];
 
-            return({...c, ...newConfig, gmap: gmap, pois: pois});
+            let narrative = [];
+            if ('narrative' in newConfig) {
+                narrative = newConfig['narrative'];
+            }
+            delete newConfig['narrative'];
+
+            let files = [];
+            if ('files' in newConfig) {
+                files = newConfig['files'];
+            }
+            delete newConfig['files'];
+
+            return({...c, ...newConfig, gmap: gmap, files: files, pois: pois, narrative: narrative});
         });
         setParsed(cs);
     }, [configs]);

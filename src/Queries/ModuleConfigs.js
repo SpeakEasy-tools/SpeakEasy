@@ -143,7 +143,7 @@ export const UpdateConfig = (configId, name, config) => {
         updateConfigs({variables: {
                 configId: configId,
                 name: name,
-                config: JSON.stringify(config),
+                config: config,
             }});
     }, [configId, name, config, updateConfigs]);
     /* Check the return value of the mutation and set output */

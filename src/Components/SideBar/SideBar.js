@@ -4,23 +4,31 @@ import {Theme} from "../../utils";
 import clsx from "clsx";
 import {
     Build,
-    Casino, Contacts,
+    Casino,
+    Contacts,
     CropFree,
-    ExitToApp, Info,
-    KeyboardArrowLeft, LibraryBooks, ListAlt, Help,
-    MoreHoriz, Notes,
-    PersonOutline, Search, Settings, ShowChart,
+    ExitToApp,
+    Help,
+    Info,
+    KeyboardArrowLeft,
+    ListAlt,
+    MoreHoriz,
+    Notes,
+    PersonOutline,
+    RecentActors,
+    Search,
+    ShowChart,
     SupervisorAccount,
     ViewComfy,
-    Visibility, RecentActors
+    Visibility
 } from "@material-ui/icons";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import {ListItemIcon} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import {useAuth} from "../../Firebase/FirebaseAuth";
+import {useAuth} from "../../Firebase";
 import Avatar from "@material-ui/core/Avatar";
-import FirebaseUI from "../../Firebase/FirebaseUI";
+import {FirebaseUI} from "../../Firebase";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -91,7 +99,7 @@ export default () => {
                         >
                             <ListItemIcon>
                                 <Avatar>
-                                    <img style={{maxWidth: "100%"}} src={user.photoURL} alt='User photo'/>
+                                    <img src={user.photoURL} alt='User photo'/>
                                 </Avatar>
                             </ListItemIcon>
                         </ListItem>

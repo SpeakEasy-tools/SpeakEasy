@@ -113,7 +113,7 @@ export default ({moduleId, moduleName}) => {
     };
     const handleEdit = () => {
         setEditName(newName);
-        setEditConfig({...jsonEditor.get(), files: files})
+        setEditConfig(newConfig);
     };
 
     useEffect(() => {
@@ -146,7 +146,7 @@ export default ({moduleId, moduleName}) => {
     }, [rowsEdited]);
     useEffect(() => {
         if (!container) return;
-        setJsonEditor(new JSONEditor(container, {mode: "text"}));
+        setJsonEditor(new JSONEditor(container, {}));
     }, [container]);
 
     return (

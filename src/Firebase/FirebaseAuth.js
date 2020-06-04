@@ -9,6 +9,7 @@ import 'firebase/auth';
 import {CONFIG} from "./FirebaseConfig";
 
 firebase.initializeApp(CONFIG);
+const functions = firebase.functions;
 
 const authContext = createContext({});
 
@@ -82,7 +83,7 @@ function useProvideAuth() {
                         if(result.claims['https://hasura.io/jwt/claims']) {
                             return token
                         }
-                        const endpoint = 'https://us-central1-speakeasy-263714.cloudfunctions.net/refreshToken'
+                        const endpoint = '/refreshToken'
                         return fetch(`${endpoint}?uid=${user.uid}`).then(res => {
                             if(res.status === 200) {
                                 return user.getIdToken(true);

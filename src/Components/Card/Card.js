@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {IconButton} from "@material-ui/core";
-import {Close, Info} from "@material-ui/icons";
+import {Close} from "@material-ui/icons";
 import {Theme} from "../../utils";
 import clsx from "clsx";
 
@@ -22,11 +22,8 @@ const useStyles = makeStyles(theme => ({
         borderRadius: 10,
     },
     close: {
-        width: 40,
-        height: 40,
-        padding: 0,
-        opacity: 0.7,
-        borderRadius: "100%",
+        width: 30,
+        height: 30,
     },
     darkTop: {
         backgroundColor: theme.palette.primary.main,
@@ -47,19 +44,15 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.main,
     },
     button: {
-        width: 40,
-        height: 40,
         padding: theme.spacing(0),
-        margin: theme.spacing(0),
-        position: "absolute",
-        zIndex: "10"
+        margin: theme.spacing(0)
     }
 }));
 /*
  * Title and body should both be functions that return a React component. This way you can render
  * more complex components inside of the card than just text. darkMode toggles the background of the card
  */
-export default ({title, body, darkMode = false, stayOpen = false, defaultOpen = false, getConfig}) => {
+export default ({title, body, darkMode = false, stayOpen = false, defaultOpen = false}) => {
     const classes = useStyles(Theme);
 
     const [open, setOpen] = useState(false);
@@ -82,32 +75,31 @@ export default ({title, body, darkMode = false, stayOpen = false, defaultOpen = 
                 [classes.close]: !open,
             })}
         >
-
-            {!stayOpen && (
-                <IconButton
-                    onClick={open ? handleClose : handleOpen}                        // onClick={getConfig("Alley")}
-                    className={clsx(classes.button)}
-                >
-                    {open ? <Close /> : <Info />}
-                </IconButton>
-            )}
-            {title && (title() !== null) &&
-                <div className={clsx(classes.top, {
+            <div
+                className={clsx(classes.top, {
                     [classes.darkTop]: darkMode && open,
                     [classes.lightTop]: !darkMode && open,
                     [classes.close]: !open,
                 })}
-                >
-                    {open && title()}
-                </div>}
-            {open && (body() !== null) &&
+            >
+                {!stayOpen && (
+                    <IconButton
+                        onClick={open ? handleClose : handleOpen}
+                        className={clsx(classes.button)}
+                    >
+                        <Close/>
+                    </IconButton>
+                )}
+                {open && title()}
+            </div>
+            {open && (
                 <div className={clsx(classes.bottom, {
                     [classes.darkBottom]: darkMode && open,
                     [classes.lightBottom]: !darkMode && open
                 })}>
                     {body()}
                 </div>
-            }
+            )}
         </div>
     )
 }

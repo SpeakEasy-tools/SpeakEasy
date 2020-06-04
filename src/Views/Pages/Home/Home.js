@@ -3,7 +3,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Theme} from "../../../utils";
 import clsx from "clsx";
 import {HOME} from '../../../Routes/Routes';
-import FirebaseUI from "../../../Firebase/FirebaseUI";
+import {TextToSpeech, Voices} from '../../../CloudFunctions';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -31,11 +31,12 @@ const useStyles = makeStyles(theme => ({
 export default () => {
     document.title = HOME.name;
     const classes = useStyles(Theme);
-
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
+                    <Voices/>
+                    <TextToSpeech/>
                 </div>
             </div>
         </div>

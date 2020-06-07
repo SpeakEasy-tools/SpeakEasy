@@ -1,47 +1,48 @@
-import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {IconButton} from "@material-ui/core";
-import {Close} from "@material-ui/icons";
-import {Theme} from "../../utils";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { IconButton } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
+import { Theme } from "../../utils";
 import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        overflow: 'hidden',
-        backgroundColor: theme.palette.primary.main,
+        overflow: "hidden",
+        backgroundColor: theme.palette.primary.main
     },
     top: {
         borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderTopRightRadius: 10
     },
     bottom: {
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10
     },
     open: {
-        borderRadius: 10,
+        borderRadius: 10
     },
     close: {
         width: 30,
-        height: 30,
+        height: 30
     },
     darkTop: {
         backgroundColor: theme.palette.primary.main,
-        color: theme.palette.secondary.main,
+        color: theme.palette.secondary.main
     },
     lightTop: {
         backgroundColor: theme.palette.secondary.main,
         color: theme.palette.secondary.contrastText,
-        borderBottomRightRadius: 10,
+        borderBottomRightRadius: 10
     },
     darkBottom: {
         backgroundColor: theme.palette.secondary.main,
         color: theme.palette.secondary.contrastText,
-        borderTopLeftRadius: 10,
+        borderTopLeftRadius: 10
     },
     lightBottom: {
         backgroundColor: theme.palette.primary.main,
-        color: theme.palette.secondary.main,
+        color: theme.palette.secondary.main
     },
     button: {
         padding: theme.spacing(0),
@@ -52,7 +53,13 @@ const useStyles = makeStyles(theme => ({
  * Title and body should both be functions that return a React component. This way you can render
  * more complex components inside of the card than just text. darkMode toggles the background of the card
  */
-export default ({title, body, darkMode = false, stayOpen = false, defaultOpen = false}) => {
+function Card({
+    title,
+    body,
+    darkMode = false,
+    stayOpen = false,
+    defaultOpen = false
+}) {
     const classes = useStyles(Theme);
 
     const [open, setOpen] = useState(false);
@@ -72,14 +79,14 @@ export default ({title, body, darkMode = false, stayOpen = false, defaultOpen = 
         <div
             className={clsx(classes.root, {
                 [classes.open]: open,
-                [classes.close]: !open,
+                [classes.close]: !open
             })}
         >
             <div
                 className={clsx(classes.top, {
                     [classes.darkTop]: darkMode && open,
                     [classes.lightTop]: !darkMode && open,
-                    [classes.close]: !open,
+                    [classes.close]: !open
                 })}
             >
                 {!stayOpen && (
@@ -87,19 +94,30 @@ export default ({title, body, darkMode = false, stayOpen = false, defaultOpen = 
                         onClick={open ? handleClose : handleOpen}
                         className={clsx(classes.button)}
                     >
-                        <Close/>
+                        <Close />
                     </IconButton>
                 )}
                 {open && title()}
             </div>
             {open && (
-                <div className={clsx(classes.bottom, {
-                    [classes.darkBottom]: darkMode && open,
-                    [classes.lightBottom]: !darkMode && open
-                })}>
+                <div
+                    className={clsx(classes.bottom, {
+                        [classes.darkBottom]: darkMode && open,
+                        [classes.lightBottom]: !darkMode && open
+                    })}
+                >
                     {body()}
                 </div>
             )}
         </div>
-    )
+    );
 }
+Card.displayName = "Card";
+Card.propTypes = {
+    title: PropTypes.any,
+    body: PropTypes.any,
+    darkMode: PropTypes.any,
+    stayOpen: PropTypes.any,
+    defaultOpen: PropTypes.any
+};
+export default Card;

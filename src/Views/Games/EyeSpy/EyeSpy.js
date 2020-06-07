@@ -1,13 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import React, { useEffect, useRef, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
-import {Card, GoogleMap, ViewWrapper} from "../../../Components";
-import Settings from './Settings';
-import Instructions from './Instructions';
-import {v4 as uuid} from 'uuid';
+import { Card, GoogleMap, ViewWrapper } from "../../../Components";
+import Settings from "./Settings";
+import Instructions from "./Instructions";
+import { v4 as uuid } from "uuid";
 
-import povToPixel from '../../../utils/povToPixel';
+import povToPixel from "../../../utils/povToPixel";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
@@ -16,40 +16,40 @@ const useStyles = makeStyles(theme => ({
         height: "100%",
         display: "flex",
         flexFlow: "column noWrap",
-        overflow: "auto",
+        overflow: "auto"
     },
     column: {
         display: "flex",
         flexFlow: "column noWrap",
-        alignItems: "center",
+        alignItems: "center"
     },
     row: {
         display: "flex",
         flexFlow: "row noWrap",
-        alignItems: "center",
+        alignItems: "center"
     },
     rowLeft: {
         display: "flex",
         flexFlow: "row noWrap",
-        alignItems: "center",
+        alignItems: "center"
     },
     rowCenter: {
         display: "flex",
         flexFlow: "row noWrap",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
     },
     pad: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(1)
     },
     formControl: {
         margin: theme.spacing(1),
         padding: theme.spacing(1),
         minWidth: 200,
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.light
     },
     content: {
-        flex: "1 1 100%",
+        flex: "1 1 100%"
     },
     map: {
         flex: "1 1 100%",
@@ -58,17 +58,17 @@ const useStyles = makeStyles(theme => ({
         bottom: 0,
         left: 0,
         right: 0,
-        padding: theme.spacing(1),
+        padding: theme.spacing(1)
     },
     svCard: {
         maxWidth: 300,
         zIndex: 101,
-        position: "absolute",
-    },
+        position: "absolute"
+    }
 }));
 
-export default () => {
-    document.title = 'Eye-Spy';
+function EyeSpy() {
+    document.title = "Eye-Spy";
     const classes = useStyles(Theme);
 
     /* Reference to the div to place Dynamic Street View */
@@ -80,17 +80,12 @@ export default () => {
     const [config, setConfig] = useState(null);
 
     /* Variables from inside config */
-    const [panoramaPath, setPanoramaPath] = useState(null);
-    const [panorama, setPanorama] = useState(null);
     const [gmap, setGmap] = useState(null);
     const [pois, setPois] = useState(null);
-    const [waypoint, setWaypoint] = useState(null);
-    const [vocabulary, setVocabulary] = useState(null);
-    const [inventory, setInventory] = useState(null);
+    const [vocabulary] = useState(null);
 
     /* Variable to keep track of current Point-of-View in Street View */
     const [svPov, setSvPov] = useState(null);
-
 
     const getSettings = () => (
         <Settings
@@ -102,28 +97,18 @@ export default () => {
             setConfig={setConfig}
         />
     );
-    const getInstructions = () => (
-        <Instructions/>
-    );
-    const getScore = () => {
-
-    };
+    const getInstructions = () => <Instructions />;
+    const getScore = () => {};
 
     /* Set state variables from config values */
     useEffect(() => {
         if (!config) return;
-        setPanoramaPath(config['files'][0]);
         setGmap(config.gmap);
         setPois(config.poi);
-        //setWaypoint(config.waypoint);
-        //setVocabulary(config.vocabulary);
-        //setInventory(config.inventory);
     }, [config]);
 
     return (
-        <div
-            className={clsx(classes.root)}
-        >
+        <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <ViewWrapper
                     settings={getSettings}
@@ -131,92 +116,105 @@ export default () => {
                     score={getScore}
                 />
             </div>
-            <div
-                className={clsx(classes.content)}
-            >
+            <div className={clsx(classes.content)}>
                 <div
                     ref={panoContainer}
                     style={{
-                        position: 'relative',
+                        position: "relative",
                         zIndex: 0,
                         left: 0,
                         top: 0,
-                        width: '100%',
-                        height: '100%',
-                    }}/>
+                        width: "100%",
+                        height: "100%"
+                    }}
+                />
 
                 {/* Add Vocabulary words */}
-                {vocabulary && vocabulary.map(v => (
-                    <div
-                        key={uuid()}
-                        className={clsx(classes.svCard)}
-                        id={v.word}
-                        style={povToPixel(
-                            {heading: 0, pitch: 0},// this should be {location.heading, location.pitch} from config
-                            // TO-DO: POI pos. var needs updating to reflect new heading and pitch vars
-                            svPov || {heading: 0, pitch: 0},
-                            panoContainer.current
-                        )}
-                    >
-                        <Card
-                            darkMode
-                            title={() => (
-                                <div className={clsx(classes.rowCenter)}>
-                                    <div>
-                                        <Typography variant='h6'>{v.word}</Typography>
-                                    </div>
-                                </div>
+                {vocabulary &&
+                    vocabulary.map(v => (
+                        <div
+                            key={uuid()}
+                            className={clsx(classes.svCard)}
+                            id={v.word}
+                            style={povToPixel(
+                                { heading: 0, pitch: 0 }, // this should be {location.heading, location.pitch} from config
+                                // TO-DO: POI pos. var needs updating to reflect new heading and pitch vars
+                                svPov || { heading: 0, pitch: 0 },
+                                panoContainer.current
                             )}
-                            body={() => (
-                                <div className={clsx(classes.rowCenter)}>
-                                    <div className={clsx(classes.pad)}>
-                                        <Typography variant='h6'>{v.pinyin}</Typography>
+                        >
+                            <Card
+                                darkMode
+                                title={() => (
+                                    <div className={clsx(classes.rowCenter)}>
+                                        <div>
+                                            <Typography variant="h6">
+                                                {v.word}
+                                            </Typography>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        />
-                    </div>
-                ))}
+                                )}
+                                body={() => (
+                                    <div className={clsx(classes.rowCenter)}>
+                                        <div className={clsx(classes.pad)}>
+                                            <Typography variant="h6">
+                                                {v.pinyin}
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                )}
+                            />
+                        </div>
+                    ))}
 
                 {/* Add Points of Interest */}
-                {pois && pois.map(v => (
-                    <div
-                        key={uuid()}
-                        className={clsx(classes.svCard)}
-                        style={povToPixel(
-                            {heading: 312, pitch: 5},// this should be {location.heading, location.pitch} from config
-                            // TO-DO: POI pos. var needs updating to reflect new heading and pitch vars
-                            svPov || {heading: 0, pitch: 0},
-                            panoContainer.current
-                        )}
-                    >
-                        <Card
-                            title={() => (
-                                <div className={clsx(classes.rowCenter)}>
-                                    <div className={clsx(classes.pad)}>
-                                        <Typography variant='h6'>{v.title}</Typography>
-                                    </div>
-                                </div>
+                {pois &&
+                    pois.map(v => (
+                        <div
+                            key={uuid()}
+                            className={clsx(classes.svCard)}
+                            style={povToPixel(
+                                { heading: 312, pitch: 5 }, // this should be {location.heading, location.pitch} from config
+                                // TO-DO: POI pos. var needs updating to reflect new heading and pitch vars
+                                svPov || { heading: 0, pitch: 0 },
+                                panoContainer.current
                             )}
-                            body={() => (
-                                <div className={clsx(classes.rowCenter)}>
-                                    <div className={clsx(classes.pad)}>
-                                        <Typography variant='h6'>{v.body}</Typography>
+                        >
+                            <Card
+                                title={() => (
+                                    <div className={clsx(classes.rowCenter)}>
+                                        <div className={clsx(classes.pad)}>
+                                            <Typography variant="h6">
+                                                {v.title}
+                                            </Typography>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        />
-                    </div>
-                ))}
+                                )}
+                                body={() => (
+                                    <div className={clsx(classes.rowCenter)}>
+                                        <div className={clsx(classes.pad)}>
+                                            <Typography variant="h6">
+                                                {v.body}
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                )}
+                            />
+                        </div>
+                    ))}
 
                 {/* Add Google Map */}
                 {gmap && (
                     <div
                         className={clsx(classes.pad)}
-                        style={{maxWidth: 350, display: 'flex', justifyItems: 'center'}}
+                        style={{
+                            maxWidth: 350,
+                            display: "flex",
+                            justifyItems: "center"
+                        }}
                     >
                         <Card
-                            title={() => ''}
+                            title={() => ""}
                             body={() => (
                                 <div className={clsx(classes.map)}>
                                     <GoogleMap
@@ -240,5 +238,8 @@ export default () => {
                 )}
             </div>
         </div>
-    )
+    );
 }
+
+EyeSpy.displayName = "EyeSpy";
+export default EyeSpy;

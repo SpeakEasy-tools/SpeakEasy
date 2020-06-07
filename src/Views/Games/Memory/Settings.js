@@ -1,19 +1,32 @@
+import PropTypes from "prop-types";
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
-import {TextField} from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {},
     column: {},
     pad: {}
 }));
 
-const languages = [{text: 'English'}, {text: 'Pinyin'}, {text: 'Chinese'}, {text: 'Hybrid'}, {text: 'Chaos'}];
-const boardSizes = [{size: '12'}, {size: '24'}, {size: '36'}, {size: '48'}];
-export default (language, setLanguage, boardSize, setBoardSize) => {
+const languages = [
+    { text: "English" },
+    { text: "Pinyin" },
+    { text: "Chinese" },
+    { text: "Hybrid" },
+    { text: "Chaos" }
+];
+const boardSizes = [
+    { size: "12" },
+    { size: "24" },
+    { size: "36" },
+    { size: "48" }
+];
+
+function Settings({ language, setLanguage, boardSize, setBoardSize }) {
     const classes = useStyles(Theme);
 
     return (
@@ -21,27 +34,47 @@ export default (language, setLanguage, boardSize, setBoardSize) => {
             <div className={clsx(classes.column)}>
                 <div className={clsx(classes.pad)}>
                     <Autocomplete
-                        id='language-select'
+                        id="language-select"
                         options={languages}
                         value={language}
                         getOptionLabel={option => option.text}
-                        style={{width: 150}}
+                        style={{ width: 150 }}
                         onChange={(e, v) => setLanguage(v)}
-                        renderInput={params => <TextField {...params} label='Select language' margin='none'/>}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label="Select language"
+                                margin="none"
+                            />
+                        )}
                     />
                 </div>
                 <div className={clsx(classes.pad)}>
                     <Autocomplete
-                        id='board-size-select'
+                        id="board-size-select"
                         options={boardSizes}
                         value={boardSize}
                         getOptionLabel={option => option.size}
-                        style={{width: 150}}
+                        style={{ width: 150 }}
                         onChange={(e, v) => setBoardSize(v)}
-                        renderInput={params => <TextField {...params} label='Select board size' margin='none'/>}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label="Select board size"
+                                margin="none"
+                            />
+                        )}
                     />
                 </div>
             </div>
         </div>
-    )
+    );
 }
+Settings.displayName = "Settings";
+Settings.propTypes = {
+    language: PropTypes.any,
+    setLanguage: PropTypes.any,
+    boardSize: PropTypes.any,
+    setBoardSize: PropTypes.any
+};
+export default Settings;

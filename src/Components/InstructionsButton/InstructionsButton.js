@@ -1,28 +1,36 @@
 /* A button to login using the authentication service. */
-import React, {useState} from "react";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 import clsx from "clsx";
-import {Avatar, Button, makeStyles, Menu, MenuItem, Typography} from "@material-ui/core";
-import {HelpOutline, KeyboardArrowLeft} from '@material-ui/icons';
+import {
+    Avatar,
+    Button,
+    makeStyles,
+    Menu,
+    MenuItem,
+    Typography
+} from "@material-ui/core";
+import { HelpOutline, KeyboardArrowLeft } from "@material-ui/icons";
 
-import {Theme} from "../../utils";
+import { Theme } from "../../utils";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
-        height: '100%',
-        color: theme.palette.secondary.contrastText,
+        width: "100%",
+        height: "100%",
+        color: theme.palette.secondary.contrastText
     },
     row: {
-        display: 'flex',
-        flexFlow: 'row noWrap',
-        alignItems: 'center'
+        display: "flex",
+        flexFlow: "row noWrap",
+        alignItems: "center"
     },
     pad: {
-        padding: theme.spacing(1),
-    },
+        padding: theme.spacing(1)
+    }
 }));
 
-export default ({instructions}) => {
+function InstructionsButton({ instructions }) {
     const classes = useStyles(Theme);
 
     const [anchorE1, setAnchorE1] = useState(null);
@@ -39,12 +47,22 @@ export default ({instructions}) => {
             <div className={clsx(classes.row)}>
                 <Button
                     onClick={handleOpen}
-                    style={{backgroundColor: Theme.palette.secondary.main}}
+                    style={{ backgroundColor: Theme.palette.secondary.main }}
                 >
-                    <Avatar style={{backgroundColor: Theme.palette.secondary.main}}>
-                        <HelpOutline style={{color: Theme.palette.secondary.contrastText}}/>
+                    <Avatar
+                        style={{
+                            backgroundColor: Theme.palette.secondary.main
+                        }}
+                    >
+                        <HelpOutline
+                            style={{
+                                color: Theme.palette.secondary.contrastText
+                            }}
+                        />
                     </Avatar>
-                    <Typography style={{color: Theme.palette.secondary.contrastText}}>
+                    <Typography
+                        style={{ color: Theme.palette.secondary.contrastText }}
+                    >
                         Instructions
                     </Typography>
                 </Button>
@@ -57,15 +75,26 @@ export default ({instructions}) => {
                         <MenuItem
                             button
                             onClick={handleClose}
-                            style={{backgroundColor: Theme.palette.primary.main}}
+                            style={{
+                                backgroundColor: Theme.palette.primary.main
+                            }}
                         >
                             <Avatar
-                                style={{backgroundColor: Theme.palette.primary.main}}>
+                                style={{
+                                    backgroundColor: Theme.palette.primary.main
+                                }}
+                            >
                                 <KeyboardArrowLeft
-                                    style={{color: Theme.palette.primary.contrastText}}/>
+                                    style={{
+                                        color:
+                                            Theme.palette.primary.contrastText
+                                    }}
+                                />
                             </Avatar>
                             <Typography
-                                style={{color: Theme.palette.primary.contrastText}}
+                                style={{
+                                    color: Theme.palette.primary.contrastText
+                                }}
                             >
                                 Close
                             </Typography>
@@ -80,4 +109,9 @@ export default ({instructions}) => {
             </div>
         </div>
     );
+}
+InstructionsButton.displayName = "InstructionsButton";
+InstructionsButton.propTypes = {
+    instructions: PropTypes.any
 };
+export default InstructionsButton;

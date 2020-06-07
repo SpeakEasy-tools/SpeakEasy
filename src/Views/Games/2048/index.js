@@ -1,1 +1,0 @@
-export {default as _2048} from './2048'

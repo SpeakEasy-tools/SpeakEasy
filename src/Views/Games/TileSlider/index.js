@@ -1,1 +1,1 @@
-export {default as TileSlider} from './TileSlider';
+export { default as TileSlider } from "./TileSlider";

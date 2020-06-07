@@ -1,5 +1,5 @@
-function encodeImageFileAsURL(file){
-    return new Promise((resolve, reject) => {
+function encodeImageFileAsURL(file) {
+    return new Promise(resolve => {
         const reader = new FileReader();
         reader.onload = () => {
             resolve(reader.result);
@@ -7,4 +7,4 @@ function encodeImageFileAsURL(file){
         reader.readAsDataURL(file);
     });
 }
-export {encodeImageFileAsURL};
+export { encodeImageFileAsURL };

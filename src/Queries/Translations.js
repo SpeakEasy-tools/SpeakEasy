@@ -1,21 +1,20 @@
 import gql from "graphql-tag";
-import {useEffect, useState} from "react";
-import {useQuery} from "@apollo/react-hooks";
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/react-hooks";
 
 export const GetTranslations = () => {
     const TRANSLATIONS = gql`
         query getTranslations {
-              translations(limit: 10) {
+            translations(limit: 10) {
                 id
                 vocabulary_id_1
                 vocabulary_id_2
-              }
+            }
         }
     `;
 
     const [translations, setTranslations] = useState(null);
-    const {data, refetch} = useQuery(TRANSLATIONS, {
-
+    const { data, refetch } = useQuery(TRANSLATIONS, {
         fetchPolicy: "cache-and-network"
     });
     useEffect(() => {
@@ -23,21 +22,21 @@ export const GetTranslations = () => {
         setTranslations(data.translations);
     }, [data]);
 
-    return [translations, refetch]
+    return [translations, refetch];
 };
 export const GetNativeTranslations = vocabId => {
     const TRANSLATIONS = gql`
         query getNativeTranslations($vocabId: Int!) {
-              translations(where: {native_vocabulary_id: {_eq: $vocabId}}) {
+            translations(where: { native_vocabulary_id: { _eq: $vocabId } }) {
                 id
                 native_vocabulary_id
                 target_vocabulary_id
-              }
+            }
         }
     `;
 
     const [translations, setTranslations] = useState(null);
-    const {data, refetch} = useQuery(TRANSLATIONS, {
+    const { data, refetch } = useQuery(TRANSLATIONS, {
         variables: {
             vocabId: vocabId
         },
@@ -45,24 +44,24 @@ export const GetNativeTranslations = vocabId => {
     });
     useEffect(() => {
         if (!data) return;
-        setTranslations(data['translations']);
+        setTranslations(data["translations"]);
     }, [data]);
 
-    return [translations, refetch]
+    return [translations, refetch];
 };
 export const GetTargetTranslations = vocabId => {
     const TRANSLATIONS = gql`
         query getTargetTranslations($vocabId: Int!) {
-              translations(where: {target_vocabulary_id: {_eq: $vocabId}}) {
+            translations(where: { target_vocabulary_id: { _eq: $vocabId } }) {
                 id
                 native_vocabulary_id
                 target_vocabulary_id
-              }
+            }
         }
     `;
 
     const [translations, setTranslations] = useState(null);
-    const {data, refetch} = useQuery(TRANSLATIONS, {
+    const { data, refetch } = useQuery(TRANSLATIONS, {
         variables: {
             vocabId: vocabId
         },
@@ -70,8 +69,8 @@ export const GetTargetTranslations = vocabId => {
     });
     useEffect(() => {
         if (!data) return;
-        setTranslations(data['translations']);
+        setTranslations(data["translations"]);
     }, [data]);
 
-    return [translations, refetch]
+    return [translations, refetch];
 };

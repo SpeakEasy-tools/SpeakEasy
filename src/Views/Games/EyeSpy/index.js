@@ -1,1 +1,1 @@
-export {default as EyeSpy} from './EyeSpy';
+export { default as EyeSpy } from "./EyeSpy";

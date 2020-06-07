@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
-import {useEffect, useState} from "react";
-import {useQuery} from "@apollo/react-hooks";
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/react-hooks";
 
 export const GetLanguages = () => {
     const LANGUAGES = gql`
@@ -14,17 +14,19 @@ export const GetLanguages = () => {
     `;
 
     const [languages, setLanguages] = useState(null);
-    const {data} = useQuery(LANGUAGES, {
+    const { data } = useQuery(LANGUAGES, {
         fetchPolicy: "cache-and-network"
     });
     useEffect(() => {
         if (!data) return;
         let ls = {};
-        data.languages.forEach(l => ls[l['language_code']] = l['language_label'])
+        data.languages.forEach(
+            l => (ls[l["language_code"]] = l["language_label"])
+        );
         setLanguages(ls);
     }, [data]);
 
-    return languages
+    return languages;
 };
 
 export const GetUsedLanguages = () => {
@@ -41,7 +43,7 @@ export const GetUsedLanguages = () => {
     `;
 
     const [languages, setLanguages] = useState(null);
-    const {data, refetch} = useQuery(LANGUAGES, {
+    const { data, refetch } = useQuery(LANGUAGES, {
         fetchPolicy: "cache-and-network"
     });
     useEffect(() => {
@@ -49,5 +51,5 @@ export const GetUsedLanguages = () => {
         setLanguages(data.vocabulary.map(v => v.language));
     }, [data]);
 
-    return [languages, refetch]
+    return [languages, refetch];
 };

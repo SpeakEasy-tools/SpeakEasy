@@ -1,27 +1,27 @@
+import PropTypes from "prop-types";
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: '100%',
-        display: 'flex',
-        flexFlow: 'row wrap',
+        height: "100%",
+        display: "flex",
+        flexFlow: "row wrap",
         backgroundColor: theme.palette.primary.main,
-        borderRadius: 10,
+        borderRadius: 10
     },
     column: {
-        width: '100%',
-        flex: '1 1 100%',
-        display: 'flex',
-        flexFlow: 'column noWrap',
+        width: "100%",
+        flex: "1 1 100%",
+        display: "flex",
+        flexFlow: "column noWrap"
     },
     pad: {
         padding: theme.spacing(1),
-        flex: '1 1 18%',
-
+        flex: "1 1 18%"
     },
     top: {
         color: theme.palette.secondary.contrastText,
@@ -30,8 +30,8 @@ const useStyles = makeStyles(theme => ({
         borderTopLeftRadius: 10,
         borderBottomRightRadius: 5,
         borderBottomLeftRadius: 5,
-        borderTop: 'double',
-        borderRight: 'double',
+        borderTop: "double",
+        borderRight: "double"
     },
     bottom: {
         color: theme.palette.secondary.contrastText,
@@ -40,8 +40,8 @@ const useStyles = makeStyles(theme => ({
         borderTopLeftRadius: 5,
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
-        borderBottom: 'double',
-        borderLeft: 'double',
+        borderBottom: "double",
+        borderLeft: "double"
     },
     middle: {
         backgroundColor: theme.palette.secondary.main,
@@ -50,8 +50,8 @@ const useStyles = makeStyles(theme => ({
         borderTopLeftRadius: 0,
         borderBottomRightRadius: 0,
         borderBottomLeftRadius: 0,
-        borderLeft: 'double',
-        borderRight: 'double'
+        borderLeft: "double",
+        borderRight: "double"
     },
     flipped: {
         backgroundColor: theme.palette.secondary.contrastText,
@@ -59,37 +59,44 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default ({topText, middleText, bottomText, flipped}) => {
+function PlayingCard({ topText, middleText, bottomText, flipped }) {
     const classes = useStyles(Theme);
 
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.column)}>
-                <div className={clsx(classes.pad, classes.top, {[classes.flipped]: flipped})}>
-                    <Typography
-                        align='center'
-                        variant='h6'
-                    >
-                        {flipped ? topText : ''}
+                <div
+                    className={clsx(classes.pad, classes.top, {
+                        [classes.flipped]: flipped
+                    })}
+                >
+                    <Typography align="center" variant="h6">
+                        {flipped ? topText : ""}
                     </Typography>
                 </div>
                 <div className={clsx(classes.pad, classes.middle)}>
-                    <Typography
-                        align='center'
-                        variant='h6'
-                    >
-                        {flipped ? middleText : '?'}
+                    <Typography align="center" variant="h6">
+                        {flipped ? middleText : "?"}
                     </Typography>
                 </div>
-                <div className={clsx(classes.pad, classes.bottom, {[classes.flipped]:flipped})}>
-                    <Typography
-                        align='center'
-                        variant='h6'
-                    >
-                        {flipped ? bottomText : '' }
+                <div
+                    className={clsx(classes.pad, classes.bottom, {
+                        [classes.flipped]: flipped
+                    })}
+                >
+                    <Typography align="center" variant="h6">
+                        {flipped ? bottomText : ""}
                     </Typography>
                 </div>
             </div>
         </div>
-    )
+    );
 }
+PlayingCard.displayName = "PlayingCard";
+PlayingCard.propTypes = {
+    topText: PropTypes.any,
+    middleText: PropTypes.any,
+    bottomText: PropTypes.any,
+    flipped: PropTypes.any
+};
+export default PlayingCard;

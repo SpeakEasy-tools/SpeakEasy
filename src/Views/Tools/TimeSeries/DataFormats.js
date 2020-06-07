@@ -1,6 +1,6 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
 import {
     Divider,
@@ -16,59 +16,58 @@ import {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flex: '1 1 100%',
-        width: '90%',
-        height: '90%',
+        flex: "1 1 100%",
+        width: "90%",
+        height: "90%",
         backgroundColor: theme.palette.primary.light,
-        margin: 'auto'
+        margin: "auto"
     },
     row: {
-        width: '100%',
-        display: 'flex',
-
+        width: "100%",
+        display: "flex"
     },
     pad: {
         padding: theme.spacing(1),
-        flex: '1 1 auto',
+        flex: "1 1 auto"
     },
     json: {
-        height: '25%',
-        overflow: 'auto'
+        height: "25%",
+        overflow: "auto"
     }
 }));
 
-const jsonData = {
-    x: 'Date',
-    series: ['AAPL', 'AMZN', 'IBM'],
+const jsonData = `{
+    x: "Date",
+    series: ["AAPL", "AMZN", "IBM"],
     data: [
         {
-            ['Date (YYYY-MM-DD)']: '2019-04-17',
-            ['AAPL']: 203.13,
-            ['AMZN']: 1864.82,
-            ['IBM']: 139.11
+            ["Date (YYYY-MM-DD)"]: "2019-04-17",
+            ["AAPL"]: 203.13,
+            ["AMZN"]: 1864.82,
+            ["IBM"]: 139.11
         },
         {
-            ['Date (YYYY-MM-DD)']: '2019-04-18',
-            ['AAPL']: 203.86,
-            ['AMZN']: 1861.69,
-            ['IBM']: 140.33
+            ["Date (YYYY-MM-DD)"]: "2019-04-18",
+            ["AAPL"]: 203.86,
+            ["AMZN"]: 1861.69,
+            ["IBM"]: 140.33
         },
         {
-            ['Date (YYYY-MM-DD)']: '2019-04-19',
-            ['AAPL']: 202.53,
-            ['AMZN']: 1887.31,
-            ['IBM']: 138.89
+            ["Date (YYYY-MM-DD)"]: "2019-04-19",
+            ["AAPL"]: 202.53,
+            ["AMZN"]: 1887.31,
+            ["IBM"]: 138.89
         },
         {
-            ['Date (YYYY-MM-DD)']: '2019-04-20',
-            ['AAPL']: 207.48,
-            ['AMZN']: 1923.77,
-            ['IBM']: 140.44
-        },
+            ["Date (YYYY-MM-DD)"]: "2019-04-20",
+            ["AAPL"]: 207.48,
+            ["AMZN"]: 1923.77,
+            ["IBM"]: 140.44
+        }
     ]
-}
+}`;
 
-export default () => {
+function DataFormats() {
     const classes = useStyles(Theme);
 
     return (
@@ -76,48 +75,57 @@ export default () => {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography
-                        variant='h2'
-                        style={{color: Theme.palette.primary.contrastText}}
+                        variant="h2"
+                        style={{ color: Theme.palette.primary.contrastText }}
                     >
                         Formatting Your Data
                     </Typography>
-                    <Divider/>
+                    <Divider />
                     <Typography
                         paragraph
-                        style={{width: 500, color: Theme.palette.primary.contrastText}}
+                        style={{
+                            width: 500,
+                            color: Theme.palette.primary.contrastText
+                        }}
                     >
-                        The Time Series Analyzer can parse time series data stored in .csv, .json, .ods, tsv, or .xlsx
-                        file formats.
+                        The Time Series Analyzer can parse time series data
+                        stored in .csv, .json, .ods, tsv, or .xlsx file formats.
                     </Typography>
                 </div>
             </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography
-                        variant='h4'
-                        style={{color: Theme.palette.primary.contrastText}}
+                        variant="h4"
+                        style={{ color: Theme.palette.primary.contrastText }}
                     >
                         Formatting .csv, .ods, .tsv, and .xlsx file formats
                     </Typography>
-                    <Divider/>
+                    <Divider />
                 </div>
             </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography
                         paragraph
-                        style={{width: 500, color: Theme.palette.primary.contrastText}}
+                        style={{
+                            width: 500,
+                            color: Theme.palette.primary.contrastText
+                        }}
                     >
-                        For .csv, .ods, .tsv, and .xlsx file formats please format your data so that the first column
-                        contains
-                        the x axis label followed by the x axis data and each additional column contains the series
-                        label
-                        followed by the y axis data for a single series. See the example:
+                        For .csv, .ods, .tsv, and .xlsx file formats please
+                        format your data so that the first column contains the x
+                        axis label followed by the x axis data and each
+                        additional column contains the series label followed by
+                        the y axis data for a single series. See the example:
                     </Typography>
                 </div>
                 <div className={clsx(classes.pad)}>
                     <TableContainer component={Paper}>
-                        <Table className={clsx(classes.table)} aria-label='file-format-example'>
+                        <Table
+                            className={clsx(classes.table)}
+                            aria-label="file-format-example"
+                        >
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Date (YYYY-MM-DD)</TableCell>
@@ -159,35 +167,45 @@ export default () => {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography
-                        variant='h4'
-                        style={{color: Theme.palette.primary.contrastText}}
+                        variant="h4"
+                        style={{ color: Theme.palette.primary.contrastText }}
                     >
                         Formatting .json file format
                     </Typography>
-                    <Divider/>
+                    <Divider />
                 </div>
             </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography
                         paragraph
-                        style={{width: 500, color: Theme.palette.primary.contrastText}}
+                        style={{
+                            width: 500,
+                            color: Theme.palette.primary.contrastText
+                        }}
                     >
-                        For .json file format please massage your data into a JSON format
-                        with field for "data", "x" axis label, and "series" names. The "x" axis label should contain the
-                        label that identifies the x axis data while "series" names is an array containing the names of
-                        the series. The "data" field should contain an array of objects. Each object should have a field
-                        for the x axis where the key is the x axis label and the value is the value is the x data and
-                        one field for each series where the key is the series label and the value is the y data. See the
-                        example below:
+                        For .json file format please massage your data into a
+                        JSON format with field for &quot;data&quot;,
+                        &quot;x&quot; axis label, and &quot;series&quot; names.
+                        The &quot;x&quot; axis label should contain the label
+                        that identifies the x axis data while &quot;series&quot;
+                        names is an array containing the names of the series.
+                        The &quot;data&quot; field should contain an array of
+                        objects. Each object should have a field for the x axis
+                        where the key is the x axis label and the value is the
+                        value is the x data and one field for each series where
+                        the key is the series label and the value is the y data.
+                        See the example below:
                     </Typography>
                 </div>
                 <div className={clsx(classes.pad)}>
                     <div className={clsx(classes.json)}>
-                        <pre>{JSON.stringify(jsonData, null, 2)}</pre>
+                        <pre>{jsonData}</pre>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
+}
+DataFormats.displayName = "DataFormats";
+export default DataFormats;

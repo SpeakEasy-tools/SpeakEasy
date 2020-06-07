@@ -1,5 +1,5 @@
 {
-  "name": "SpeakEasytools",
+  "name": "speak-easy-tools",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,6 +29,7 @@
     "mic-recorder-to-mp3": "^2.2.1",
     "papaparse": "^5.2.0",
     "pitchfinder": "^2.2.1",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-firebaseui": "^4.1.0",
@@ -43,12 +44,13 @@
     "uuid": "latest",
     "webrtc-adapter": "^7.6.1",
     "xlsx": "^0.15.6",
-    "yargs-parser": "^18.1.3"
+    "yargs-parser": "^18.1.3",
+    "yarn": "^1.22.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:deploy": "react-scripts build && scp -r ./build/* jeramey@speakeasy.tools:/var/www/speakeasy.tools/html",
+    "build:deploy": "react-scripts build && scp -r ./build/* admin@speakeasy.tools:/var/www/speakeasy.tools/html",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint \"src/**/*.js\" --fix"

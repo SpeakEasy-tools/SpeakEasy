@@ -1,14 +1,14 @@
 import React from "react";
 import clsx from "clsx";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../utils";
 
 const K_WIDTH = 20;
 const K_HEIGHT = 20;
 
 const useStyles = makeStyles(theme => ({
     root: {
-        position: 'absolute',
+        position: "absolute",
         width: K_WIDTH,
         height: K_HEIGHT,
         left: -K_WIDTH / 2,
@@ -21,10 +21,10 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default () => {
+function MapMarker() {
     const classes = useStyles(Theme);
 
-    return (
-        <div className={clsx(classes.root)}/>
-    )
+    return <div className={clsx(classes.root)} />;
 }
+MapMarker.displayName = "MapMarker";
+export default MapMarker;

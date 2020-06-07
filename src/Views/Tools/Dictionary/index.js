@@ -1,1 +1,1 @@
-export {default as Dictionary} from './Dictionary'
+export { default as Dictionary } from "./Dictionary";

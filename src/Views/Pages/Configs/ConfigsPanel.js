@@ -1,44 +1,62 @@
-import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {encodeImageFileAsURL, Theme} from "../../../utils";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { encodeImageFileAsURL, Theme } from "../../../utils";
 import clsx from "clsx";
-import {DeleteConfig, GetConfigs, InsertConfig, UpdateConfig} from "../../../Queries";
+import {
+    DeleteConfig,
+    GetConfigs,
+    InsertConfig,
+    UpdateConfig
+} from "../../../Queries";
 import Typography from "@material-ui/core/Typography";
-import {Add, Check, Clear, Delete, Edit, ExpandMore, Help} from "@material-ui/icons";
-import {ExpansionPanel, ExpansionPanelDetails, TextField} from "@material-ui/core";
+import {
+    Add,
+    Check,
+    Clear,
+    Delete,
+    Edit,
+    ExpandMore,
+    Help
+} from "@material-ui/icons";
+import {
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    TextField
+} from "@material-ui/core";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import IconButton from "@material-ui/core/IconButton";
 import JSONEditor from "jsoneditor";
-import {DropzoneArea} from "material-ui-dropzone";
+import { DropzoneArea } from "material-ui-dropzone";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: 'auto',
-        height: '90%'
+        width: "auto",
+        height: "90%"
     },
     content: {
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexFlow: 'row noWrap'
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexFlow: "row noWrap"
     },
     column: {
-        height: '100%',
-        display: 'flex',
-        flexFlow: 'column noWrap',
+        height: "100%",
+        display: "flex",
+        flexFlow: "column noWrap"
     },
     row: {
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center'
+        width: "100%",
+        display: "flex",
+        alignItems: "center"
     },
     pad: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(2)
     },
     button: {
-        '&:disabled': {
+        "&:disabled": {
             backgroundColor: theme.palette.error.main
         }
     },
@@ -47,15 +65,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default ({moduleId, moduleName}) => {
+function ConfigsPanel({ moduleId, moduleName }) {
     const classes = useStyles(Theme);
 
-    const [configs,] = GetConfigs(moduleId);
+    const [configs] = GetConfigs(moduleId);
     const [configId, setConfigId] = useState(null);
 
     const [tabIndex, setTabIndex] = useState(0);
 
-    const [newName, setNewName] = useState('');
+    const [newName, setNewName] = useState("");
     const [newConfig, setNewConfig] = useState({});
 
     const [insertName, setInsertName] = useState(null);
@@ -71,7 +89,7 @@ export default ({moduleId, moduleName}) => {
     const [editConfig, setEditConfig] = useState(null);
 
     const [container, setContainer] = useState(null);
-    
+
     const [jsonEditor, setJsonEditor] = useState(null);
 
     const rowsEdited = UpdateConfig(configId, editName, editConfig);
@@ -80,7 +98,7 @@ export default ({moduleId, moduleName}) => {
     const [dropZoneKey, setDropZoneKey] = useState(0);
 
     const handleFileChange = fs => {
-        if(!Boolean(fs.length)) return;
+        if (!fs.length) return;
         Promise.all(fs.map(f => encodeImageFileAsURL(f))).then(values => {
             setFiles([...values]);
         });
@@ -89,23 +107,27 @@ export default ({moduleId, moduleName}) => {
         setTabIndex(v);
     };
     const handleDelete = lId => {
-        if (window.confirm("Are you sure you want to delete this configuration?")) {
+        if (
+            window.confirm(
+                "Are you sure you want to delete this configuration?"
+            )
+        ) {
             setDeleteId(lId);
         }
     };
     const handleAdd = () => {
-        setInsertConfig({...jsonEditor.get(), files: files});
+        setInsertConfig({ ...jsonEditor.get(), files: files });
         setInsertName(newName);
     };
     const handleClear = () => {
-        setDropZoneKey(prevState => prevState+1);
-        setNewName('');
+        setDropZoneKey(prevState => prevState + 1);
+        setNewName("");
         setNewConfig({});
         setInsertName(null);
         setInsertConfig(null);
     };
     const handleCancel = () => {
-        setNewName('');
+        setNewName("");
         setNewConfig({});
         setEditName(null);
         setEditConfig(null);
@@ -117,7 +139,7 @@ export default ({moduleId, moduleName}) => {
     };
 
     useEffect(() => {
-        if(!jsonEditor) return;
+        if (!jsonEditor) return;
         if (!(configs && configs.length > tabIndex)) {
             setConfigId(null);
             jsonEditor.set({});
@@ -125,10 +147,10 @@ export default ({moduleId, moduleName}) => {
             handleCancel();
             return;
         }
-        let parsed = JSON.parse(configs[tabIndex]['config']);
-        setFiles([...parsed['files']]);
+        let parsed = JSON.parse(configs[tabIndex]["config"]);
+        setFiles([...parsed["files"]]);
         setDropZoneKey(prevState => prevState + 1);
-        delete parsed['files'];
+        delete parsed["files"];
         setConfigId(configs[tabIndex].id);
         jsonEditor.set(parsed);
     }, [configs, tabIndex, jsonEditor]);
@@ -152,72 +174,78 @@ export default ({moduleId, moduleName}) => {
     return (
         <ExpansionPanel expanded>
             <ExpansionPanelSummary
-                expandIcon={<ExpandMore style={{color: Theme.palette.primary.main}}/>}
-                style={{backgroundColor: Theme.palette.secondary.main}}
+                expandIcon={
+                    <ExpandMore style={{ color: Theme.palette.primary.main }} />
+                }
+                style={{ backgroundColor: Theme.palette.secondary.main }}
             >
-                <Typography
-                    color='primary'
-                    variant='h6'>
+                <Typography color="primary" variant="h6">
                     Configurations: {moduleName}
                 </Typography>
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails style={{padding: Theme.spacing(0)}}>
+            <ExpansionPanelDetails style={{ padding: Theme.spacing(0) }}>
                 <Tabs
                     value={tabIndex}
                     onChange={handleTabChange}
-                    variant='scrollable'
+                    variant="scrollable"
                     style={{
-                        backgroundColor: Theme.palette.secondary.light,
+                        backgroundColor: Theme.palette.secondary.light
                     }}
-                    orientation='vertical'
+                    orientation="vertical"
                 >
-                    {configs && configs.map(c => (
-                        <Tab
-                            key={c.id}
-                            label={
-                                <>
-                                    {
-                                        edit && (c.id === configs[tabIndex].id) ? (
+                    {configs &&
+                        configs.map(c => (
+                            <Tab
+                                key={c.id}
+                                label={
+                                    <>
+                                        {edit &&
+                                        c.id === configs[tabIndex].id ? (
                                             <TextField
                                                 required
-                                                label='Edit Config Name'
-                                                placeholder='Config Name'
+                                                label="Edit Config Name"
+                                                placeholder="Config Name"
                                                 defaultValue={c.name}
-                                                onChange={e => setNewName(e.target.value)}
+                                                onChange={e =>
+                                                    setNewName(e.target.value)
+                                                }
                                             />
                                         ) : (
-                                            <Typography
-                                                color='primary'
-                                            >
+                                            <Typography color="primary">
                                                 {c.name}
                                             </Typography>
                                         )}
-                                </>
-                            }
-                            style={{color: Theme.palette.primary.main}}
-                        />
-                    ))}
-                    <Tab label={
-                        <>
-                            {
-                                configs && configs.length <= tabIndex ? (
+                                    </>
+                                }
+                                style={{ color: Theme.palette.primary.main }}
+                            />
+                        ))}
+                    <Tab
+                        label={
+                            <>
+                                {configs && configs.length <= tabIndex ? (
                                     <TextField
                                         required
-                                        label='Add Config'
-                                        placeholder='Config Name'
+                                        label="Add Config"
+                                        placeholder="Config Name"
                                         value={newName}
-                                        onChange={e => setNewName(e.target.value)}
+                                        onChange={e =>
+                                            setNewName(e.target.value)
+                                        }
                                     />
                                 ) : (
-                                    <Typography
-                                        color='primary'
-                                    >
+                                    <Typography color="primary">
                                         Add Config
                                     </Typography>
                                 )}
-                            <Add style={{color: Theme.palette.primary.main}}/>
-                        </>
-                    }/>
+                                <Add
+                                    style={{
+                                        color: Theme.palette.primary.main
+                                    }}
+                                />
+                            </>
+                        }
+                    />
                 </Tabs>
                 <div className={clsx(classes.column)}>
                     <div className={clsx(classes.row)}>
@@ -225,19 +253,22 @@ export default ({moduleId, moduleName}) => {
                             {configs && configs.length <= tabIndex ? (
                                 <>
                                     <IconButton>
-                                        <Help style={{color: Theme.palette.secondary.main}}/>
+                                        <Help
+                                            style={{
+                                                color:
+                                                    Theme.palette.secondary.main
+                                            }}
+                                        />
                                     </IconButton>
                                     <IconButton
                                         className={clsx(classes.button)}
-                                        disabled={!(Boolean(newName))}
+                                        disabled={!newName}
                                         onClick={handleAdd}
                                     >
-                                        <Check/>
+                                        <Check />
                                     </IconButton>
-                                    <IconButton
-                                        onClick={handleClear}
-                                    >
-                                        <Clear/>
+                                    <IconButton onClick={handleClear}>
+                                        <Clear />
                                     </IconButton>
                                 </>
                             ) : (
@@ -245,33 +276,45 @@ export default ({moduleId, moduleName}) => {
                                     {edit ? (
                                         <>
                                             <IconButton>
-                                                <Help style={{color: Theme.palette.secondary.main}}/>
+                                                <Help
+                                                    style={{
+                                                        color:
+                                                            Theme.palette
+                                                                .secondary.main
+                                                    }}
+                                                />
                                             </IconButton>
-                                            <IconButton
-                                                onClick={handleEdit}
-                                            >
-                                                <Check/>
+                                            <IconButton onClick={handleEdit}>
+                                                <Check />
                                             </IconButton>
-                                            <IconButton
-                                                onClick={handleCancel}
-                                            >
-                                                <Clear/>
+                                            <IconButton onClick={handleCancel}>
+                                                <Clear />
                                             </IconButton>
                                         </>
                                     ) : (
                                         <>
                                             <IconButton>
-                                                <Help style={{color: Theme.palette.secondary.main}}/>
+                                                <Help
+                                                    style={{
+                                                        color:
+                                                            Theme.palette
+                                                                .secondary.main
+                                                    }}
+                                                />
                                             </IconButton>
                                             <IconButton
                                                 onClick={() => setEdit(true)}
                                             >
-                                                <Edit/>
+                                                <Edit />
                                             </IconButton>
                                             <IconButton
-                                                onClick={() => handleDelete(configs[tabIndex].id)}
+                                                onClick={() =>
+                                                    handleDelete(
+                                                        configs[tabIndex].id
+                                                    )
+                                                }
                                             >
-                                                <Delete/>
+                                                <Delete />
                                             </IconButton>
                                         </>
                                     )}
@@ -281,7 +324,10 @@ export default ({moduleId, moduleName}) => {
                     </div>
                     <div className={clsx(classes.row)}>
                         <div className={clsx(classes.pad)}>
-                            <div className={clsx(classes.json)} ref={elem => setContainer(elem)}/>
+                            <div
+                                className={clsx(classes.json)}
+                                ref={elem => setContainer(elem)}
+                            />
                         </div>
                     </div>
                     <div className={clsx(classes.row)}>
@@ -289,7 +335,7 @@ export default ({moduleId, moduleName}) => {
                             <DropzoneArea
                                 key={dropZoneKey}
                                 onChange={handleFileChange}
-                                dropzoneText='Drag and drop files here or click to upload'
+                                dropzoneText="Drag and drop files here or click to upload"
                                 showFileNames
                                 filesLimit={5}
                                 initialFiles={files}
@@ -300,4 +346,10 @@ export default ({moduleId, moduleName}) => {
             </ExpansionPanelDetails>
         </ExpansionPanel>
     );
+}
+ConfigsPanel.displayName = "ConfigsPanel";
+ConfigsPanel.propTypes = {
+    moduleId: PropTypes.any,
+    moduleName: PropTypes.any
 };
+export default ConfigsPanel;

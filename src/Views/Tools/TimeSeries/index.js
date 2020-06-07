@@ -1,1 +1,1 @@
-export {default as TimeSeries} from './TimeSeries';
+export { default as TimeSeries } from "./TimeSeries";

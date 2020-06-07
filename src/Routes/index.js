@@ -1,1 +1,1 @@
-export {Routes, BuildRoutes} from './Routes';
+export { Routes, BuildRoutes } from "./Routes";

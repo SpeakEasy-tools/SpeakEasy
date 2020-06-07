@@ -14,15 +14,17 @@ export const GetLanguages = () => {
     `;
 
     const [languages, setLanguages] = useState(null);
-    const {data, refetch} = useQuery(LANGUAGES, {
+    const {data} = useQuery(LANGUAGES, {
         fetchPolicy: "cache-and-network"
     });
     useEffect(() => {
         if (!data) return;
-        setLanguages(data.languages);
+        let ls = {};
+        data.languages.forEach(l => ls[l['language_code']] = l['language_label'])
+        setLanguages(ls);
     }, [data]);
 
-    return [languages, refetch]
+    return languages
 };
 
 export const GetUsedLanguages = () => {

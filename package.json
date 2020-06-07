@@ -74,5 +74,15 @@
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1"
   },
-  "proxy": "https://us-central1-speakeasy-263714.cloudfunctions.net"
+  "proxy": "https://us-central1-speakeasy-263714.cloudfunctions.net",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }

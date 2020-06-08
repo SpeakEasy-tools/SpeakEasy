@@ -76,7 +76,6 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-
 function Tile({ value, language, score }) {
     const classes = useStyles(Theme);
 

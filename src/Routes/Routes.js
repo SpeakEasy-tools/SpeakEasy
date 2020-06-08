@@ -91,7 +91,7 @@ export const TONE_TRAINER = {
     name: "Tone Trainer",
     component: ToneTrainer
 };
-export const WS = {
+export const WORD_SEARCH = {
     path: '/word_search', 
     name: 'Word Search', 
     component: WordSearch
@@ -122,7 +122,7 @@ const routes = [
     POP_QUIZ,
     TIME_SERIES,
     TONE_TRAINER,
-    WS
+    WORD_SEARCH
 ];
 
 const devRoutes = [CONFIGS];

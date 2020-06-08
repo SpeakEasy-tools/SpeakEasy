@@ -1,12 +1,11 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Typography} from "@material-ui/core";
-import {Translate} from "@material-ui/icons";
-import {Theme} from "../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Translate } from "@material-ui/icons";
+import { Theme } from "../../utils";
 import clsx from "clsx";
-import {Breadcrumbs} from "../Breadcrumbs";
+import { Breadcrumbs } from "../Breadcrumbs";
 import Button from "@material-ui/core/Button";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -14,17 +13,17 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.contrastText
     },
     row: {
-        width: '100%',
-        display: 'flex',
-        flexFlow: 'row noWrap',
-        alignItems: 'center'
+        width: "100%",
+        display: "flex",
+        flexFlow: "row noWrap",
+        alignItems: "center"
     },
     pad: {
         padding: theme.spacing(1)
     }
 }));
 
-export default () => {
+function HomeButton() {
     const classes = useStyles(Theme);
 
     return (
@@ -33,19 +32,22 @@ export default () => {
                 <div className={clsx(classes.pad)}>
                     <Button
                         component={Link}
-                        to='/'
+                        to="/"
                         style={{
                             backgroundColor: Theme.palette.secondary.main,
                             color: Theme.palette.secondary.contrastText
                         }}
                     >
-                        <Translate/> SpeakEasy.tools
+                        <Translate /> SpeakEasy.tools
                     </Button>
                 </div>
                 <div>
-                    <Breadcrumbs/>
+                    <Breadcrumbs />
                 </div>
             </div>
         </div>
     );
-};
+}
+
+HomeButton.displayName = "HomeButton";
+export default HomeButton;

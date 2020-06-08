@@ -20,6 +20,7 @@ import {
     TimeSeries,
     ToneTrainer,
     WordSearch
+
 } from "../Views";
 
 /*

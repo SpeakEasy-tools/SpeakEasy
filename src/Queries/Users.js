@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
-import {useEffect, useState} from "react";
-import {useQuery} from "@apollo/react-hooks";
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/react-hooks";
 
 export const GetUsers = () => {
     const USERS = gql`
@@ -13,8 +13,7 @@ export const GetUsers = () => {
     `;
 
     const [users, setUsers] = useState(null);
-    const {data, refetch} = useQuery(USERS, {
-
+    const { data, refetch } = useQuery(USERS, {
         fetchPolicy: "cache-and-network"
     });
     useEffect(() => {
@@ -22,5 +21,5 @@ export const GetUsers = () => {
         setUsers(data.users);
     }, [data]);
 
-    return [users, refetch]
+    return [users, refetch];
 };

@@ -1,43 +1,35 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../utils";
 import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
-import {useStopwatch} from "react-timer-hook";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: '100%',
-        width: '100%',
+        height: "100%",
+        width: "100%"
     },
     row: {
-        display: 'flex',
-        flex: 'row noWrap',
-        justifyContent: 'space-around'
+        display: "flex",
+        flex: "row noWrap",
+        justifyContent: "space-around"
     },
     pad: {
         margin: theme.spacing(1),
-        borderRadius: 10,
+        borderRadius: 10
     }
 }));
 
-export default () => {
+function Timer() {
     const classes = useStyles(Theme);
-
-    const {
-        seconds,
-        minutes,
-        hours,
-        start,
-    } = useStopwatch({autoStart: false});
 
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography
-                        variant='h4'
-                        style={{color: Theme.palette.secondary.contrastText}}
+                        variant="h4"
+                        style={{ color: Theme.palette.secondary.contrastText }}
                     >
                         Time:
                     </Typography>
@@ -45,4 +37,6 @@ export default () => {
             </div>
         </div>
     );
-};
+}
+Timer.displayName = "Timer";
+export default Timer;

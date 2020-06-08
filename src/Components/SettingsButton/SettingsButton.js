@@ -1,28 +1,36 @@
 /* A button to login using the authentication service. */
-import React, {useState} from "react";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
 import clsx from "clsx";
-import {Avatar, Button, makeStyles, Menu, MenuItem, Typography} from "@material-ui/core";
-import {KeyboardArrowLeft, Settings} from '@material-ui/icons';
+import {
+    Avatar,
+    Button,
+    makeStyles,
+    Menu,
+    MenuItem,
+    Typography
+} from "@material-ui/core";
+import { KeyboardArrowLeft, Settings } from "@material-ui/icons";
 
-import {Theme} from "../../utils";
+import { Theme } from "../../utils";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
-        height: '100%',
-        color: theme.palette.secondary.contrastText,
+        width: "100%",
+        height: "100%",
+        color: theme.palette.secondary.contrastText
     },
     row: {
-        display: 'flex',
-        flexFlow: 'row noWrap',
-        alignItems: 'center'
+        display: "flex",
+        flexFlow: "row noWrap",
+        alignItems: "center"
     },
     pad: {
-        padding: theme.spacing(1),
-    },
+        padding: theme.spacing(1)
+    }
 }));
 
-export default ({settings, setSelectedSettings}) => {
+function SettingsButton({ settings }) {
     const classes = useStyles(Theme);
 
     const [anchorE1, setAnchorE1] = useState(null);
@@ -39,12 +47,22 @@ export default ({settings, setSelectedSettings}) => {
             <div className={clsx(classes.row)}>
                 <Button
                     onClick={handleOpen}
-                    style={{backgroundColor: Theme.palette.secondary.main}}
+                    style={{ backgroundColor: Theme.palette.secondary.main }}
                 >
-                    <Avatar style={{backgroundColor: Theme.palette.secondary.main}}>
-                        <Settings style={{color: Theme.palette.secondary.contrastText}}/>
+                    <Avatar
+                        style={{
+                            backgroundColor: Theme.palette.secondary.main
+                        }}
+                    >
+                        <Settings
+                            style={{
+                                color: Theme.palette.secondary.contrastText
+                            }}
+                        />
                     </Avatar>
-                    <Typography style={{color: Theme.palette.secondary.contrastText}}>
+                    <Typography
+                        style={{ color: Theme.palette.secondary.contrastText }}
+                    >
                         Settings
                     </Typography>
                 </Button>
@@ -57,15 +75,26 @@ export default ({settings, setSelectedSettings}) => {
                         <MenuItem
                             button
                             onClick={handleClose}
-                            style={{backgroundColor: Theme.palette.primary.dark}}
+                            style={{
+                                backgroundColor: Theme.palette.primary.dark
+                            }}
                         >
                             <Avatar
-                                style={{backgroundColor: Theme.palette.primary.dark}}>
+                                style={{
+                                    backgroundColor: Theme.palette.primary.dark
+                                }}
+                            >
                                 <KeyboardArrowLeft
-                                    style={{color: Theme.palette.primary.contrastText}}/>
+                                    style={{
+                                        color:
+                                            Theme.palette.primary.contrastText
+                                    }}
+                                />
                             </Avatar>
                             <Typography
-                                style={{color: Theme.palette.primary.contrastText}}
+                                style={{
+                                    color: Theme.palette.primary.contrastText
+                                }}
                             >
                                 Close
                             </Typography>
@@ -80,4 +109,9 @@ export default ({settings, setSelectedSettings}) => {
             </div>
         </div>
     );
+}
+SettingsButton.displayName = "SettingsButton";
+SettingsButton.propTypes = {
+    settings: PropTypes.any
 };
+export default SettingsButton;

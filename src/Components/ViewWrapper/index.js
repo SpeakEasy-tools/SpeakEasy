@@ -1,1 +1,1 @@
-export {default as ViewWrapper} from './ViewWrapper';
+export { default as ViewWrapper } from "./ViewWrapper";

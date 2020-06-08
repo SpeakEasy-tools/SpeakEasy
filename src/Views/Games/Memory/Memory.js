@@ -1,32 +1,30 @@
-import React, {useEffect, useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
-import {ViewWrapper} from "../../../Components/ViewWrapper";
+import { ViewWrapper } from "../../../Components/ViewWrapper";
 import Settings from "./Settings";
 import Instructions from "./Instructions";
-import {GetRandomLessons} from "../../../Queries";
+import { GetRandomLessons } from "../../../Queries";
 import Board from "./Board";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: '100%',
-        display: 'flex',
-        flexFlow: 'row wrap',
+        height: "100%",
+        display: "flex",
+        flexFlow: "row wrap"
     },
     row: {
-        flex: '1 1 100%'
+        flex: "1 1 100%"
     },
-    column: {},
-    content: {},
     pad: {
         margin: theme.spacing(1),
-        flex: '1 1 100px',
-    },
+        flex: "1 1 100px"
+    }
 }));
 
-export default () => {
-    document.title = 'Memory';
+function Memory() {
+    document.title = "Memory";
     const classes = useStyles(Theme);
 
     const [language, setLanguage] = useState(null);
@@ -51,12 +49,12 @@ export default () => {
     };
 
     const [tileCount, setTileCount] = useState(null);
-    const [lessons, ] = GetRandomLessons(tileCount);
+    const [lessons] = GetRandomLessons(tileCount);
     const [tiles, setTiles] = useState(null);
 
     useEffect(() => {
         if (!lessons) return;
-        setTiles(lessons.map(l => l.lesson))
+        setTiles(lessons.map(l => l.lesson));
     }, [lessons]);
 
     useEffect(() => {
@@ -64,7 +62,6 @@ export default () => {
         const t = Math.floor(boardSize.size / 2);
 
         setTileCount(t);
-
     }, [boardSize]);
 
     return (
@@ -82,7 +79,12 @@ export default () => {
                     tiles={tiles}
                     language={language.text}
                     setScore={setScore}
-                    setTime={setTime}/>)}
+                    setTime={setTime}
+                />
+            )}
         </div>
-    )
+    );
 }
+
+Memory.displayName = "Memory";
+export default Memory;

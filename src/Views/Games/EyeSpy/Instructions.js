@@ -1,20 +1,17 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
 
-const useStyles = makeStyles(theme => ({
-    root: {
-
-    }
+const useStyles = makeStyles(() => ({
+    root: {}
 }));
 
-export default () => {
+function Instructions() {
     const classes = useStyles(Theme);
 
-    return (
-        <div className={clsx(classes.root)}>
+    return <div className={clsx(classes.root)} />;
+}
 
-        </div>
-    );
-};
+Instructions.displayName = "Instructions";
+export default Instructions;

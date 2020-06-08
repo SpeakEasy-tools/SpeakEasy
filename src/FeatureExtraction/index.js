@@ -1,1 +1,1 @@
-export {default as F0} from './F0';
+export { default as F0 } from "./F0";

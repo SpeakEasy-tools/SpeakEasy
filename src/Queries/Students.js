@@ -1,11 +1,11 @@
 import gql from "graphql-tag";
-import {useEffect, useState} from "react";
-import {useMutation, useQuery} from "@apollo/react-hooks";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 export const GetStudents = courseId => {
     const STUDENTS = gql`
         query getStudents($courseId: Int!) {
-            courses (where: {id: {_eq: $courseId}}) {
+            courses(where: { id: { _eq: $courseId } }) {
                 courses_students {
                     user {
                         id
@@ -18,24 +18,24 @@ export const GetStudents = courseId => {
     `;
 
     const [students, setStudents] = useState(null);
-    const {data, refetch} = useQuery(STUDENTS, {
+    const { data, refetch } = useQuery(STUDENTS, {
         variables: {
             courseId: courseId
         },
         fetchPolicy: "cache-and-network"
     });
     useEffect(() => {
-        if(!data) return;
-        setStudents(data['courses'][0]['courses_students']);
+        if (!data) return;
+        setStudents(data["courses"][0]["courses_students"]);
     }, [data]);
 
-    return [students, refetch]
+    return [students, refetch];
 };
 
 export const GetStudentsCourses = userId => {
     const STUDENTS_COURSES = gql`
         query getStudentsCourses($userId: String!) {
-            students (where: {user_id: {_eq: $userId}}) {
+            students(where: { user_id: { _eq: $userId } }) {
                 course {
                     id
                     name
@@ -47,18 +47,18 @@ export const GetStudentsCourses = userId => {
     `;
 
     const [students, setStudents] = useState(null);
-    const {data, refetch} = useQuery(STUDENTS_COURSES, {
+    const { data, refetch } = useQuery(STUDENTS_COURSES, {
         variables: {
             userId: userId
-        },
+        }
     });
     useEffect(() => {
-        if(!data) return;
+        if (!data) return;
         console.log(data);
-        setStudents(data['students'].map(d => d['course']));
+        setStudents(data["students"].map(d => d["course"]));
     }, [data]);
 
-    return [students, refetch]
+    return [students, refetch];
 };
 
 /* Insert a configuration */
@@ -66,10 +66,12 @@ export const InsertStudent = (userId, registration_code) => {
     /* A GraphQL mutation. Mutations are like queries except they modify the graph. This one accepts variables. */
     const INSERT_STUDENTS = gql`
         mutation insertStudents($userId: String!, $registration_code: String!) {
-            insert_students(objects: {
-                user_id: $userId,
-                registration_code: $registration_code
-            }) {
+            insert_students(
+                objects: {
+                    user_id: $userId
+                    registration_code: $registration_code
+                }
+            ) {
                 affected_rows
                 returning {
                     id
@@ -81,21 +83,23 @@ export const InsertStudent = (userId, registration_code) => {
     /* useMutation returns a function for calling the mutation and the data returned. This mutation only returns the
      * number of configurations returned.
      */
-    const [insertStudents, {data}] = useMutation(INSERT_STUDENTS);
+    const [insertStudents, { data }] = useMutation(INSERT_STUDENTS);
     const [affectedRows, setAffectedRows] = useState(null);
 
     /* Check the configuration and call the mutation */
     useEffect(() => {
-        if(!(userId && registration_code)) return;
-        insertStudents({variables: {
+        if (!(userId && registration_code)) return;
+        insertStudents({
+            variables: {
                 userId: userId,
                 registration_code: registration_code
-            }});
+            }
+        });
     }, [userId, registration_code, insertStudents]);
     /* Check the return value of the mutation and set output */
     useEffect(() => {
-        if(!(data && data['insert_students'])) return;
-        setAffectedRows(data['insert_students']);
+        if (!(data && data["insert_students"])) return;
+        setAffectedRows(data["insert_students"]);
     }, [data]);
 
     return affectedRows;
@@ -104,7 +108,7 @@ export const InsertStudent = (userId, registration_code) => {
 export const GetStudentProfile = userId => {
     const STUDENTS_PROFILE = gql`
         query getStudentProfile($userId: String!) {
-            students (where: {user_id: {_eq: $userId}}) {
+            students(where: { user_id: { _eq: $userId } }) {
                 course {
                     id
                     name
@@ -144,15 +148,15 @@ export const GetStudentProfile = userId => {
     `;
 
     const [profile, setProfile] = useState(null);
-    const {data, refetch} = useQuery(STUDENTS_PROFILE, {
+    const { data, refetch } = useQuery(STUDENTS_PROFILE, {
         variables: {
             userId: userId
-        },
+        }
     });
     useEffect(() => {
-        if(!data) return;
-        setProfile(data['students']);
+        if (!data) return;
+        setProfile(data["students"]);
     }, [data]);
 
-    return [profile, refetch]
-}
+    return [profile, refetch];
+};

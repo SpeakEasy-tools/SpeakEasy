@@ -1,22 +1,21 @@
-import React, {
-    useState,
-    useEffect,
-    useContext,
-    createContext
-} from "react";
+import PropTypes from "prop-types";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import firebase from "firebase/app";
-import 'firebase/auth';
-import {CONFIG} from "./FirebaseConfig";
+import "firebase/auth";
+import { CONFIG } from "./FirebaseConfig";
 
 firebase.initializeApp(CONFIG);
-const functions = firebase.functions;
 
 const authContext = createContext({});
 
-export function ProvideAuth({children}) {
-    const auth = useProvideAuth()
+export function ProvideAuth({ children }) {
+    const auth = useProvideAuth();
     return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
+ProvideAuth.displayName = "ProvideAuth";
+ProvideAuth.propTypes = {
+    children: PropTypes.any
+};
 
 export const useAuth = () => {
     return useContext(authContext);
@@ -78,22 +77,37 @@ function useProvideAuth() {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 setUser(user);
-                return user.getIdToken().then(token => firebase.auth().currentUser.getIdTokenResult()
-                    .then(result => {
-                        if(result.claims['https://hasura.io/jwt/claims']) {
-                            return token
-                        }
-                        const endpoint = '/refreshToken'
-                        return fetch(`${endpoint}?uid=${user.uid}`).then(res => {
-                            if(res.status === 200) {
-                                return user.getIdToken(true);
-                            }
-                            return res.json().then(e => {throw e})
-                        })
+                return user
+                    .getIdToken()
+                    .then(token =>
+                        firebase
+                            .auth()
+                            .currentUser.getIdTokenResult()
+                            .then(result => {
+                                if (
+                                    result.claims[
+                                        "https://hasura.io/jwt/claims"
+                                    ]
+                                ) {
+                                    return token;
+                                }
+                                const endpoint = "/refreshToken";
+                                return fetch(
+                                    `${endpoint}?uid=${user.uid}`
+                                ).then(res => {
+                                    if (res.status === 200) {
+                                        return user.getIdToken(true);
+                                    }
+                                    return res.json().then(e => {
+                                        throw e;
+                                    });
+                                });
+                            })
+                    )
+                    .then(validToken => {
+                        setToken(validToken);
                     })
-                ).then(validToken => {
-                    setToken(validToken);
-                }).catch(console.error)
+                    .catch(console.error);
             }
         });
 

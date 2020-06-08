@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
-import {ViewWrapper} from "../../../Components/ViewWrapper";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { ViewWrapper } from "../../../Components/ViewWrapper";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import DataPicker from "./DataPicker";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import {Check, Delete, HelpOutline} from "@material-ui/icons";
+import { Check, Delete, HelpOutline } from "@material-ui/icons";
 import Avatar from "@material-ui/core/Avatar";
-import {Modal} from "@material-ui/core";
+import { Modal } from "@material-ui/core";
 import DataFormats from "./DataFormats";
 import DataValidator from "./DataValidator";
 import DataGraph from "./DataGraph";
@@ -16,31 +16,31 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: '100%',
-        height: '100%',
+        width: "100%",
+        height: "100%"
     },
     content: {
-        width: '100%',
-        height: '50%',
-        padding: theme.spacing(1),
+        width: "100%",
+        height: "50%",
+        padding: theme.spacing(1)
     },
     row: {
-        width: '100%',
-        height: 'auto',
-        display: 'flex',
-        justifyContent: 'start',
-        alignItems: 'center'
+        width: "100%",
+        height: "auto",
+        display: "flex",
+        justifyContent: "start",
+        alignItems: "center"
     },
     pad: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(1)
     },
     graph: {
-        flex: '1 1 100%',
+        flex: "1 1 100%"
     }
 }));
 
-export default () => {
-    document.title = 'Time Series Analyzer';
+const TimeSeries = () => {
+    document.title = "Time Series Analyzer";
     const classes = useStyles(Theme);
 
     const [rawFiles, setRawFiles] = useState(null);
@@ -75,7 +75,7 @@ export default () => {
         setData(null);
         setXLabel(null);
         setSeriesNames(null);
-    }
+    };
 
     useEffect(() => {
         if (!rawFiles) return;
@@ -84,7 +84,7 @@ export default () => {
     useEffect(() => {
         if (!parsedFiles) return;
         let joined = [];
-        parsedFiles.forEach(p => joined = joined.concat([...p.data]));
+        parsedFiles.forEach(p => (joined = joined.concat([...p.data])));
         let s = new Set();
         parsedFiles.forEach(p => p.series.forEach(ps => s.add(ps)));
         setSeriesNames([...s]);
@@ -100,85 +100,137 @@ export default () => {
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
-                <ViewWrapper/>
+                <ViewWrapper />
             </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
-                    <Typography
-                        variant='h4'
-                    >
+                    <Typography variant="h4">
                         Step 1. Select your data
                     </Typography>
                 </div>
 
                 <div className={clsx(classes.pad)}>
-                    <Check fontSize='large'
-                           style={{color: stepOpen > 1 ? Theme.palette.primary.contrastText : Theme.palette.primary.main}}/>
+                    <Check
+                        fontSize="large"
+                        style={{
+                            color:
+                                stepOpen > 1
+                                    ? Theme.palette.primary.contrastText
+                                    : Theme.palette.primary.main
+                        }}
+                    />
                 </div>
                 <div className={clsx(classes.pad)}>
-                    <Button style={{backgroundColor: Theme.palette.primary.main}} onClick={handleFormatOpen}>
-                        <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
-                            <HelpOutline fontSize='large' style={{color: Theme.palette.primary.contrastText}}/>
+                    <Button
+                        style={{ backgroundColor: Theme.palette.primary.main }}
+                        onClick={handleFormatOpen}
+                    >
+                        <Avatar
+                            style={{
+                                backgroundColor: Theme.palette.primary.main
+                            }}
+                        >
+                            <HelpOutline
+                                fontSize="large"
+                                style={{
+                                    color: Theme.palette.primary.contrastText
+                                }}
+                            />
                         </Avatar>
                         <Typography>Formatting</Typography>
                     </Button>
-                    <Modal open={formatOpen} onClose={handleFormatClose}>{DataFormats()}</Modal>
+                    <Modal open={formatOpen} onClose={handleFormatClose}>
+                        {DataFormats()}
+                    </Modal>
                 </div>
                 <div className={clsx(classes.pad)}>
-                    <Button style={{backgroundColor: Theme.palette.primary.main}} onClick={restart}>
-                        <Avatar style={{backgroundColor: Theme.palette.primary.main}}>
-                            <Delete fontSize='large' style={{color: Theme.palette.primary.contrastText}}/>
+                    <Button
+                        style={{ backgroundColor: Theme.palette.primary.main }}
+                        onClick={restart}
+                    >
+                        <Avatar
+                            style={{
+                                backgroundColor: Theme.palette.primary.main
+                            }}
+                        >
+                            <Delete
+                                fontSize="large"
+                                style={{
+                                    color: Theme.palette.primary.contrastText
+                                }}
+                            />
                         </Avatar>
                         <Typography>Restart</Typography>
                     </Button>
                 </div>
             </div>
-            <Divider/>
+            <Divider />
             {stepOpen === 1 && (
                 <div className={clsx(classes.content)}>
-                    <DataPicker files={rawFiles} setFiles={setRawFiles}/>
+                    <DataPicker files={rawFiles} setFiles={setRawFiles} />
                 </div>
             )}
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
-                    <Typography
-                        variant='h4'
-                    >
+                    <Typography variant="h4">
                         Step 2. Validate your data
                     </Typography>
                 </div>
 
                 <div className={clsx(classes.pad)}>
-                    <Check fontSize='large'
-                           style={{color: stepOpen > 2 ? Theme.palette.primary.contrastText : Theme.palette.primary.main}}/>
+                    <Check
+                        fontSize="large"
+                        style={{
+                            color:
+                                stepOpen > 2
+                                    ? Theme.palette.primary.contrastText
+                                    : Theme.palette.primary.main
+                        }}
+                    />
                 </div>
             </div>
-            <Divider/>
+            <Divider />
             {stepOpen === 2 && (
                 <div className={clsx(classes.content)}>
-                    <DataValidator rawFiles={rawFiles} setParsedFiles={setParsedFiles} removeFile={removeFile}/>
+                    <DataValidator
+                        rawFiles={rawFiles}
+                        setParsedFiles={setParsedFiles}
+                        removeFile={removeFile}
+                    />
                 </div>
             )}
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
-                    <Typography
-                        variant='h4'
-                    >
+                    <Typography variant="h4">
                         Step 3. Analyze your data
                     </Typography>
                 </div>
 
                 <div className={clsx(classes.pad)}>
-                    <Check fontSize='large'
-                           style={{color: stepOpen > 3 ? Theme.palette.primary.contrastText : Theme.palette.primary.main}}/>
+                    <Check
+                        fontSize="large"
+                        style={{
+                            color:
+                                stepOpen > 3
+                                    ? Theme.palette.primary.contrastText
+                                    : Theme.palette.primary.main
+                        }}
+                    />
                 </div>
             </div>
-            <Divider/>
+            <Divider />
             {stepOpen === 3 && (
                 <div className={clsx(classes.content)}>
-                    <DataGraph data={data} xLabel={xLabel} seriesNames={seriesNames}/>
+                    <DataGraph
+                        data={data}
+                        xLabel={xLabel}
+                        seriesNames={seriesNames}
+                    />
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
+
+TimeSeries.displayName = "TimeSeries";
+export default TimeSeries;

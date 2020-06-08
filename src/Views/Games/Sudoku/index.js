@@ -1,1 +1,1 @@
-export {default as Sudoku} from './Sudoku';
+export { default as Sudoku } from "./Sudoku";

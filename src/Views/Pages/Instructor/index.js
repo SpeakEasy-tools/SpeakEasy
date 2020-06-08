@@ -1,1 +1,1 @@
-export {default as Instructor} from './Instructor';
+export { default as Instructor } from "./Instructor";

@@ -1,28 +1,32 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import { Theme } from "../../../utils";
+import clsx from "clsx";
 import { ViewWrapper } from "../../../Components/ViewWrapper";
 
 const useStyles = makeStyles(theme => ({
     root: {
+        height: "100%"
+    },
+    content: {
+        padding: theme.spacing(1),
+        flex: "1 1 100%",
         height: "100%",
         display: "flex",
-        flexFlow: "row wrap"
+        flexFlow: "column noWrap"
     },
     row: {
-        flex: "1 1 100%"
+        width: "100%",
+        display: "flex"
     },
-    column: {},
-    content: {},
     pad: {
         margin: theme.spacing(1),
-        flex: "1 1 100px"
+        padding: theme.spacing(1)
     }
 }));
 
-function FAQ() {
-    document.title = "FAQs";
+function Flashcards() {
+    document.title = "Flash Cards";
     const classes = useStyles(Theme);
 
     return (
@@ -33,6 +37,5 @@ function FAQ() {
         </div>
     );
 }
-
-FAQ.displayName = "FAQ";
-export default FAQ;
+Flashcards.displayName = "Flashcards";
+export default Flashcards;

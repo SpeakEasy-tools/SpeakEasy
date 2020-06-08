@@ -1,1 +1,1 @@
-export {default as _2048} from './2048'
+export { default as TwentyFortyEight } from "./TwentyFortyEight";

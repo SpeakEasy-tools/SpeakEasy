@@ -1,11 +1,11 @@
 import gql from "graphql-tag";
-import {useEffect, useState} from "react";
-import {useQuery} from "@apollo/react-hooks";
+import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/react-hooks";
 
 export const GetCorpus = grapheme => {
     const CORPUS = gql`
         query getCorpus($graphemes: String!) {
-            corpus (limit: 10, where: {graphemes: {_eq: $graphemes}}) {
+            corpus(limit: 10, where: { graphemes: { _eq: $graphemes } }) {
                 id
                 graphemes
                 phonemes
@@ -16,7 +16,7 @@ export const GetCorpus = grapheme => {
     `;
 
     const [corpus, setCorpus] = useState(null);
-    const {data, refetch} = useQuery(CORPUS, {
+    const { data, refetch } = useQuery(CORPUS, {
         variables: {
             graphemes: grapheme
         },
@@ -27,12 +27,12 @@ export const GetCorpus = grapheme => {
         setCorpus(data.corpus);
     }, [data]);
 
-    return [corpus, refetch]
+    return [corpus, refetch];
 };
 export const GetCorpusById = id => {
     const CORPUS = gql`
         query getCorpus($id: String!) {
-            corpus (limit: 10, where: {id: {_eq: $id}}) {
+            corpus(limit: 10, where: { id: { _eq: $id } }) {
                 id
                 graphemes
                 phonemes
@@ -43,7 +43,7 @@ export const GetCorpusById = id => {
     `;
 
     const [corpus, setCorpus] = useState(null);
-    const {data, refetch} = useQuery(CORPUS, {
+    const { data, refetch } = useQuery(CORPUS, {
         variables: {
             id: id
         },
@@ -54,26 +54,29 @@ export const GetCorpusById = id => {
         setCorpus(data.corpus);
     }, [data]);
 
-    return [corpus, refetch]
+    return [corpus, refetch];
 };
 
 export const GetRandomCorpus = grapheme => {
     const RANDOM_CORPUS = gql`
         query getRandomCorpus($graphemes: String!) {
-            random_corpus (limit: 10, where: {corpus: {graphemes: {_eq: $graphemes}}}) {
+            random_corpus(
+                limit: 10
+                where: { corpus: { graphemes: { _eq: $graphemes } } }
+            ) {
                 corpus {
-                id
-                graphemes
-                phonemes
-                wav
-                is_good
+                    id
+                    graphemes
+                    phonemes
+                    wav
+                    is_good
                 }
             }
         }
     `;
 
     const [corpus, setCorpus] = useState(null);
-    const {data, refetch} = useQuery(RANDOM_CORPUS, {
+    const { data, refetch } = useQuery(RANDOM_CORPUS, {
         variables: {
             graphemes: grapheme
         },
@@ -84,6 +87,5 @@ export const GetRandomCorpus = grapheme => {
         setCorpus(data.random_corpus);
     }, [data]);
 
-    return [corpus, refetch]
+    return [corpus, refetch];
 };
-

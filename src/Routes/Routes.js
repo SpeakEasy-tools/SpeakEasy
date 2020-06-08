@@ -20,7 +20,6 @@ import {
     TimeSeries,
     ToneTrainer,
     WordSearch
-
 } from "../Views";
 
 /*
@@ -93,8 +92,8 @@ export const TONE_TRAINER = {
     component: ToneTrainer
 };
 export const WORD_SEARCH = {
-    path: '/word_search', 
-    name: 'Word Search', 
+    path: "/word_search", 
+    name: "Word Search", 
     component: WordSearch
 };
 

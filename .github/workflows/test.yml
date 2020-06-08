@@ -1,0 +1,26 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    env:
+      node-version: 12.x
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ env.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node-version }}
+
+    - run: yarn install --frozen-lockfile
+
+    - run: yarn lint

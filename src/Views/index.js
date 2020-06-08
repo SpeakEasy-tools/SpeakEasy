@@ -9,6 +9,7 @@ export {TileSlider} from './Games/TileSlider';
 export {TotD} from './Games/TypingOfTheDead';
 export {Uno} from './Games/Uno';
 export {WoF} from './Games/WheelOfFortune';
+export {WordSearch} from './Games/WordSearch';
 
 export {About} from './Pages/About';
 export {Configs} from './Pages/Configs';

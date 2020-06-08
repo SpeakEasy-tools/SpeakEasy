@@ -24,7 +24,8 @@ import {
     ToneTrainer,
     TotD,
     Uno,
-    WoF
+    WoF,
+    WordSearch
 } from '../Views';
 
 /*
@@ -46,6 +47,7 @@ export const TILE_SLIDER = {path: '/tile_slider', name: 'Tile Slider', component
 export const TD = {path: '/typing_of_the_dead', name: 'Typing of the Dead', component: TotD};
 export const UNO = {path: '/uno', name: 'Uno', component: Uno};
 export const WF = {path: '/wheel_of_fortune', name: 'Wheel of Fortune', component: WoF};
+export const WS = {path: '/word_search', name: 'Word Search', component: WordSearch};
 
 export const ABOUT = {path: '/about', name: 'About', component: About};
 export const CONTACT = {path: '/contact', name: 'Contact', component: Contact};
@@ -74,6 +76,7 @@ const routes = [
     TD,
     UNO,
     WF,
+    WS,
     ABOUT,
     CONTACT,
     FAQS,

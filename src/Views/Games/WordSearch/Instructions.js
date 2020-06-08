@@ -15,8 +15,7 @@ export default () => {
     return (
         <div className={clsx(classes.root)}>
         <p>
-        The goal of Sudoku is to fill the entire grid with so that each column, row, and 3 x 3 sub
-        grid contain every number from one to nine.
+        Click and drag to select words hidden within the grid.
         </p>
         </div>
     );

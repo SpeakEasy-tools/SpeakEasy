@@ -1,55 +1,56 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import {Theme} from "../../../utils";
 import clsx from "clsx";
 import {ViewWrapper} from "../../../Components/ViewWrapper";
-import Board from "./Board";
 import Settings from "./Settings";
 import Instructions from "./Instructions";
 
 const useStyles = makeStyles(theme => ({
     root: {
         height: '100%',
+    },
+    content: {
+        padding: theme.spacing(1),
+        flex: '1 1 100%',
+        height: '100%',
         display: 'flex',
-        flexFlow: 'row wrap',
+        flexFlow: 'column noWrap',
     },
     row: {
-        flex: '1 1 100%'
+        width: '100%',
+        display: 'flex',
     },
-    column: {},
-    content: {},
     pad: {
-        margin: theme.spacing(1),
+        padding: theme.spacing(1),
         flex: '1 1 100px',
-    },
+    }
 }));
 
 export default () => {
-    document.title = "Sudoku";
-    const [language, setLanguage] = useState(null);
+    document.title = 'Word Search';
     const classes = useStyles(Theme);
+
+    const [language, setLanguage] = useState(null);
+
     const settings = Settings(language, setLanguage);
     const instructions = Instructions();
+    const [score, setScore] = useState(0);
 
-    const handleClick = () => {
-
-    }
     const getSettings = () => {
         return settings;
     };
     const getInstructions = () => {
         return instructions;
     };
-    return (
+
+      return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <ViewWrapper
                     settings={getSettings}
                     instructions={getInstructions}
                 />
-            </div>
-            <div className={clsx(classes.row)}>
-                <Board handleClick={handleClick}/>
             </div>
         </div>
     )

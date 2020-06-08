@@ -12,7 +12,6 @@ const useStyles = makeStyles(() => ({
     pad: {}
 }));
 
-
 const languages = [
     { text: "English" },
     { text: "Pinyin" },
@@ -45,7 +44,6 @@ function TwentyFortyEight(language, setLanguage) {
                 </div>
             </div>
         </div>
-
     );
 }
 TwentyFortyEight.displayName = "TwentyFortyEight";

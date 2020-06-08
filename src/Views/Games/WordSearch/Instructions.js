@@ -1,22 +1,44 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root: {
-    	whiteSpace: 'pre-line'
+        height: "100%",
+        display: "flex",
+        flexFlow: "row wrap",
+        overflow: "auto"
+    },
+    row: {
+        display: "flex",
+        flex: "1 1 100%"
+    },
+    pad: {
+        padding: theme.spacing(0)
     }
 }));
 
-export default () => {
+function Instructions() {
     const classes = useStyles(Theme);
 
     return (
         <div className={clsx(classes.root)}>
-        <p>
-        Click and drag to select words hidden within the grid.
-        </p>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad)}>
+                    <Typography variant="h2">Instructions</Typography>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad)}>
+                    <Typography paragraph>
+                        Click and drag to select words hidden within the grid.
+                    </Typography>
+                </div>
+            </div>
         </div>
     );
-};
+}
+Instructions.displayName = "Instructions";
+export default Instructions;

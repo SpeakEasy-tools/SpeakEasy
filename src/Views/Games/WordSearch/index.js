@@ -1,1 +1,1 @@
-export {default as WordSearch} from './WordSearch';
+export { default as WordSearch } from "./WordSearch";

@@ -1,18 +1,25 @@
+import PropTypes from "prop-types";
 import React from "react";
-import {makeStyles} from "@material-ui/core/styles";
-import {Theme} from "../../../utils";
+import { makeStyles } from "@material-ui/core/styles";
+import { Theme } from "../../../utils";
 import clsx from "clsx";
-import {TextField} from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {},
     column: {},
     pad: {}
 }));
 
-const languages = [{text: 'English'}, {text: 'Pinyin'}, {text: 'Chinese'}, {text: 'Adaptive'}, {text: 'Chaos'}];
-export default (language, setLanguage) => {
+const languages = [
+    { text: "English" },
+    { text: "Pinyin" },
+    { text: "Chinese" },
+    { text: "Adaptive" },
+    { text: "Chaos" }
+];
+function TwentyFortyEight(language, setLanguage) {
     const classes = useStyles(Theme);
 
     return (
@@ -20,16 +27,28 @@ export default (language, setLanguage) => {
             <div className={clsx(classes.column)}>
                 <div className={clsx(classes.pad)}>
                     <Autocomplete
-                        id='language-select'
+                        id="language-select"
                         options={languages}
                         value={language}
                         getOptionLabel={option => option.text}
-                        style={{width: 150}}
+                        style={{ width: 150 }}
                         onChange={(e, v) => setLanguage(v)}
-                        renderInput={params => <TextField {...params} label='Select language' margin='none'/>}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label="Select language"
+                                margin="none"
+                            />
+                        )}
                     />
                 </div>
             </div>
         </div>
-    )
+    );
 }
+TwentyFortyEight.displayName = "TwentyFortyEight";
+TwentyFortyEight.propTypes = {
+    language: PropTypes.any,
+    setLanguage: PropTypes.any
+};
+export default TwentyFortyEight;

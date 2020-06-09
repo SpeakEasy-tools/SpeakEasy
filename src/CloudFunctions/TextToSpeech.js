@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import { translate } from "./Translate";
 
 const Synthesize = firebase.functions().httpsCallable("synthesize");
 const Voices = firebase.functions().httpsCallable("voices");
@@ -9,18 +10,32 @@ export async function synthesizeSpeech(text, language) {
         Synthesize({ text: text, languageCode: language })
             .then(res => storageRef.child(res.data))
             .then(child => child.getDownloadURL())
+            .catch(() => "404")
     );
 }
 
-export function getVoices() {
-    const results = {};
-    new Promise(() =>
+export async function getVoices() {
+    return await Promise.resolve(
         Voices()
             .then(result => result.data)
             .then(data => data[0])
             .then(d => d["voices"])
-            .then(vs => (results["voices"] = vs))
     );
-
-    return results;
 }
+
+async function TextToSpeech(text, language) {
+    const translation = await Promise.resolve(translate(text, language.code));
+    const synth = await Promise.resolve(
+        synthesizeSpeech(translation, language.code).catch(console.error)
+    ).catch(console.error);
+
+    return {
+        text: text,
+        language: { ...language },
+        translation: translation,
+        audioUrl: synth
+    };
+}
+
+TextToSpeech.displayName = "TextToSpeech";
+export default TextToSpeech;

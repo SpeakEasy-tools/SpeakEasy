@@ -17,4 +17,4 @@ export { Dictionary } from "./Tools/Dictionary";
 export { Flashcards } from "./Tools/FlashCards";
 export { PopQuiz } from "./Tools/PopQuiz";
 export { TimeSeries } from "./Tools/TimeSeries";
-export { ToneTrainer } from "./Tools/ToneTrainer";
+export { ToneTrainerView } from "./Tools/ToneTrainerView";

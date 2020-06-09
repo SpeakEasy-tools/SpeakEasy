@@ -4,14 +4,10 @@ const DetectLanguage = firebase.functions().httpsCallable("detectLanguage");
 const ListLanguages = firebase.functions().httpsCallable("listLanguages");
 const Translate = firebase.functions().httpsCallable("translate");
 
-export function detectLanguage(text) {
-    const results = {};
-    new Promise(() =>
-        DetectLanguage({ text: text })
-            .then(result => result.data)
-            .then(data => (results["languages"] = data))
+export async function detectLanguage(text) {
+    return await Promise.resolve(
+        DetectLanguage({ text: text }).then(result => result.data)
     );
-    return results;
 }
 
 export async function listLanguages() {
@@ -22,14 +18,10 @@ export async function listLanguages() {
     );
 }
 
-export function translate(text, target) {
-    const results = {};
-    new Promise(() =>
+export async function translate(text, target) {
+    return await Promise.resolve(
         Translate({ text: text, target: target })
             .then(result => result.data)
             .then(data => data[0])
-            .then(d => (results["translation"] = d))
     );
-
-    return results;
 }

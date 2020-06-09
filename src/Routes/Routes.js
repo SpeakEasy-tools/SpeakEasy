@@ -18,7 +18,7 @@ import {
     Sudoku,
     TileSlider,
     TimeSeries,
-    ToneTrainer
+    ToneTrainerView
 } from "../Views";
 
 /*
@@ -88,7 +88,7 @@ export const TIME_SERIES = {
 export const TONE_TRAINER = {
     path: "/tone_trainer",
     name: "Tone Trainer",
-    component: ToneTrainer
+    component: ToneTrainerView
 };
 
 export const CONFIGS = {

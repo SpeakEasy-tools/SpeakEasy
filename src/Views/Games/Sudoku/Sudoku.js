@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { ViewWrapper } from "../../../Components/ViewWrapper";
 import Board from "./Board";
 import Settings from "./Settings";
+import Instructions from "./Instructions";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,15 +29,22 @@ function Sudoku() {
     const [language, setLanguage] = useState(null);
     const classes = useStyles(Theme);
     const settings = Settings(language, setLanguage);
+    const instructions = Instructions();
 
     const handleClick = () => {};
     const getSettings = () => {
         return settings;
     };
+    const getInstructions = () => {
+        return instructions;
+    };
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
-                <ViewWrapper settings={getSettings} />
+                <ViewWrapper
+                    settings={getSettings}
+                    instructions={getInstructions}
+                />
             </div>
             <div className={clsx(classes.row)}>
                 <Board handleClick={handleClick} />

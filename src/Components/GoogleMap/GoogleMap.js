@@ -93,7 +93,6 @@ function GoogleMap({
             updatePovOut(panorama);
 
             panorama.addListener("pov_changed", function() {
-                console.log("updated");
                 updatePovOut(panorama);
             });
         }

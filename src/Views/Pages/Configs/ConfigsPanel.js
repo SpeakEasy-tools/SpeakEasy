@@ -74,7 +74,6 @@ function ConfigsPanel({ moduleId, moduleName }) {
     const [tabIndex, setTabIndex] = useState(0);
 
     const [newName, setNewName] = useState("");
-    const [newConfig, setNewConfig] = useState({});
 
     const [insertName, setInsertName] = useState(null);
     const [insertConfig, setInsertConfig] = useState(null);
@@ -122,20 +121,20 @@ function ConfigsPanel({ moduleId, moduleName }) {
     const handleClear = () => {
         setDropZoneKey(prevState => prevState + 1);
         setNewName("");
-        setNewConfig({});
         setInsertName(null);
         setInsertConfig(null);
+        setFiles([]);
     };
     const handleCancel = () => {
         setNewName("");
-        setNewConfig({});
         setEditName(null);
         setEditConfig(null);
         setEdit(false);
+        setFiles([]);
     };
     const handleEdit = () => {
         setEditName(newName);
-        setEditConfig(newConfig);
+        setEditConfig({ ...jsonEditor.get(), files: files });
     };
 
     useEffect(() => {
@@ -168,7 +167,7 @@ function ConfigsPanel({ moduleId, moduleName }) {
     }, [rowsEdited]);
     useEffect(() => {
         if (!container) return;
-        setJsonEditor(new JSONEditor(container, {}));
+        setJsonEditor(new JSONEditor(container, { mode: "text" }));
     }, [container]);
 
     return (

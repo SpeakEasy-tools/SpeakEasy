@@ -144,7 +144,7 @@ export const UpdateConfig = (configId, name, config) => {
             variables: {
                 configId: configId,
                 name: name,
-                config: config
+                config: JSON.stringify(config)
             }
         });
     }, [configId, name, config, updateConfigs]);

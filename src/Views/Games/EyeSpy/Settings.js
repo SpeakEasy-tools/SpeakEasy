@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
@@ -28,11 +28,23 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Settings({ language, setLanguage, mode, setMode, config, setConfig }) {
+function Settings({
+    language,
+    setLanguage,
+    mode,
+    setMode,
+    config,
+    setConfig,
+    setParsedConfigs
+}) {
     const classes = useStyles(Theme);
 
     const [configs] = GetConfigsByName("eye-spy");
     const parsedConfigs = ParseConfig(configs);
+
+    useEffect(() => {
+        setParsedConfigs(parsedConfigs);
+    }, [parsedConfigs, setParsedConfigs]);
 
     return (
         <div className={clsx(classes.root)}>
@@ -106,6 +118,7 @@ Settings.propTypes = {
     mode: PropTypes.any,
     setMode: PropTypes.any,
     config: PropTypes.any,
-    setConfig: PropTypes.any
+    setConfig: PropTypes.any,
+    setParsedConfigs: PropTypes.any
 };
 export default Settings;

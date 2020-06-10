@@ -107,7 +107,11 @@ function Sidebar() {
                         >
                             <ListItemIcon>
                                 <Avatar>
-                                    <img src={user.photoURL} alt="User menu" />
+                                    <img
+                                        src={user.photoURL}
+                                        style={{ maxWidth: "100%" }}
+                                        alt="User menu"
+                                    />
                                 </Avatar>
                             </ListItemIcon>
                         </ListItem>

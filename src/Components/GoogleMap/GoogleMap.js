@@ -1,5 +1,5 @@
 import PropType from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../utils";
 import clsx from "clsx";
@@ -23,18 +23,27 @@ function GoogleMap({
     mapLng,
     svLat,
     svLng,
-    heading,
-    pitch,
-    panoContainer,
+    initialHeading,
+    initialPitch,
+    streetViewContainer,
     setSvPovOut
 }) {
     const classes = useStyles(Theme);
+
+    const [streetView, setStreetView] = useState(null);
 
     useEffect(() => {
         return function cleanupListeners() {
             window.removeEventListener("pov_changed", updatePovOut);
         };
     });
+
+    useEffect(() => {
+        if (streetView) {
+            streetView.setPosition({ lat: svLat, lng: svLng });
+            streetView.setPov({ heading: initialHeading, pitch: initialPitch });
+        }
+    }, [svLat, svLng, initialHeading, initialPitch, streetView]);
 
     const formatMarkers = () => {
         let ms = [];
@@ -53,7 +62,6 @@ function GoogleMap({
 
     const getOptions = () => {
         return {
-            // disableDefaultUI: false,
             fullscreenControl: false,
             streetViewControl: false
         };
@@ -66,16 +74,13 @@ function GoogleMap({
 
     const apiIsLoaded = (map, maps) => {
         if (map) {
-            const panorama = new maps.StreetViewPanorama(panoContainer, {
-                // position: { lat: 42.726884, lng: -73.692533 },
-                // position: { lat: 31.208505, lng: 121.468125 },
+            const panorama = new maps.StreetViewPanorama(streetViewContainer, {
                 position: { lat: parseFloat(svLat), lng: parseFloat(svLng) },
 
                 pov: {
-                    heading: heading,
-                    pitch: pitch
+                    heading: initialHeading,
+                    pitch: initialPitch
                 },
-                // motionTrackingControl: true,
                 linksControl: false,
                 zoomControl: false,
                 panControl: false,
@@ -83,7 +88,9 @@ function GoogleMap({
                 clickToGo: false,
                 disableDefaultUI: true
             });
-            updatePovOut(panorama); // initialize marker placements by setting currentPov
+            setStreetView(panorama);
+            /* initialize PoI placements by setting currentPov */
+            updatePovOut(panorama);
 
             panorama.addListener("pov_changed", function() {
                 updatePovOut(panorama);
@@ -113,14 +120,14 @@ function GoogleMap({
 GoogleMap.displayName = "GoogleMap";
 GoogleMap.propTypes = {
     markers: PropType.any,
-    zoom: PropType,
+    zoom: PropType.any,
     mapLat: PropType.any,
     mapLng: PropType.any,
     svLat: PropType.any,
     svLng: PropType.any,
-    heading: PropType.any,
-    pitch: PropType.any,
-    panoContainer: PropType.any,
+    initialHeading: PropType.any,
+    initialPitch: PropType.any,
+    streetViewContainer: PropType.any,
     setSvPovOut: PropType.any
 };
 export default GoogleMap;

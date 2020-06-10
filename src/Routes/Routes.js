@@ -18,7 +18,8 @@ import {
     Sudoku,
     TileSlider,
     TimeSeries,
-    ToneTrainerView
+    ToneTrainerView,
+    WordSearch
 } from "../Views";
 
 /*
@@ -90,6 +91,11 @@ export const TONE_TRAINER = {
     name: "Tone Trainer",
     component: ToneTrainerView
 };
+export const WORD_SEARCH = {
+    path: "/word_search",
+    name: "Word Search",
+    component: WordSearch
+};
 
 export const CONFIGS = {
     path: "/configs",
@@ -115,7 +121,8 @@ const routes = [
     FLASHCARDS,
     POP_QUIZ,
     TIME_SERIES,
-    TONE_TRAINER
+    TONE_TRAINER,
+    WORD_SEARCH
 ];
 
 const devRoutes = [CONFIGS];

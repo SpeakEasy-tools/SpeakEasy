@@ -26,6 +26,7 @@
     "mic-recorder-to-mp3": "^2.2.1",
     "mui-datatables": "^2.15.0",
     "node-lame": "^1.2.2",
+    "pannellum-react": "^1.2.4",
     "papaparse": "^5.2.0",
     "pitchfinder": "^2.2.1",
     "prop-types": "^15.7.2",

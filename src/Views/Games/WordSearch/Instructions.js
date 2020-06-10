@@ -33,9 +33,7 @@ function Instructions() {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography paragraph>
-                        The goal of Sudoku is to fill the entire grid so that
-                        each column, row, and 3 x 3 grid contains every number
-                        from one to nine.
+                        Click and drag to select words hidden within the grid.
                     </Typography>
                 </div>
             </div>

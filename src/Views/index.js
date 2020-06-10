@@ -3,6 +3,7 @@ export { Memory } from "./Games/Memory";
 export { Sudoku } from "./Games/Sudoku";
 export { TileSlider } from "./Games/TileSlider";
 export { TwentyFortyEight } from "./Games/TwentyFortyEight";
+export { WordSearch } from "./Games/WordSearch";
 
 export { About } from "./Pages/About";
 export { Configs } from "./Pages/Configs";

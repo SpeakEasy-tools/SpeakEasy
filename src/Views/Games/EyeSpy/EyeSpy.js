@@ -1,20 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { Card, GoogleMap, ViewWrapper } from "../../../Components";
+import {
+    Card,
+    GoogleMap,
+    PanoramaViewer,
+    ViewWrapper
+} from "../../../Components";
+import SpyCard from "./SpyCard";
+import NarrativeCard from "./NarrativeCard";
 import Settings from "./Settings";
 import Instructions from "./Instructions";
 import { v4 as uuid } from "uuid";
 
-import { HelpOutline } from "@material-ui/icons";
-
 import povToPixel from "../../../utils/povToPixel";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
-import ToneTrainerComponent from "../../Tools/ToneTrainerView/ToneTrainerComponent";
-import { TextToSpeech } from "../../../CloudFunctions";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         padding: theme.spacing(1)
     },
-    svCard: {
+    spyCard: {
         maxWidth: 300,
         zIndex: 101,
         position: "absolute"
@@ -78,17 +78,21 @@ function EyeSpy() {
     const classes = useStyles(Theme);
 
     /* Reference to the div to place Dynamic Street View */
-    const panoContainer = useRef();
+    const [streetViewContainer, setStreetViewContainer] = useState(null);
 
     /* Variables from Settings Gear */
     const [language, setLanguage] = useState(null);
     const [mode, setMode] = useState(null);
     const [config, setConfig] = useState(null);
+    const [parsedConfigs, setParsedConfigs] = useState(null);
 
     /* Variables from inside config */
+    const [panorama, setPanorama] = useState({});
+    const [panoramaPath, setPanoramaPath] = useState(null);
     const [gmap, setGmap] = useState(null);
     const [pois, setPois] = useState(null);
-    const [vocabulary] = useState(null);
+
+    const [narrative, setNarrative] = useState([]);
 
     /* Variable to keep track of current Point-of-View in Street View */
     const [svPov, setSvPov] = useState(null);
@@ -101,6 +105,8 @@ function EyeSpy() {
             setMode={setMode}
             config={config}
             setConfig={setConfig}
+            parsedConfigs={parsedConfigs}
+            setParsedConfigs={setParsedConfigs}
         />
     );
     const getInstructions = () => <Instructions />;
@@ -109,30 +115,13 @@ function EyeSpy() {
     /* Set state variables from config values */
     useEffect(() => {
         if (!config) return;
+        setPanorama(config.panorama);
+        setPanoramaPath(config["files"][0]);
         setGmap(config.gmap);
         setPois(config.poi);
+        setNarrative(config.narrative);
     }, [config]);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const handleClick = e => {
-        setAnchorEl(e.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const [sample, setSample] = useState({});
-    async function getSample() {
-        return Promise.resolve(
-            TextToSpeech("goodbye children", { code: "es", name: "Spanish" })
-        )
-            .then(s => setSample(s))
-            .catch(console.error);
-    }
-    useEffect(() => {
-        getSample().then();
-    }, []);
-    useEffect(() => {
-        console.log(sample);
-    }, [sample]);
+
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
@@ -143,32 +132,18 @@ function EyeSpy() {
                 />
             </div>
             <div className={clsx(classes.content)}>
-                <IconButton
-                    style={{
-                        position: "absolute",
-                        zIndex: 1000,
-                        color: Theme.palette.primary.contrastText
-                    }}
-                    onClick={handleClick}
-                >
-                    <HelpOutline />
-                </IconButton>
-                <Menu
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <div className={clsx(classes.content)}>
-                        <div className={clsx(classes.row)}>
-                            <div className={clsx(classes.pad)}>
-                                <ToneTrainerComponent sample={sample} />
-                            </div>
-                        </div>
-                    </div>
-                </Menu>
+                {/* Custom Panorama Container */}
+                {panoramaPath && (
+                    <PanoramaViewer
+                        panorama={panorama}
+                        panoramaPath={panoramaPath}
+                        setSvPov={setSvPov}
+                    />
+                )}
+
+                {/* Street View Container */}
                 <div
-                    ref={panoContainer}
+                    ref={elem => setStreetViewContainer(elem)}
                     style={{
                         position: "relative",
                         zIndex: 0,
@@ -179,79 +154,33 @@ function EyeSpy() {
                     }}
                 />
 
-                {/* Add Vocabulary words */}
-                {vocabulary &&
-                    vocabulary.map(v => (
-                        <div
-                            key={uuid()}
-                            className={clsx(classes.svCard)}
-                            id={v.word}
-                            style={povToPixel(
-                                { heading: 0, pitch: 0 }, // this should be {location.heading, location.pitch} from config
-                                // TO-DO: POI pos. var needs updating to reflect new heading and pitch vars
-                                svPov || { heading: 0, pitch: 0 },
-                                panoContainer.current
-                            )}
-                        >
-                            <Card
-                                darkMode
-                                title={() => (
-                                    <div className={clsx(classes.rowCenter)}>
-                                        <div>
-                                            <Typography variant="h6">
-                                                {v.word}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                )}
-                                body={() => (
-                                    <div className={clsx(classes.rowCenter)}>
-                                        <div className={clsx(classes.pad)}>
-                                            <Typography variant="h6">
-                                                {v.pinyin}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                )}
-                            />
-                        </div>
-                    ))}
-
                 {/* Add Points of Interest */}
                 {pois &&
                     pois.map(v => (
                         <div
                             key={uuid()}
-                            className={clsx(classes.svCard)}
+                            className={clsx(classes.spyCard)}
                             style={povToPixel(
-                                { heading: 312, pitch: 5 }, // this should be {location.heading, location.pitch} from config
-                                // TO-DO: POI pos. var needs updating to reflect new heading and pitch vars
+                                { heading: v.x, pitch: v.y },
                                 svPov || { heading: 0, pitch: 0 },
-                                panoContainer.current
+                                streetViewContainer
                             )}
                         >
-                            <Card
-                                title={() => (
-                                    <div className={clsx(classes.rowCenter)}>
-                                        <div className={clsx(classes.pad)}>
-                                            <Typography variant="h6">
-                                                {v.title}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                )}
-                                body={() => (
-                                    <div className={clsx(classes.rowCenter)}>
-                                        <div className={clsx(classes.pad)}>
-                                            <Typography variant="h6">
-                                                {v.body}
-                                            </Typography>
-                                        </div>
-                                    </div>
-                                )}
+                            <SpyCard
+                                poi={v}
+                                setConfig={setConfig}
+                                parsedConfigs={parsedConfigs}
                             />
                         </div>
                     ))}
+
+                {/* NARRATION CARD */}
+                {narrative.length && (
+                    <NarrativeCard
+                        narrative={narrative}
+                        setNarrative={setNarrative}
+                    />
+                )}
 
                 {/* Add Google Map */}
                 {gmap && (
@@ -268,15 +197,21 @@ function EyeSpy() {
                             body={() => (
                                 <div className={clsx(classes.map)}>
                                     <GoogleMap
-                                        panoContainer={panoContainer.current}
+                                        streetViewContainer={
+                                            streetViewContainer
+                                        }
                                         markers={gmap.markers}
                                         zoom={gmap.zoom}
                                         mapLat={gmap.center.lat}
                                         mapLng={gmap.center.lng}
-                                        svLat={gmap.svlat || 31.208505}
-                                        svLng={gmap.svlng || 121.468125}
-                                        heading={gmap.heading || 0}
-                                        pitch={gmap.pitch || 0}
+                                        svLat={panorama.svLat}
+                                        svLng={panorama.svLng}
+                                        initialHeading={
+                                            panorama.initialHeading || 0
+                                        }
+                                        initialPitch={
+                                            panorama.initialPitch || 0
+                                        }
                                         setSvPovOut={setSvPov}
                                     />
                                 </div>

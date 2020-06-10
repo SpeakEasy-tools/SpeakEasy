@@ -3,6 +3,7 @@ export { Card } from "./Card";
 export { GoogleMap } from "./GoogleMap";
 export { HomeButton } from "./HomeButton";
 export { InstructionsButton } from "./InstructionsButton";
+export { PanoramaViewer } from "./PanoramaViewer";
 export { ScoreBoard } from "./ScoreBoard";
 export { SettingsButton } from "./SettingsButton";
 export { Sidebar } from "./Sidebar";

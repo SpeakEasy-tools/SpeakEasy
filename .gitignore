@@ -163,3 +163,6 @@ src/config.js
 # Panoramic images
 images
 images/*
+
+# because Macs are dumb sometimes
+.DS_Store

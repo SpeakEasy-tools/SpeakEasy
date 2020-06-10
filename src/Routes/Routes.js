@@ -39,7 +39,7 @@ export const INSTRUCTOR = {
 };
 
 export const TWENTY_FORTY_EIGHT = {
-    path: "/TwentyFortyEight",
+    path: "/2048",
     name: "2048",
     component: TwentyFortyEight
 };

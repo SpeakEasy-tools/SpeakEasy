@@ -34,6 +34,9 @@ function TonePractice({ attempts }) {
 
     return (
         <div className={clsx(classes.root)}>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad)}></div>
+            </div>
             <List style={{ backgroundColor: Theme.palette.primary.dark }}>
                 <ListItem>
                     <ListItemText primary="Your practice attempts" />

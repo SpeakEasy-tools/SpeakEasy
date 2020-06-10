@@ -7,8 +7,14 @@ import Settings from "./Settings";
 import Instructions from "./Instructions";
 import { v4 as uuid } from "uuid";
 
+import { HelpOutline } from "@material-ui/icons";
+
 import povToPixel from "../../../utils/povToPixel";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import ToneTrainerComponent from "../../Tools/ToneTrainerView/ToneTrainerComponent";
+import { TextToSpeech } from "../../../CloudFunctions";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -106,7 +112,27 @@ function EyeSpy() {
         setGmap(config.gmap);
         setPois(config.poi);
     }, [config]);
-
+    const [anchorEl, setAnchorEl] = useState(null);
+    const handleClick = e => {
+        setAnchorEl(e.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const [sample, setSample] = useState({});
+    async function getSample() {
+        return Promise.resolve(
+            TextToSpeech("goodbye children", { code: "es", name: "Spanish" })
+        )
+            .then(s => setSample(s))
+            .catch(console.error);
+    }
+    useEffect(() => {
+        getSample().then();
+    }, []);
+    useEffect(() => {
+        console.log(sample);
+    }, [sample]);
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
@@ -117,6 +143,30 @@ function EyeSpy() {
                 />
             </div>
             <div className={clsx(classes.content)}>
+                <IconButton
+                    style={{
+                        position: "absolute",
+                        zIndex: 1000,
+                        color: Theme.palette.primary.contrastText
+                    }}
+                    onClick={handleClick}
+                >
+                    <HelpOutline />
+                </IconButton>
+                <Menu
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    <div className={clsx(classes.content)}>
+                        <div className={clsx(classes.row)}>
+                            <div className={clsx(classes.pad)}>
+                                <ToneTrainerComponent sample={sample} />
+                            </div>
+                        </div>
+                    </div>
+                </Menu>
                 <div
                     ref={panoContainer}
                     style={{

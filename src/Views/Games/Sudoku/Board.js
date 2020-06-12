@@ -4,13 +4,23 @@ import { Theme } from "../../../utils";
 import clsx from "clsx";
 import Square from "./Square";
 import Divider from "@material-ui/core/Divider";
+import { Button, ButtonGroup, Container } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
     root: {
-        width: 300
+        width: "100%"
     },
     row: {
         width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        cursor: "pointer"
+    },
+    buttongroup: {
+        width: "100%",
+        justifyContent: "center"
+    },
+    container: {
         display: "flex",
         justifyContent: "center"
     }
@@ -18,9 +28,43 @@ const useStyles = makeStyles(() => ({
 
 function Board() {
     const classes = useStyles(Theme);
-
-    const [board] = useState(Array(9).fill(Object.keys(Array(9).fill(""))));
-
+    var [board] = useState(
+        Array(9)
+            .fill()
+            .map(() => Array(9).fill("\u00A0"))
+    );
+    //load a puzzle here, make sure to disable buttons that are part of the original puzzle
+    const checkBoard = alerts => {
+        for (let i = 0; i < board.length; i++) {
+            var column = board.map(function(value) {
+                return value[i];
+            });
+            var box = getSquare(i);
+            for (var j = 1; j <= board[0].length; j++) {
+                if (
+                    !board[i].includes(j.toString()) ||
+                    !column.includes(j.toString()) ||
+                    !box.includes(j.toString())
+                ) {
+                    if (alerts) {
+                        alert("The puzzle isn't finished yet!");
+                    }
+                    return false;
+                }
+            }
+        }
+        alert("Done!");
+        return true;
+    };
+    const clearBoard = () => {
+        for (var i = 0; i < board.length; i++) {
+            for (var j = 0; j < board[0].length; j++) {
+                board[i][j] = "\u00A0"; //change this so that it sets the value to the original puzzle
+                var id = i.toString() + j.toString();
+                document.getElementById(id).textContent = "\u00A0";
+            }
+        }
+    };
     const getSquare = squareId => {
         switch (squareId) {
             case 0:
@@ -69,7 +113,7 @@ function Board() {
                     board[4][2],
                     board[5][0],
                     board[5][1],
-                    board[3][2]
+                    board[5][2]
                 ];
             case 4:
                 return [
@@ -136,12 +180,21 @@ function Board() {
         }
     };
 
-    const handleTileClick = (squareId, tileId) => {
-        console.log(squareId, tileId);
+    const handleTileClick = (squareId, tileId, val) => {
+        var column = (squareId % 3) * 3 + (tileId % 3);
+        var row = Math.floor(squareId / 3) * 3 + Math.floor(tileId / 3);
+        board[column][row] = val;
+        checkBoard(false);
     };
 
     return (
         <div className={clsx(classes.root)}>
+            <Container className={classes.container}>
+                <ButtonGroup id="buttongroup">
+                    <Button onClick={checkBoard}> Check Board </Button>
+                    <Button onClick={clearBoard}> Clear Board </Button>
+                </ButtonGroup>
+            </Container>
             <div className={clsx(classes.row)}>
                 <Square
                     handleClick={handleTileClick}

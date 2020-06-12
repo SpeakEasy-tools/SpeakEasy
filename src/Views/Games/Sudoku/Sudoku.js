@@ -31,7 +31,6 @@ function Sudoku() {
     const settings = Settings(language, setLanguage);
     const instructions = Instructions();
 
-    const handleClick = () => {};
     const getSettings = () => {
         return settings;
     };
@@ -47,7 +46,7 @@ function Sudoku() {
                 />
             </div>
             <div className={clsx(classes.row)}>
-                <Board handleClick={handleClick} />
+                <Board />
             </div>
         </div>
     );

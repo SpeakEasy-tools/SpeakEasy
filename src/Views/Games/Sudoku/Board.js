@@ -25,7 +25,6 @@ const useStyles = makeStyles(() => ({
         justifyContent: "center"
     }
 }));
-
 function Board() {
     const classes = useStyles(Theme);
     var [board] = useState(
@@ -33,37 +32,98 @@ function Board() {
             .fill()
             .map(() => Array(9).fill("\u00A0"))
     );
-    //load a puzzle here, make sure to disable buttons that are part of the original puzzle
+    const initialBoardState = () => {
+        return Array(9)
+            .fill()
+            .map(() => Array(9).fill("\u00A0"));
+    };
+    const countOccurrencesOf = (word, search) => {
+        return word.filter(el => el.includes(search)).length;
+    };
     const checkBoard = alerts => {
+        var flag = true;
         for (let i = 0; i < board.length; i++) {
             var column = board.map(function(value) {
                 return value[i];
             });
             var box = getSquare(i);
             for (var j = 1; j <= board[0].length; j++) {
+                var j_s = j.toString();
                 if (
-                    !board[i].includes(j.toString()) ||
-                    !column.includes(j.toString()) ||
-                    !box.includes(j.toString())
+                    !board[i].includes(j_s) ||
+                    !column.includes(j_s) ||
+                    !box.includes(j_s) ||
+                    board[i].includes("\u00A0") ||
+                    column.includes("\u00A0") ||
+                    box.includes("\u00A0")
                 ) {
+                    flag = false;
                     if (alerts) {
                         alert("The puzzle isn't finished yet!");
+                        return false;
                     }
-                    return false;
+                }
+                if (countOccurrencesOf(board[i], j_s) > 1) {
+                    var rowduplicates = getIndicesOf(j_s, board[i]);
+                    for (var k = 0; k < rowduplicates.length; k++) {
+                        var rowid = getID(i, rowduplicates[k]);
+                        document.getElementById(rowid).style.backgroundColor =
+                            Theme.palette.error.main;
+                    }
+                }
+                if (countOccurrencesOf(column, j_s) > 1) {
+                    var colduplicates = getIndicesOf(j_s, column);
+                    for (var m = 0; m < colduplicates.length; m++) {
+                        var colid = getID(colduplicates[m], i);
+                        document.getElementById(colid).style.backgroundColor =
+                            Theme.palette.error.main;
+                    }
+                }
+                if (countOccurrencesOf(box, j_s) > 1) {
+                    var boxduplicates = getIndicesOf(j_s, box);
+                    for (var n = 0; n < boxduplicates.length; n++) {
+                        var boxid = i.toString() + boxduplicates[n];
+                        document.getElementById(boxid).style.backgroundColor =
+                            Theme.palette.error.main;
+                    }
                 }
             }
         }
-        alert("Done!");
-        return true;
+        if (flag) {
+            alert("Done!");
+        }
     };
     const clearBoard = () => {
+        var initialBoard = initialBoardState();
         for (var i = 0; i < board.length; i++) {
             for (var j = 0; j < board[0].length; j++) {
-                board[i][j] = "\u00A0"; //change this so that it sets the value to the original puzzle
+                board[i][j] = initialBoard[i][j];
                 var id = i.toString() + j.toString();
+                document.getElementById(id).style.backgroundColor =
+                    Theme.palette.primary.light;
                 document.getElementById(id).textContent = "\u00A0";
             }
         }
+    };
+    function getIndicesOf(searchStr, str) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen === 0) {
+            return [];
+        }
+        var startIndex = 0,
+            index,
+            indices = [];
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
+    }
+    const getID = (row, column) => {
+        var id = "";
+        id += Math.floor(row / 3) * 3 + Math.floor(column / 3);
+        id += (row % 3) * 3 + (column % 3);
+        return id;
     };
     const getSquare = squareId => {
         switch (squareId) {
@@ -183,7 +243,14 @@ function Board() {
     const handleTileClick = (squareId, tileId, val) => {
         var column = (squareId % 3) * 3 + (tileId % 3);
         var row = Math.floor(squareId / 3) * 3 + Math.floor(tileId / 3);
-        board[column][row] = val;
+        board[row][column] = val;
+        for (var i = 0; i < board.length; i++) {
+            for (var j = 0; j < board[0].length; j++) {
+                document.getElementById(
+                    i.toString() + j.toString()
+                ).style.backgroundColor = Theme.palette.primary.light;
+            }
+        }
         checkBoard(false);
     };
 

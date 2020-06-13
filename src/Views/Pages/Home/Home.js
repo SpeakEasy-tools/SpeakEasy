@@ -3,7 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
 import { HOME } from "../../../Routes/Routes";
-
+import { ViewWrapper } from "../../../Components/ViewWrapper";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 const useStyles = makeStyles(theme => ({
     root: {
         height: "100%"
@@ -30,10 +32,19 @@ const useStyles = makeStyles(theme => ({
 function Home() {
     document.title = HOME.name;
     const classes = useStyles(Theme);
+
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
-                <div className={clsx(classes.pad)} />
+                <ViewWrapper />
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad)}>
+                    <Typography variant="h4" color="secondary">
+                        Welcome to SpeakEasy.tools
+                    </Typography>
+                    <Divider />
+                </div>
             </div>
         </div>
     );

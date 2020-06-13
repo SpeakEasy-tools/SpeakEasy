@@ -1,78 +1,41 @@
-import React, { useEffect, useState } from "react";
 import firebase from "firebase";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "../utils";
-import clsx from "clsx";
-import { CircularProgress, TextField } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { Clear } from "@material-ui/icons";
-import IconButton from "@material-ui/core/IconButton";
+import { translate } from "./Translate";
 
-const tts = firebase.functions().httpsCallable("tts");
-const voices = firebase.functions().httpsCallable("getVoices");
+const Synthesize = firebase.functions().httpsCallable("synthesize");
+const Voices = firebase.functions().httpsCallable("voices");
 const storageRef = firebase.storage().ref();
 
-const useStyles = makeStyles(() => ({
-    root: {}
-}));
-
-export const getVoices = () => {
-    return Promise.resolve(() =>
-        voices().then(result => console.log(result.data))
-    );
-};
-
-function TextToSpeech() {
-    const classes = useStyles(Theme);
-    const [text, setText] = useState("");
-    const [audioUrl, setAudioUrl] = useState("");
-    const [loading, setLoading] = useState(false);
-
-    const handleChange = e => {
-        setText(e.target.value);
-    };
-    const handleClick = () => {
-        if (!(Boolean(text) && typeof text === "string")) return;
-        setLoading(true);
-        new Promise(() =>
-            tts({ text: text, language: "cmn" })
-                .then(results => results.data)
-                .then(data => data["filename"])
-                .then(base64 => storageRef.child(base64).getDownloadURL())
-                .then(url => setAudioUrl(url))
-                .finally(() => setLoading(false))
-        );
-    };
-    const handleClear = () => {
-        setText("");
-    };
-
-    useEffect(() => {
-        if (!audioUrl) return;
-        console.log(audioUrl);
-        setLoading(false);
-    }, [audioUrl]);
-
-    return (
-        <div className={clsx(classes.root)}>
-            <div>
-                <TextField
-                    placeholder="Text to Synthesize"
-                    onChange={handleChange}
-                    value={text}
-                />
-
-                <IconButton disabled={!text || loading} onClick={handleClear}>
-                    <Clear />
-                </IconButton>
-                <Button disabled={!text || loading} onClick={handleClick}>
-                    Synthesize
-                </Button>
-            </div>
-            <div>{loading && <CircularProgress />}</div>
-            {Boolean(audioUrl) && <audio controls src={audioUrl} />}
-        </div>
+export async function synthesizeSpeech(text, language) {
+    return await Promise.resolve(
+        Synthesize({ text: text, languageCode: language })
+            .then(res => storageRef.child(res.data))
+            .then(child => child.getDownloadURL())
+            .catch(() => "404")
     );
 }
-TextField.displayName = "TextToSpeech";
+
+export async function getVoices() {
+    return await Promise.resolve(
+        Voices()
+            .then(result => result.data)
+            .then(data => data[0])
+            .then(d => d["voices"])
+    );
+}
+
+async function TextToSpeech(text, language) {
+    const translation = await Promise.resolve(translate(text, language.code));
+    const synth = await Promise.resolve(
+        synthesizeSpeech(translation, language.code).catch(console.error)
+    ).catch(console.error);
+
+    return {
+        text: text,
+        language: { ...language },
+        translation: translation,
+        audioUrl: synth
+    };
+}
+
+TextToSpeech.displayName = "TextToSpeech";
 export default TextToSpeech;

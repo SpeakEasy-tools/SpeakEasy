@@ -133,7 +133,11 @@ function ConfigsPanel({ moduleId, moduleName }) {
         setFiles([]);
     };
     const handleEdit = () => {
-        setEditName(newName);
+        if (newName.length) {
+            setEditName(newName);
+        } else {
+            setEditName(configs[tabIndex].name);
+        }
         setEditConfig({ ...jsonEditor.get(), files: files });
     };
 

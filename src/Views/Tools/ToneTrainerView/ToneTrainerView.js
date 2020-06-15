@@ -4,32 +4,27 @@ import { Theme } from "../../../utils";
 import clsx from "clsx";
 import { ViewWrapper } from "../../../Components";
 import { SearchBar } from "../../../Components/SearchBar";
-import ToneTrainerComponent from "../ToneTrainerView/ToneTrainerComponent";
+import ToneTrainerComponent from "./ToneTrainerComponent";
 
 const useStyles = makeStyles(theme => ({
     root: {
+        width: "100%",
         height: "100%"
     },
-    content: {
-        padding: theme.spacing(1),
-        flex: "1 1 100%",
-        height: "100%",
-        display: "flex",
-        flexFlow: "column noWrap"
-    },
     row: {
+        flex: "1 1 100%",
         width: "100%",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "start",
         alignItems: "center"
     },
     pad: {
-        padding: theme.spacing(1)
+        margin: theme.spacing(1)
     }
 }));
 
-function Dictionary() {
-    document.title = "Dictionary";
+function ToneTrainerView() {
+    document.title = "Tone Trainer";
     const classes = useStyles(Theme);
     const [results, setResults] = useState({});
     const [sample, setSample] = useState({});
@@ -57,5 +52,5 @@ function Dictionary() {
     );
 }
 
-Dictionary.displayName = "Dictionary";
-export default Dictionary;
+ToneTrainerView.displayName = "ToneTrainerView";
+export default ToneTrainerView;

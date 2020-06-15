@@ -18,7 +18,7 @@ import {
     Sudoku,
     TileSlider,
     TimeSeries,
-    ToneTrainer,
+    ToneTrainerView,
     WordSearch
 } from "../Views";
 
@@ -40,7 +40,7 @@ export const INSTRUCTOR = {
 };
 
 export const TWENTY_FORTY_EIGHT = {
-    path: "/TwentyFortyEight",
+    path: "/2048",
     name: "2048",
     component: TwentyFortyEight
 };
@@ -89,7 +89,7 @@ export const TIME_SERIES = {
 export const TONE_TRAINER = {
     path: "/tone_trainer",
     name: "Tone Trainer",
-    component: ToneTrainer
+    component: ToneTrainerView
 };
 export const WORD_SEARCH = {
     path: "/word_search",

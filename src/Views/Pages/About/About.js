@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Theme } from "../../../utils";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import { ViewWrapper } from "../../../Components/ViewWrapper";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -59,6 +60,9 @@ function About() {
 
     return (
         <div className={clsx(classes.root)}>
+            <div className={clsx(classes.row)}>
+                <ViewWrapper />
+            </div>
             {headers.map((h, index) => output(h, lorem, index))}
         </div>
     );

@@ -11,3 +11,4 @@ export { default as Theme } from "./Theme";
 export { default as history } from "./history";
 export { serviceWorker };
 export { encodeImageFileAsURL } from "./FileConversion";
+export { getRandomColor } from "./RandomColorGenerator";

@@ -57,7 +57,9 @@ function Help() {
 
     return (
         <div className={clsx(classes.root)}>
-            <ViewWrapper />
+            <div className={clsx(classes.row)}>
+                <ViewWrapper />
+            </div>
             {output(headers[0], loginInfo, 0)}
             {output(headers[1], gamesInfo, 1)}
             {output(headers[2], settingInfo, 2)}

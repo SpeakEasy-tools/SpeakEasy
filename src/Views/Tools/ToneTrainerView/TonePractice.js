@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
@@ -11,6 +11,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import { PlayArrow } from "@material-ui/icons";
+import { Recorder } from "../../../Components";
+import Divider from "@material-ui/core/Divider";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,32 +32,71 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function TonePractice({ attempts }) {
+function TonePractice({ display }) {
     const classes = useStyles(Theme);
+    const [audioUrl, setAudioUrl] = useState();
+    const [samples, setSamples] = useState([]);
+    const [checked, setChecked] = useState(-1);
+
+    function handlePlay(index) {
+        const audio = new Audio();
+        audio.src = samples[index];
+        audio.play();
+    }
+    useEffect(() => {
+        if (audioUrl) {
+            setSamples(prevState => [...prevState, audioUrl]);
+        }
+    }, [audioUrl]);
+
+    useEffect(() => {
+        if (checked > -1) {
+            display(samples[checked]);
+        } else {
+            display();
+        }
+    }, [checked, display, samples]);
 
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
-                <div className={clsx(classes.pad)}></div>
+                <div className={clsx(classes.pad)}>
+                    <Typography variant="h4" color="secondary">
+                        Your attempts
+                    </Typography>
+                    <Divider />
+                </div>
             </div>
             <List style={{ backgroundColor: Theme.palette.primary.dark }}>
                 <ListItem>
-                    <ListItemText primary="Your practice attempts" />
+                    <ListItemIcon>
+                        <Recorder url={setAudioUrl} />
+                    </ListItemIcon>
+                    <ListItemText primary="Practice" />
                 </ListItem>
-                {attempts &&
-                    attempts.map((a, i) => (
+                {samples &&
+                    samples.map((a, i) => (
                         <ListItem key={i}>
                             <ListItemIcon>
                                 <Checkbox
                                     edge="start"
-                                    checked={false}
+                                    checked={checked === i}
                                     tabIndex={-1}
                                     disableRipple
+                                    onChange={() =>
+                                        setChecked(prevState =>
+                                            prevState === i ? -1 : i
+                                        )
+                                    }
                                 />
                             </ListItemIcon>
-                            <ListItemText primary={`Attempt #${1}`} />
+                            <ListItemText primary={`Attempt #${i + 1}`} />
                             <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="play-audio">
+                                <IconButton
+                                    edge="end"
+                                    aria-label="play-audio"
+                                    onClick={() => handlePlay(i)}
+                                >
                                     <PlayArrow />
                                 </IconButton>
                             </ListItemSecondaryAction>
@@ -67,6 +109,6 @@ function TonePractice({ attempts }) {
 
 TonePractice.displayName = "TonePractice";
 TonePractice.propTypes = {
-    attempts: PropTypes.array.isRequired
+    display: PropTypes.func.isRequired
 };
 export default TonePractice;

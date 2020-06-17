@@ -23,6 +23,7 @@
     "lamejs": "^1.2.0",
     "machinelearn": "^2.1.5",
     "material-ui-dropzone": "^2.5.0",
+    "material-ui-popup-state": "^1.5.4",
     "mic-recorder-to-mp3": "^2.2.1",
     "mui-datatables": "^2.15.0",
     "node-lame": "^1.2.2",

@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
+import { Button } from "@material-ui/core";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 import Square from "./Square";
-import Divider from "@material-ui/core/Divider";
-import { Button, ButtonGroup, Container } from "@material-ui/core";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     root: {
         width: "100%"
     },
@@ -14,316 +16,193 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         display: "flex",
         justifyContent: "center",
-        cursor: "pointer"
+        alignItems: "center"
     },
-    buttongroup: {
-        width: "100%",
-        justifyContent: "center"
+    pad: {
+        padding: theme.spacing(1)
     },
-    container: {
-        display: "flex",
-        justifyContent: "center"
+    typography: {
+        "&:hover": {
+            cursor: "pointer"
+        }
     }
 }));
-function Board() {
+
+// boardState is a 1-d list of integers representing the 81 tiles in sudoku
+function Board({ boardState }) {
     const classes = useStyles(Theme);
-    var [board] = useState(
-        Array(9)
-            .fill()
-            .map(() => Array(9).fill("\u00A0"))
-    );
-    const initialBoardState = () => {
-        return Array(9)
-            .fill()
-            .map(() => Array(9).fill("\u00A0"));
-    };
-    const countOccurrencesOf = (word, search) => {
-        return word.filter(el => el.includes(search)).length;
-    };
-    const checkBoard = alerts => {
-        var flag = true;
-        for (let i = 0; i < board.length; i++) {
-            var column = board.map(function(value) {
-                return value[i];
-            });
-            var box = getSquare(i);
-            for (var j = 1; j <= board[0].length; j++) {
-                var j_s = j.toString();
-                if (
-                    !board[i].includes(j_s) ||
-                    !column.includes(j_s) ||
-                    !box.includes(j_s) ||
-                    board[i].includes("\u00A0") ||
-                    column.includes("\u00A0") ||
-                    box.includes("\u00A0")
-                ) {
-                    flag = false;
-                    if (alerts) {
-                        alert("The puzzle isn't finished yet!");
-                        return false;
-                    }
-                }
-                if (countOccurrencesOf(board[i], j_s) > 1) {
-                    var rowduplicates = getIndicesOf(j_s, board[i]);
-                    for (var k = 0; k < rowduplicates.length; k++) {
-                        var rowid = getID(i, rowduplicates[k]);
-                        document.getElementById(rowid).style.backgroundColor =
-                            Theme.palette.error.main;
-                    }
-                }
-                if (countOccurrencesOf(column, j_s) > 1) {
-                    var colduplicates = getIndicesOf(j_s, column);
-                    for (var m = 0; m < colduplicates.length; m++) {
-                        var colid = getID(colduplicates[m], i);
-                        document.getElementById(colid).style.backgroundColor =
-                            Theme.palette.error.main;
-                    }
-                }
-                if (countOccurrencesOf(box, j_s) > 1) {
-                    var boxduplicates = getIndicesOf(j_s, box);
-                    for (var n = 0; n < boxduplicates.length; n++) {
-                        var boxid = i.toString() + boxduplicates[n];
-                        document.getElementById(boxid).style.backgroundColor =
-                            Theme.palette.error.main;
-                    }
-                }
-            }
-        }
-        if (flag) {
-            alert("Done!");
-        }
-    };
-    const clearBoard = () => {
-        var initialBoard = initialBoardState();
-        for (var i = 0; i < board.length; i++) {
-            for (var j = 0; j < board[0].length; j++) {
-                board[i][j] = initialBoard[i][j];
-                var id = i.toString() + j.toString();
-                document.getElementById(id).style.backgroundColor =
-                    Theme.palette.primary.light;
-                document.getElementById(id).textContent = "\u00A0";
-            }
-        }
-    };
-    function getIndicesOf(searchStr, str) {
-        var searchStrLen = searchStr.length;
-        if (searchStrLen === 0) {
-            return [];
-        }
-        var startIndex = 0,
-            index,
-            indices = [];
-        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-            indices.push(index);
-            startIndex = index + searchStrLen;
-        }
-        return indices;
+    // I know it's used in almost every tutorial but never ever use var, if you need to update the variable use let.
+    // Using var can cause your variable to have scope outside of your function
+    // When you use a useState hook the output is a variable and a setter, make sure you're getting both
+
+    const [board, setBoard] = useState([]);
+
+    const [rows, setRows] = useState([]);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const [validChoices, setValidChoices] = useState([]);
+
+    const [selectedTile, setSelectedTile] = useState(null);
+    // To check the board we need to check rows, columns, and squares. Returns true if the board is complete, false otherwise
+    function checkBoard() {}
+
+    function handleClick(squareId, tileId, e) {
+        setAnchorEl(e);
+        setSelectedTile(tileId);
+        setValidChoices([...getValid(squareId, tileId)]);
     }
-    const getID = (row, column) => {
-        var id = "";
-        id += Math.floor(row / 3) * 3 + Math.floor(column / 3);
-        id += (row % 3) * 3 + (column % 3);
-        return id;
-    };
-    const getSquare = squareId => {
-        switch (squareId) {
-            case 0:
-                return [
-                    board[0][0],
-                    board[0][1],
-                    board[0][2],
-                    board[1][0],
-                    board[1][1],
-                    board[1][2],
-                    board[2][0],
-                    board[2][1],
-                    board[2][2]
-                ];
-            case 1:
-                return [
-                    board[0][3],
-                    board[0][4],
-                    board[0][5],
-                    board[1][3],
-                    board[1][4],
-                    board[1][5],
-                    board[2][3],
-                    board[2][4],
-                    board[2][5]
-                ];
-            case 2:
-                return [
-                    board[0][6],
-                    board[0][7],
-                    board[0][8],
-                    board[1][6],
-                    board[1][7],
-                    board[1][8],
-                    board[2][6],
-                    board[2][7],
-                    board[2][8]
-                ];
-            case 3:
-                return [
-                    board[3][0],
-                    board[3][1],
-                    board[3][2],
-                    board[4][0],
-                    board[4][1],
-                    board[4][2],
-                    board[5][0],
-                    board[5][1],
-                    board[5][2]
-                ];
-            case 4:
-                return [
-                    board[3][3],
-                    board[3][4],
-                    board[3][5],
-                    board[4][3],
-                    board[4][4],
-                    board[4][5],
-                    board[5][3],
-                    board[5][4],
-                    board[5][5]
-                ];
-            case 5:
-                return [
-                    board[3][6],
-                    board[3][7],
-                    board[3][8],
-                    board[4][6],
-                    board[4][7],
-                    board[4][8],
-                    board[5][6],
-                    board[5][7],
-                    board[5][8]
-                ];
-            case 6:
-                return [
-                    board[6][0],
-                    board[6][1],
-                    board[6][2],
-                    board[7][0],
-                    board[7][1],
-                    board[7][2],
-                    board[8][0],
-                    board[8][1],
-                    board[8][2]
-                ];
-            case 7:
-                return [
-                    board[6][3],
-                    board[6][4],
-                    board[6][5],
-                    board[7][3],
-                    board[7][4],
-                    board[7][5],
-                    board[8][3],
-                    board[8][4],
-                    board[8][5]
-                ];
-            case 8:
-                return [
-                    board[6][6],
-                    board[6][7],
-                    board[6][8],
-                    board[7][6],
-                    board[7][7],
-                    board[7][8],
-                    board[8][6],
-                    board[8][7],
-                    board[8][8]
-                ];
-            default:
-                return;
-        }
-    };
 
-    const handleTileClick = (squareId, tileId, val) => {
-        var column = (squareId % 3) * 3 + (tileId % 3);
-        var row = Math.floor(squareId / 3) * 3 + Math.floor(tileId / 3);
-        board[row][column] = val;
-        for (var i = 0; i < board.length; i++) {
-            for (var j = 0; j < board[0].length; j++) {
-                document.getElementById(
-                    i.toString() + j.toString()
-                ).style.backgroundColor = Theme.palette.primary.light;
+    function handleClose(e) {
+        if (e.target.textContent) {
+            let newBoard = [...board];
+            newBoard[selectedTile] = parseInt(e.target.textContent);
+            setBoard(newBoard);
+        }
+        setAnchorEl(null);
+    }
+
+    // If we use a second board then all we need to do to clear the board is replace it with the initial board.
+    function clearBoard() {
+        setBoard(boardState);
+    }
+
+    // Rows go from top to bottom numbered 0-8
+    function getRow(rowNum) {
+        const row = [];
+        for (let i = 0; i < 9; i++) {
+            let index = rowNum * 9 + i;
+            let value = board[index];
+            row.push({ id: index, value: value });
+        }
+
+        return row;
+    }
+
+    // Columns go from left to right numbered 0-8
+    function getColumn(colNum) {
+        const column = [];
+        for (let i = 0; i < board.length; i += 9) {
+            let index = i + colNum;
+            let value = board[index];
+            column.push({ id: index, value: value });
+        }
+        return column;
+    }
+
+    // Squares go from left to right, top to bottom numbered 0-8
+    function getSquare(squareNum) {
+        let square = [];
+        let colNum = Math.floor(squareNum % 3);
+        let rowNum = Math.floor(squareNum / 3);
+        for (let i = 0; i < 3; i++) {
+            let r = [];
+            for (let j = 0; j < 3; j++) {
+                let index = (rowNum * 3 + i) * 9 + colNum * 3 + j;
+                let value = board[index];
+                r.push({ id: index, value: value });
             }
+            square.push(r);
         }
-        checkBoard(false);
-    };
+        return square;
+    }
 
+    function getValid(squareId, tileId) {
+        const rowNum = Math.floor(tileId / 9);
+        const colNum = Math.floor(tileId % 9);
+
+        const row = getRow(rowNum).map(r => r.value);
+        const col = getColumn(colNum).map(c => c.value);
+        const square = getSquare(squareId)
+            .flat(1)
+            .map(s => s.value);
+
+        const options = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        const invalid = new Set([...row, ...col, ...square]);
+        return new Set([...options].filter(x => !invalid.has(x)));
+    }
+
+    useEffect(() => {
+        function square(squareId) {
+            let s = [];
+            let colNum = Math.floor(squareId % 3);
+            let rowNum = Math.floor(squareId / 3);
+            for (let i = 0; i < 3; i++) {
+                let r = [];
+                for (let j = 0; j < 3; j++) {
+                    let index = (rowNum * 3 + i) * 9 + colNum * 3 + j;
+                    let value = board[index];
+                    r.push({ id: index, value: value });
+                }
+                s.push(r);
+            }
+            return s;
+        }
+
+        if (board && board.length === 81) {
+            setRows([
+                [square(0), square(1), square(2)],
+                [square(3), square(4), square(5)],
+                [square(6), square(7), square(8)]
+            ]);
+        }
+    }, [board]);
+
+    useEffect(() => {
+        if (boardState && boardState.length === 81) {
+            setBoard([...boardState]);
+        }
+    }, [boardState]);
     return (
         <div className={clsx(classes.root)}>
-            <Container className={classes.container}>
-                <ButtonGroup id="buttongroup">
+            <div className={classes.row}>
+                <div className={clsx(classes.pad)}>
                     <Button onClick={checkBoard}> Check Board </Button>
+                </div>
+                <div className={clsx(classes.pad)}>
                     <Button onClick={clearBoard}> Clear Board </Button>
-                </ButtonGroup>
-            </Container>
-            <div className={clsx(classes.row)}>
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={0}
-                    vals={getSquare(0)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={1}
-                    vals={getSquare(1)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={2}
-                    vals={getSquare(2)}
-                />
+                </div>
             </div>
-            <Divider style={{ width: "auto" }} />
-            <div className={clsx(classes.row)}>
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={3}
-                    vals={getSquare(3)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={4}
-                    vals={getSquare(4)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={5}
-                    vals={getSquare(5)}
-                />
-            </div>
-            <Divider style={{ width: "auto" }} />
-            <div className={clsx(classes.row)}>
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={6}
-                    vals={getSquare(6)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={7}
-                    vals={getSquare(7)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={8}
-                    vals={getSquare(8)}
-                />
-            </div>
+            {rows &&
+                rows.map((row, index) => (
+                    <div key={`row${index}`} className={clsx(classes.row)}>
+                        {row &&
+                            row.map((square, id) => (
+                                <div
+                                    key={id}
+                                    className={clsx(classes.pad)}
+                                    style={{
+                                        border: `2px solid ${Theme.palette.secondary.main}`
+                                    }}
+                                >
+                                    <Square
+                                        vals={square}
+                                        squareId={index * 3 + id}
+                                        handleClick={handleClick}
+                                    />
+                                </div>
+                            ))}
+                    </div>
+                ))}
+            <Menu
+                id="Number select"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                {validChoices.map((v, i) => (
+                    <MenuItem key={i} onClick={handleClose}>
+                        {v}
+                    </MenuItem>
+                ))}
+            </Menu>
         </div>
     );
 }
 
 Board.displayName = "Board";
+Board.propTypes = {
+    boardState: PropTypes.array.isRequired
+};
 export default Board;

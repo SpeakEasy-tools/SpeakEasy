@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
@@ -25,30 +25,78 @@ const useStyles = makeStyles(() => ({
         justifyContent: "center"
     }
 }));
+
 function Board() {
     const classes = useStyles(Theme);
-    var [board] = useState(
+    var [board, setBoard] = useState(
         Array(9)
             .fill()
             .map(() => Array(9).fill("\u00A0"))
     );
-    const initialBoardState = () => {
-        return Array(9)
+    var [initialBoard, setInitialBoard] = useState(
+        Array(9)
             .fill()
-            .map(() => Array(9).fill("\u00A0"));
+            .map(() => Array(9).fill("\u00A0"))
+    );
+    const deepCopy = oldarray => {
+        return JSON.parse(JSON.stringify(oldarray));
     };
+    useEffect(() => {
+        const initialBoardState = async () => {
+            let data;
+            let strings = Array(9)
+                .fill()
+                .map(() => Array(9).fill("\u00A0"));
+            await fetch(
+                "https://sugoku.herokuapp.com/board?difficulty=easy"
+            ).then(response => {
+                if (response.ok) {
+                    response.json().then(json => {
+                        data = json["board"];
+                        for (let i = 0; i < 9; i++) {
+                            for (let j = 0; j < 9; j++) {
+                                let element = document.getElementById(
+                                    getID(i, j)
+                                );
+                                if (data[i][j] !== 0) {
+                                    strings[i][j] = data[i][j].toString();
+                                    element.disabled = true;
+                                } else {
+                                    element.style.color =
+                                        Theme.palette.secondary.light;
+                                }
+                            }
+                        }
+                        setInitialBoard(strings);
+                        setBoard(deepCopy(strings));
+                    });
+                }
+            });
+        };
+        initialBoardState();
+    }, []);
     const countOccurrencesOf = (word, search) => {
         return word.filter(el => el.includes(search)).length;
     };
     const checkBoard = alerts => {
-        var flag = true;
+        let flag = true;
         for (let i = 0; i < board.length; i++) {
-            var column = board.map(function(value) {
+            let column = board.map(function(value) {
                 return value[i];
             });
-            var box = getSquare(i);
-            for (var j = 1; j <= board[0].length; j++) {
-                var j_s = j.toString();
+            let box = getSquare(i);
+            for (let j = 0; j < 9; j++) {
+                let element = document.getElementById(getID(i, j));
+                element.style.backgroundColor = Theme.palette.primary.light;
+                element.addEventListener("mouseover", function() {
+                    this.style.backgroundColor = Theme.palette.primary.main;
+                });
+                element.addEventListener("mouseout", function() {
+                    this.style.backgroundColor = Theme.palette.primary.light;
+                });
+            }
+            for (let j = 1; j <= board[0].length; j++) {
+                let j_s = j.toString();
                 if (
                     !board[i].includes(j_s) ||
                     !column.includes(j_s) ||
@@ -64,27 +112,54 @@ function Board() {
                     }
                 }
                 if (countOccurrencesOf(board[i], j_s) > 1) {
-                    var rowduplicates = getIndicesOf(j_s, board[i]);
-                    for (var k = 0; k < rowduplicates.length; k++) {
-                        var rowid = getID(i, rowduplicates[k]);
-                        document.getElementById(rowid).style.backgroundColor =
-                            Theme.palette.error.main;
+                    let rowduplicates = getIndicesOf(j_s, board[i]);
+                    for (let k = 0; k < rowduplicates.length; k++) {
+                        let rowid = getID(i, rowduplicates[k]);
+                        let rowelement = document.getElementById(rowid);
+                        rowelement.style.backgroundColor =
+                            Theme.palette.error.light;
+                        rowelement.addEventListener("mouseover", function() {
+                            this.style.backgroundColor =
+                                Theme.palette.error.main;
+                        });
+                        rowelement.addEventListener("mouseout", function() {
+                            this.style.backgroundColor =
+                                Theme.palette.error.light;
+                        });
                     }
                 }
                 if (countOccurrencesOf(column, j_s) > 1) {
-                    var colduplicates = getIndicesOf(j_s, column);
-                    for (var m = 0; m < colduplicates.length; m++) {
-                        var colid = getID(colduplicates[m], i);
-                        document.getElementById(colid).style.backgroundColor =
-                            Theme.palette.error.main;
+                    let colduplicates = getIndicesOf(j_s, column);
+                    for (let m = 0; m < colduplicates.length; m++) {
+                        let colid = getID(colduplicates[m], i);
+                        let colelement = document.getElementById(colid);
+                        colelement.style.backgroundColor =
+                            Theme.palette.error.light;
+                        colelement.addEventListener("mouseover", function() {
+                            this.style.backgroundColor =
+                                Theme.palette.error.main;
+                        });
+                        colelement.addEventListener("mouseout", function() {
+                            this.style.backgroundColor =
+                                Theme.palette.error.light;
+                        });
                     }
                 }
                 if (countOccurrencesOf(box, j_s) > 1) {
-                    var boxduplicates = getIndicesOf(j_s, box);
-                    for (var n = 0; n < boxduplicates.length; n++) {
-                        var boxid = i.toString() + boxduplicates[n];
-                        document.getElementById(boxid).style.backgroundColor =
-                            Theme.palette.error.main;
+                    let boxduplicates = getIndicesOf(j_s, box);
+                    for (let n = 0; n < boxduplicates.length; n++) {
+                        let boxid = i.toString() + boxduplicates[n];
+                        let boxelement = document.getElementById(boxid);
+                        boxelement.style.backgroundColor =
+                            Theme.palette.error.light;
+                        boxelement.addEventListener("mouseover", function() {
+                            this.style.backgroundColor =
+                                Theme.palette.error.main;
+                        });
+                        boxelement.addEventListener("mouseout", function() {
+                            this.style.backgroundColor =
+                                Theme.palette.error.light;
+                        });
                     }
                 }
             }
@@ -94,23 +169,31 @@ function Board() {
         }
     };
     const clearBoard = () => {
-        var initialBoard = initialBoardState();
-        for (var i = 0; i < board.length; i++) {
-            for (var j = 0; j < board[0].length; j++) {
-                board[i][j] = initialBoard[i][j];
-                var id = i.toString() + j.toString();
-                document.getElementById(id).style.backgroundColor =
-                    Theme.palette.primary.light;
-                document.getElementById(id).textContent = "\u00A0";
+        setBoard(deepCopy(initialBoard));
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[0].length; j++) {
+                let id = getID(i, j);
+                let element = document.getElementById(id);
+                element.style.backgroundColor = Theme.palette.primary.light;
+                element.addEventListener("mouseover", function() {
+                    this.style.backgroundColor = Theme.palette.primary.main;
+                });
+                element.addEventListener("mouseout", function() {
+                    this.style.backgroundColor = Theme.palette.primary.light;
+                });
+                element.textContent = initialBoard[i][j].toString();
+                if (initialBoard[i][j] !== "\u00A0") {
+                    element.disabled = true;
+                }
             }
         }
     };
     function getIndicesOf(searchStr, str) {
-        var searchStrLen = searchStr.length;
+        let searchStrLen = searchStr.length;
         if (searchStrLen === 0) {
             return [];
         }
-        var startIndex = 0,
+        let startIndex = 0,
             index,
             indices = [];
         while ((index = str.indexOf(searchStr, startIndex)) > -1) {
@@ -120,7 +203,7 @@ function Board() {
         return indices;
     }
     const getID = (row, column) => {
-        var id = "";
+        let id = "";
         id += Math.floor(row / 3) * 3 + Math.floor(column / 3);
         id += (row % 3) * 3 + (column % 3);
         return id;
@@ -241,19 +324,12 @@ function Board() {
     };
 
     const handleTileClick = (squareId, tileId, val) => {
-        var column = (squareId % 3) * 3 + (tileId % 3);
-        var row = Math.floor(squareId / 3) * 3 + Math.floor(tileId / 3);
+        let column = (squareId % 3) * 3 + (tileId % 3);
+        let row = Math.floor(squareId / 3) * 3 + Math.floor(tileId / 3);
         board[row][column] = val;
-        for (var i = 0; i < board.length; i++) {
-            for (var j = 0; j < board[0].length; j++) {
-                document.getElementById(
-                    i.toString() + j.toString()
-                ).style.backgroundColor = Theme.palette.primary.light;
-            }
-        }
+        setBoard(deepCopy(board)); //setboard is laggy for some reason
         checkBoard(false);
     };
-
     return (
         <div className={clsx(classes.root)}>
             <Container className={classes.container}>

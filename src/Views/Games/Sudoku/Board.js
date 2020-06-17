@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
+import { Button } from "@material-ui/core";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 import Square from "./Square";
-import Divider from "@material-ui/core/Divider";
-import { Button, ButtonGroup, Container } from "@material-ui/core";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     root: {
         width: "100%"
     },
@@ -14,392 +16,190 @@ const useStyles = makeStyles(() => ({
         width: "100%",
         display: "flex",
         justifyContent: "center",
-        cursor: "pointer"
+        alignItems: "center"
     },
-    buttongroup: {
-        width: "100%",
-        justifyContent: "center"
+    pad: {
+        padding: theme.spacing(1)
     },
-    container: {
-        display: "flex",
-        justifyContent: "center"
+    typography: {
+        "&:hover": {
+            cursor: "pointer"
+        }
     }
 }));
 
-function Board() {
+// boardState is a 1-d list of integers representing the 81 tiles in sudoku
+function Board({ boardState }) {
     const classes = useStyles(Theme);
-    var [board, setBoard] = useState(
-        Array(9)
-            .fill()
-            .map(() => Array(9).fill("\u00A0"))
-    );
-    var [initialBoard, setInitialBoard] = useState(
-        Array(9)
-            .fill()
-            .map(() => Array(9).fill("\u00A0"))
-    );
-    const deepCopy = oldarray => {
-        return JSON.parse(JSON.stringify(oldarray));
-    };
-    useEffect(() => {
-        const initialBoardState = async () => {
-            let data;
-            let strings = Array(9)
-                .fill()
-                .map(() => Array(9).fill("\u00A0"));
-            await fetch(
-                "https://sugoku.herokuapp.com/board?difficulty=easy"
-            ).then(response => {
-                if (response.ok) {
-                    response.json().then(json => {
-                        data = json["board"];
-                        for (let i = 0; i < 9; i++) {
-                            for (let j = 0; j < 9; j++) {
-                                let element = document.getElementById(
-                                    getID(i, j)
-                                );
-                                if (data[i][j] !== 0) {
-                                    strings[i][j] = data[i][j].toString();
-                                    element.disabled = true;
-                                } else {
-                                    element.style.color =
-                                        Theme.palette.secondary.light;
-                                }
-                            }
-                        }
-                        setInitialBoard(strings);
-                        setBoard(deepCopy(strings));
-                    });
-                }
-            });
-        };
-        initialBoardState();
-    }, []);
-    const countOccurrencesOf = (word, search) => {
-        return word.filter(el => el.includes(search)).length;
-    };
-    const checkBoard = alerts => {
-        let flag = true;
-        for (let i = 0; i < board.length; i++) {
-            let column = board.map(function(value) {
-                return value[i];
-            });
-            let box = getSquare(i);
-            for (let j = 0; j < 9; j++) {
-                let element = document.getElementById(getID(i, j));
-                element.style.backgroundColor = Theme.palette.primary.light;
-                element.addEventListener("mouseover", function() {
-                    this.style.backgroundColor = Theme.palette.primary.main;
-                });
-                element.addEventListener("mouseout", function() {
-                    this.style.backgroundColor = Theme.palette.primary.light;
-                });
-            }
-            for (let j = 1; j <= board[0].length; j++) {
-                let j_s = j.toString();
-                if (
-                    !board[i].includes(j_s) ||
-                    !column.includes(j_s) ||
-                    !box.includes(j_s) ||
-                    board[i].includes("\u00A0") ||
-                    column.includes("\u00A0") ||
-                    box.includes("\u00A0")
-                ) {
-                    flag = false;
-                    if (alerts) {
-                        alert("The puzzle isn't finished yet!");
-                        return false;
-                    }
-                }
-                if (countOccurrencesOf(board[i], j_s) > 1) {
-                    let rowduplicates = getIndicesOf(j_s, board[i]);
-                    for (let k = 0; k < rowduplicates.length; k++) {
-                        let rowid = getID(i, rowduplicates[k]);
-                        let rowelement = document.getElementById(rowid);
-                        rowelement.style.backgroundColor =
-                            Theme.palette.error.light;
-                        rowelement.addEventListener("mouseover", function() {
-                            this.style.backgroundColor =
-                                Theme.palette.error.main;
-                        });
-                        rowelement.addEventListener("mouseout", function() {
-                            this.style.backgroundColor =
-                                Theme.palette.error.light;
-                        });
-                    }
-                }
-                if (countOccurrencesOf(column, j_s) > 1) {
-                    let colduplicates = getIndicesOf(j_s, column);
-                    for (let m = 0; m < colduplicates.length; m++) {
-                        let colid = getID(colduplicates[m], i);
-                        let colelement = document.getElementById(colid);
-                        colelement.style.backgroundColor =
-                            Theme.palette.error.light;
-                        colelement.addEventListener("mouseover", function() {
-                            this.style.backgroundColor =
-                                Theme.palette.error.main;
-                        });
-                        colelement.addEventListener("mouseout", function() {
-                            this.style.backgroundColor =
-                                Theme.palette.error.light;
-                        });
-                    }
-                }
-                if (countOccurrencesOf(box, j_s) > 1) {
-                    let boxduplicates = getIndicesOf(j_s, box);
-                    for (let n = 0; n < boxduplicates.length; n++) {
-                        let boxid = i.toString() + boxduplicates[n];
-                        let boxelement = document.getElementById(boxid);
-                        boxelement.style.backgroundColor =
-                            Theme.palette.error.light;
-                        boxelement.addEventListener("mouseover", function() {
-                            this.style.backgroundColor =
-                                Theme.palette.error.main;
-                        });
-                        boxelement.addEventListener("mouseout", function() {
-                            this.style.backgroundColor =
-                                Theme.palette.error.light;
-                        });
-                    }
-                }
-            }
-        }
-        if (flag) {
-            alert("Done!");
-        }
-    };
-    const clearBoard = () => {
-        setBoard(deepCopy(initialBoard));
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[0].length; j++) {
-                let id = getID(i, j);
-                let element = document.getElementById(id);
-                element.style.backgroundColor = Theme.palette.primary.light;
-                element.addEventListener("mouseover", function() {
-                    this.style.backgroundColor = Theme.palette.primary.main;
-                });
-                element.addEventListener("mouseout", function() {
-                    this.style.backgroundColor = Theme.palette.primary.light;
-                });
-                element.textContent = initialBoard[i][j].toString();
-                if (initialBoard[i][j] !== "\u00A0") {
-                    element.disabled = true;
-                }
-            }
-        }
-    };
-    function getIndicesOf(searchStr, str) {
-        let searchStrLen = searchStr.length;
-        if (searchStrLen === 0) {
-            return [];
-        }
-        let startIndex = 0,
-            index,
-            indices = [];
-        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-            indices.push(index);
-            startIndex = index + searchStrLen;
-        }
-        return indices;
-    }
-    const getID = (row, column) => {
-        let id = "";
-        id += Math.floor(row / 3) * 3 + Math.floor(column / 3);
-        id += (row % 3) * 3 + (column % 3);
-        return id;
-    };
-    const getSquare = squareId => {
-        switch (squareId) {
-            case 0:
-                return [
-                    board[0][0],
-                    board[0][1],
-                    board[0][2],
-                    board[1][0],
-                    board[1][1],
-                    board[1][2],
-                    board[2][0],
-                    board[2][1],
-                    board[2][2]
-                ];
-            case 1:
-                return [
-                    board[0][3],
-                    board[0][4],
-                    board[0][5],
-                    board[1][3],
-                    board[1][4],
-                    board[1][5],
-                    board[2][3],
-                    board[2][4],
-                    board[2][5]
-                ];
-            case 2:
-                return [
-                    board[0][6],
-                    board[0][7],
-                    board[0][8],
-                    board[1][6],
-                    board[1][7],
-                    board[1][8],
-                    board[2][6],
-                    board[2][7],
-                    board[2][8]
-                ];
-            case 3:
-                return [
-                    board[3][0],
-                    board[3][1],
-                    board[3][2],
-                    board[4][0],
-                    board[4][1],
-                    board[4][2],
-                    board[5][0],
-                    board[5][1],
-                    board[5][2]
-                ];
-            case 4:
-                return [
-                    board[3][3],
-                    board[3][4],
-                    board[3][5],
-                    board[4][3],
-                    board[4][4],
-                    board[4][5],
-                    board[5][3],
-                    board[5][4],
-                    board[5][5]
-                ];
-            case 5:
-                return [
-                    board[3][6],
-                    board[3][7],
-                    board[3][8],
-                    board[4][6],
-                    board[4][7],
-                    board[4][8],
-                    board[5][6],
-                    board[5][7],
-                    board[5][8]
-                ];
-            case 6:
-                return [
-                    board[6][0],
-                    board[6][1],
-                    board[6][2],
-                    board[7][0],
-                    board[7][1],
-                    board[7][2],
-                    board[8][0],
-                    board[8][1],
-                    board[8][2]
-                ];
-            case 7:
-                return [
-                    board[6][3],
-                    board[6][4],
-                    board[6][5],
-                    board[7][3],
-                    board[7][4],
-                    board[7][5],
-                    board[8][3],
-                    board[8][4],
-                    board[8][5]
-                ];
-            case 8:
-                return [
-                    board[6][6],
-                    board[6][7],
-                    board[6][8],
-                    board[7][6],
-                    board[7][7],
-                    board[7][8],
-                    board[8][6],
-                    board[8][7],
-                    board[8][8]
-                ];
-            default:
-                return;
-        }
-    };
 
-    const handleTileClick = (squareId, tileId, val) => {
-        let column = (squareId % 3) * 3 + (tileId % 3);
-        let row = Math.floor(squareId / 3) * 3 + Math.floor(tileId / 3);
-        board[row][column] = val;
-        setBoard(deepCopy(board)); //setboard is laggy for some reason
-        checkBoard(false);
-    };
+    const [board, setBoard] = useState([]);
+
+    const [rows, setRows] = useState([]);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const [validChoices, setValidChoices] = useState([]);
+
+    const [selectedTile, setSelectedTile] = useState(null);
+    // To check the board we need to check rows, columns, and squares. Returns true if the board is complete, false otherwise
+    function checkBoard() {}
+
+    function handleClick(squareId, tileId, e) {
+        setAnchorEl(e);
+        setSelectedTile(tileId);
+        setValidChoices([...getValid(squareId, tileId)]);
+    }
+
+    function handleClose(e) {
+        if (e.target.textContent) {
+            let newBoard = [...board];
+            newBoard[selectedTile] = parseInt(e.target.textContent);
+            setBoard(newBoard);
+        }
+        setAnchorEl(null);
+    }
+
+    // If we use a second board then all we need to do to clear the board is replace it with the initial board.
+    function clearBoard() {
+        setBoard(boardState);
+    }
+
+    // Rows go from top to bottom numbered 0-8
+    function getRow(rowNum) {
+        const row = [];
+        for (let i = 0; i < 9; i++) {
+            let index = rowNum * 9 + i;
+            let value = board[index];
+            row.push({ id: index, value: value });
+        }
+
+        return row;
+    }
+
+    // Columns go from left to right numbered 0-8
+    function getColumn(colNum) {
+        const column = [];
+        for (let i = 0; i < board.length; i += 9) {
+            let index = i + colNum;
+            let value = board[index];
+            column.push({ id: index, value: value });
+        }
+        return column;
+    }
+
+    // Squares go from left to right, top to bottom numbered 0-8
+    function getSquare(squareNum) {
+        let square = [];
+        let colNum = Math.floor(squareNum % 3);
+        let rowNum = Math.floor(squareNum / 3);
+        for (let i = 0; i < 3; i++) {
+            let r = [];
+            for (let j = 0; j < 3; j++) {
+                let index = (rowNum * 3 + i) * 9 + colNum * 3 + j;
+                let value = board[index];
+                r.push({ id: index, value: value });
+            }
+            square.push(r);
+        }
+        return square;
+    }
+
+    function getValid(squareId, tileId) {
+        const rowNum = Math.floor(tileId / 9);
+        const colNum = Math.floor(tileId % 9);
+
+        const row = getRow(rowNum).map(r => r.value);
+        const col = getColumn(colNum).map(c => c.value);
+        const square = getSquare(squareId)
+            .flat(1)
+            .map(s => s.value);
+
+        const options = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        const invalid = new Set([...row, ...col, ...square]);
+        return new Set([...options].filter(x => !invalid.has(x)));
+    }
+
+    useEffect(() => {
+        function square(squareId) {
+            let s = [];
+            let colNum = Math.floor(squareId % 3);
+            let rowNum = Math.floor(squareId / 3);
+            for (let i = 0; i < 3; i++) {
+                let r = [];
+                for (let j = 0; j < 3; j++) {
+                    let index = (rowNum * 3 + i) * 9 + colNum * 3 + j;
+                    let value = board[index];
+                    r.push({ id: index, value: value });
+                }
+                s.push(r);
+            }
+            return s;
+        }
+
+        if (board && board.length === 81) {
+            setRows([
+                [square(0), square(1), square(2)],
+                [square(3), square(4), square(5)],
+                [square(6), square(7), square(8)]
+            ]);
+        }
+    }, [board]);
+
+    useEffect(() => {
+        if (boardState && boardState.length === 81) {
+            setBoard([...boardState]);
+        }
+    }, [boardState]);
     return (
         <div className={clsx(classes.root)}>
-            <Container className={classes.container}>
-                <ButtonGroup id="buttongroup">
+            <div className={classes.row}>
+                <div className={clsx(classes.pad)}>
                     <Button onClick={checkBoard}> Check Board </Button>
+                </div>
+                <div className={clsx(classes.pad)}>
                     <Button onClick={clearBoard}> Clear Board </Button>
-                </ButtonGroup>
-            </Container>
-            <div className={clsx(classes.row)}>
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={0}
-                    vals={getSquare(0)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={1}
-                    vals={getSquare(1)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={2}
-                    vals={getSquare(2)}
-                />
+                </div>
             </div>
-            <Divider style={{ width: "auto" }} />
-            <div className={clsx(classes.row)}>
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={3}
-                    vals={getSquare(3)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={4}
-                    vals={getSquare(4)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={5}
-                    vals={getSquare(5)}
-                />
-            </div>
-            <Divider style={{ width: "auto" }} />
-            <div className={clsx(classes.row)}>
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={6}
-                    vals={getSquare(6)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={7}
-                    vals={getSquare(7)}
-                />
-                <Divider orientation="vertical" style={{ height: "auto" }} />
-                <Square
-                    handleClick={handleTileClick}
-                    squareId={8}
-                    vals={getSquare(8)}
-                />
-            </div>
+            {rows &&
+                rows.map((row, index) => (
+                    <div key={`row${index}`} className={clsx(classes.row)}>
+                        {row &&
+                            row.map((square, id) => (
+                                <div
+                                    key={id}
+                                    className={clsx(classes.pad)}
+                                    style={{
+                                        border: `2px solid ${Theme.palette.secondary.main}`
+                                    }}
+                                >
+                                    <Square
+                                        vals={square}
+                                        squareId={index * 3 + id}
+                                        handleClick={handleClick}
+                                    />
+                                </div>
+                            ))}
+                    </div>
+                ))}
+            <Menu
+                id="Number select"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                {validChoices.map((v, i) => (
+                    <MenuItem key={i} onClick={handleClose}>
+                        {v}
+                    </MenuItem>
+                ))}
+            </Menu>
         </div>
     );
 }
 
 Board.displayName = "Board";
+Board.propTypes = {
+    boardState: PropTypes.array.isRequired
+};
 export default Board;

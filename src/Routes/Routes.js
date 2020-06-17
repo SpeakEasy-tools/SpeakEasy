@@ -3,7 +3,6 @@ import { Route } from "react-router";
 import {
     TwentyFortyEight,
     About,
-    Configs,
     Contact,
     Dictionary,
     EyeSpy,
@@ -13,6 +12,7 @@ import {
     Home,
     Instructor,
     Memory,
+    Modules,
     PopQuiz,
     Profile,
     Sudoku,
@@ -97,10 +97,10 @@ export const WORD_SEARCH = {
     component: WordSearch
 };
 
-export const CONFIGS = {
-    path: "/configs",
-    name: "Module Configurations",
-    component: Configs
+export const MODULES = {
+    path: "/modules",
+    name: "Module management",
+    component: Modules
 };
 
 const routes = [
@@ -125,7 +125,7 @@ const routes = [
     WORD_SEARCH
 ];
 
-const devRoutes = [CONFIGS];
+const devRoutes = [MODULES];
 const adminRoutes = [INSTRUCTOR];
 
 export const Routes = userRole => {

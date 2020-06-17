@@ -24,11 +24,12 @@ export async function getVoices() {
 }
 
 async function TextToSpeech(text, language) {
-    const translation = await Promise.resolve(translate(text, language.code));
+    const { translation } = await Promise.resolve(
+        translate(text, language.code)
+    );
     const synth = await Promise.resolve(
         synthesizeSpeech(translation, language.code).catch(console.error)
     ).catch(console.error);
-
     return {
         text: text,
         language: { ...language },

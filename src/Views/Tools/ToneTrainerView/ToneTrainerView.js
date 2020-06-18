@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components";
 import { SearchBar } from "../../../Components/SearchBar";
 import ToneTrainerComponent from "./ToneTrainerComponent";
 
@@ -35,9 +34,6 @@ function ToneTrainerView() {
     }, [results]);
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper />
-            </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <SearchBar results={setResults} />

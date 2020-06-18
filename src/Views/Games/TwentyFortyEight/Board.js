@@ -8,6 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Tile from "./Tile";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import { ScoreBoard } from "../../../Components/ScoreBoard";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -237,7 +238,6 @@ function Board({ languageCode, adaptive, updateScore }) {
                 )
             );
         index = Math.round(index + Number.EPSILON);
-        console.log(`index: ${index}`);
 
         if (adaptive) {
             switch (index) {
@@ -358,7 +358,7 @@ function Board({ languageCode, adaptive, updateScore }) {
             {gameOver && (
                 <div className={clsx(classes.row)}>
                     <div className={clsx(classes.pad)}>
-                        <Typography variant="h2" color="secondary">
+                        <Typography variant="h4" color="secondary">
                             Game over
                         </Typography>
                     </div>
@@ -374,7 +374,12 @@ function Board({ languageCode, adaptive, updateScore }) {
                     </div>
                 </div>
             ) : (
-                <>{board && GetRows()}</>
+                <>
+                    <div className={clsx(classes.row)}>
+                        <ScoreBoard score={() => score} />
+                    </div>
+                    {board && GetRows()}
+                </>
             )}
         </div>
     );

@@ -8,16 +8,6 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { GetConfigsByName } from "../../../Queries";
 import ParseConfig from "./ParseConfig";
 
-const languages = [
-    {
-        language_code: "zh-Hans",
-        language_label: "Chinese-Simplified"
-    },
-    {
-        language_code: "en-US",
-        language_label: "English-US"
-    }
-];
 const modes = [{ mode: "Explore" }, { mode: "Quiz" }];
 
 const useStyles = makeStyles(theme => ({
@@ -28,15 +18,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Settings({
-    language,
-    setLanguage,
-    mode,
-    setMode,
-    config,
-    setConfig,
-    setParsedConfigs
-}) {
+function Settings({ mode, setMode, config, setConfig, setParsedConfigs }) {
     const classes = useStyles(Theme);
 
     const [configs] = GetConfigsByName("eye-spy");
@@ -62,25 +44,6 @@ function Settings({
                             <TextField
                                 {...params}
                                 label="Select Config"
-                                variant="outlined"
-                                margin="none"
-                            />
-                        )}
-                    />
-                </div>
-                <div className={clsx(classes.pad)}>
-                    <Autocomplete
-                        id="language-select"
-                        autoHighlight
-                        options={languages}
-                        value={language}
-                        getOptionLabel={option => option.language_label}
-                        style={{ width: 300 }}
-                        onChange={(e, v) => setLanguage(v)}
-                        renderInput={params => (
-                            <TextField
-                                {...params}
-                                label="Select language"
                                 variant="outlined"
                                 margin="none"
                             />

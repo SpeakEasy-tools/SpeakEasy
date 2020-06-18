@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
-import Settings from "./Settings";
-import Instructions from "./Instructions";
 import { GetRandomLessons } from "../../../Queries";
 import Board from "./Board";
+import { ControlBar } from "../../../Components/ControlBar";
+import Settings from "./Settings";
+import Instructions from "./Instructions";
+import { ScoreBoard } from "../../../Components/ScoreBoard";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,27 +31,26 @@ function Memory() {
     const [language, setLanguage] = useState(null);
     const [boardSize, setBoardSize] = useState(null);
 
-    const settings = Settings(language, setLanguage, boardSize, setBoardSize);
-    const instructions = Instructions();
     const [score, setScore] = useState(0);
     const [time, setTime] = useState(null);
-
-    const getSettings = () => {
-        return settings;
-    };
-    const getInstructions = () => {
-        return instructions;
-    };
-    const getScore = () => {
-        return score;
-    };
-    const getTime = () => {
-        return time;
-    };
 
     const [tileCount, setTileCount] = useState(null);
     const [lessons] = GetRandomLessons(tileCount);
     const [tiles, setTiles] = useState(null);
+
+    const settings = Settings({
+        boardSize: boardSize,
+        setBoardSize: setBoardSize
+    });
+    const instructions = Instructions();
+
+    function getSettings() {
+        console.log(time);
+        return settings;
+    }
+    function getInstructions() {
+        return instructions;
+    }
 
     useEffect(() => {
         if (!lessons) return;
@@ -66,22 +66,26 @@ function Memory() {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper
-                    settings={getSettings}
+            <div className={clsx(classes.column)}>
+                <ControlBar
+                    updateLanguage={setLanguage}
                     instructions={getInstructions}
-                    score={getScore}
-                    time={getTime}
+                    settings={getSettings}
                 />
             </div>
-            {tiles && language && (
-                <Board
-                    tiles={tiles}
-                    language={language.text}
-                    setScore={setScore}
-                    setTime={setTime}
-                />
-            )}
+            <div className={clsx(classes.column)}>
+                {tiles && language && (
+                    <>
+                        <ScoreBoard score={score} />
+                        <Board
+                            tiles={tiles}
+                            language={language.text}
+                            setScore={setScore}
+                            setTime={setTime}
+                        />
+                    </>
+                )}
+            </div>
         </div>
     );
 }

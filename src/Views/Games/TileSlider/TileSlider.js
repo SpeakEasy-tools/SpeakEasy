@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Shuffle, Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components";
 import Tile from "./Tile";
+import { ControlBar } from "../../../Components/ControlBar";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: "100%"
+        height: "100%",
+        display: "flex",
+        flexFlow: "row wrap"
     },
     content: {
         padding: theme.spacing(1),
@@ -15,6 +17,11 @@ const useStyles = makeStyles(theme => ({
         height: "100%",
         display: "flex",
         flexFlow: "column noWrap"
+    },
+    column: {
+        display: "flex",
+        flexFlow: "column noWrap",
+        flex: "1 1 auto"
     },
     row: {
         width: "100%",
@@ -32,6 +39,8 @@ function TileSlider() {
 
     const [board, setBoard] = useState(null);
     const [vacant, setVacant] = useState(15);
+
+    const [language, setLanguage] = useState();
 
     const initializeBoard = () => {
         const squares = Shuffle([
@@ -117,38 +126,43 @@ function TileSlider() {
         };
     }, [handleKeyDown]);
 
+    useEffect(() => {
+        console.log(language);
+    }, [language]);
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper />
+            <div className={clsx(classes.column)} style={{ maxWidth: 250 }}>
+                <ControlBar updateLanguage={setLanguage} />
             </div>
             {board && (
-                <>
-                    <div className={clsx(classes.row)}>
-                        <Tile value={board[0]} />
-                        <Tile value={board[1]} />
-                        <Tile value={board[2]} />
-                        <Tile value={board[3]} />
+                <div className={clsx(classes.column)}>
+                    <div className={clsx(classes.pad)}>
+                        <div className={clsx(classes.row)}>
+                            <Tile value={board[0]} />
+                            <Tile value={board[1]} />
+                            <Tile value={board[2]} />
+                            <Tile value={board[3]} />
+                        </div>
+                        <div className={clsx(classes.row)}>
+                            <Tile value={board[4]} />
+                            <Tile value={board[5]} />
+                            <Tile value={board[6]} />
+                            <Tile value={board[7]} />
+                        </div>
+                        <div className={clsx(classes.row)}>
+                            <Tile value={board[8]} />
+                            <Tile value={board[9]} />
+                            <Tile value={board[10]} />
+                            <Tile value={board[11]} />
+                        </div>
+                        <div className={clsx(classes.row)}>
+                            <Tile value={board[12]} />
+                            <Tile value={board[13]} />
+                            <Tile value={board[14]} />
+                            <Tile value={board[15]} />
+                        </div>
                     </div>
-                    <div className={clsx(classes.row)}>
-                        <Tile value={board[4]} />
-                        <Tile value={board[5]} />
-                        <Tile value={board[6]} />
-                        <Tile value={board[7]} />
-                    </div>
-                    <div className={clsx(classes.row)}>
-                        <Tile value={board[8]} />
-                        <Tile value={board[9]} />
-                        <Tile value={board[10]} />
-                        <Tile value={board[11]} />
-                    </div>
-                    <div className={clsx(classes.row)}>
-                        <Tile value={board[12]} />
-                        <Tile value={board[13]} />
-                        <Tile value={board[14]} />
-                        <Tile value={board[15]} />
-                    </div>
-                </>
+                </div>
             )}
         </div>
     );

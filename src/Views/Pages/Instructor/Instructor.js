@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,13 +23,7 @@ function Instructor() {
     document.title = "Instructor";
     const classes = useStyles(Theme);
 
-    return (
-        <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper />
-            </div>
-        </div>
-    );
+    return <div className={clsx(classes.root)}></div>;
 }
 
 Instructor.displayName = "Instructor";

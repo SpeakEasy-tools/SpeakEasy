@@ -8,6 +8,7 @@ import {
     Contacts,
     CropFree,
     ExitToApp,
+    GridOn,
     Help,
     Info,
     KeyboardArrowLeft,
@@ -203,6 +204,9 @@ function Sidebar() {
                         </ListItem>
                         <ListItem button component={Link} to="/tile_slider">
                             <CropFree />
+                        </ListItem>
+                        <ListItem button component={Link} to="/sudoku">
+                            <GridOn />
                         </ListItem>
                     </List>
                 </div>

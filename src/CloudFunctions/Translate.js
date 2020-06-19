@@ -1,5 +1,4 @@
 import firebase from "firebase";
-
 const DetectLanguage = firebase.functions().httpsCallable("detectLanguage");
 const ListLanguages = firebase.functions().httpsCallable("listLanguages");
 const Translate = firebase.functions().httpsCallable("translate");
@@ -22,6 +21,12 @@ export async function translate(text, target) {
     return await Promise.resolve(
         Translate({ text: text, target: target })
             .then(result => result.data)
-            .then(data => data[0])
+            .then(data => {
+                return { text: text, translation: data[0] };
+            })
     );
+}
+
+export async function getTranslations(transcripts, language) {
+    return await Promise.all(transcripts.map(t => translate(t, language)));
 }

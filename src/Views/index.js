@@ -6,7 +6,7 @@ export { TwentyFortyEight } from "./Games/TwentyFortyEight";
 export { WordSearch } from "./Games/WordSearch";
 
 export { About } from "./Pages/About";
-export { Configs } from "./Pages/Configs";
+export { Modules } from "./Pages/Modules";
 export { Contact } from "./Pages/Contact";
 export { FAQ } from "./Pages/FAQ";
 export { Help } from "./Pages/Help";

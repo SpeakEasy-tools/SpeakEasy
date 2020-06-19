@@ -6,11 +6,10 @@ import { Theme } from "../../utils";
 import { Translate } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { listLanguages } from "../../CloudFunctions/Translate";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextToSpeech } from "../../CloudFunctions";
 import Button from "@material-ui/core/Button";
+import { LanguageSelect } from "../LanguageSelect";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -43,10 +42,10 @@ function SearchBar({ results }) {
     const classes = useStyles(Theme);
 
     const [loading, setLoading] = useState(false);
-    const [languages, setLanguages] = useState([]);
     const [language, setLanguage] = useState({});
     const [text, setText] = useState("");
     const [sample, setSample] = useState({});
+
     async function handleSearch() {
         setLoading(true);
         return await Promise.resolve(TextToSpeech(text, language))
@@ -54,16 +53,6 @@ function SearchBar({ results }) {
             .finally(() => setLoading(false));
     }
 
-    async function getLanguages() {
-        setLoading(true);
-        return await Promise.resolve(listLanguages())
-            .then(l => setLanguages(l))
-            .finally(() => setLoading(false));
-    }
-
-    useEffect(() => {
-        getLanguages().finally();
-    }, []);
     useEffect(() => {
         if (sample) {
             results({ ...sample });
@@ -82,31 +71,14 @@ function SearchBar({ results }) {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <TextField
-                        label="Translate text"
-                        placeholder="Hello, World!"
+                        multiline
+                        label="Text to translate"
+                        placeholder="e.g. Hello, World!"
                         onChange={e => setText(e.target.value)}
                         style={{ width: 200 }}
                     />
                 </div>
-                {languages && Boolean(languages.length) && (
-                    <div className={clsx(classes.pad)}>
-                        <Autocomplete
-                            freeSolo
-                            options={languages}
-                            getOptionLabel={option => option.name}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    label="to..."
-                                    placeholder="Spanish"
-                                    variant="outlined"
-                                />
-                            )}
-                            onChange={(e, v) => setLanguage(v)}
-                            style={{ width: 150 }}
-                        />
-                    </div>
-                )}
+                <LanguageSelect setLanguage={setLanguage} />
                 <div className={clsx(classes.pad)}>
                     <Button onClick={handleSearch}>
                         <Typography color="secondary">Translate</Typography>

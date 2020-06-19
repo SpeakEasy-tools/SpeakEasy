@@ -21,8 +21,8 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Configs() {
-    document.title = "Manage Configs";
+function Modules() {
+    document.title = "Manage Modules";
     const classes = useStyles(Theme);
 
     return (
@@ -31,12 +31,10 @@ function Configs() {
                 <ViewWrapper />
             </div>
             <div className={clsx(classes.row)}>
-                <div className={clsx(classes.pad)} style={{ width: "90%" }}>
-                    <ModulesPanel />
-                </div>
+                <ModulesPanel />
             </div>
         </div>
     );
 }
-Configs.displayName = "Configs";
-export default Configs;
+Modules.displayName = "Modules";
+export default Modules;

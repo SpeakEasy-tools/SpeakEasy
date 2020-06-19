@@ -41,7 +41,6 @@ function ToneTrainerComponent({ sample }) {
     const [audioUrl, setAudioUrl] = useState("");
 
     const [example, setExample] = useState("");
-    const [attempts, setAttempts] = useState([]);
     const [attempt, setAttempt] = useState("");
 
     useEffect(() => {
@@ -53,12 +52,13 @@ function ToneTrainerComponent({ sample }) {
             setExample(sample["audioUrl"]);
         }
     }, [sample]);
+
     return (
         <>
             <div className={clsx(classes.row)}>
                 {text && (
                     <div className={clsx(classes.pad)}>
-                        <TextField value={text} label="Text input" />
+                        <TextField multiline value={text} label="Text input" />
                     </div>
                 )}
                 {language && language.name && (
@@ -68,7 +68,11 @@ function ToneTrainerComponent({ sample }) {
                 )}
                 {translation && (
                     <div className={clsx(classes.pad)}>
-                        <TextField value={translation} label="Translation" />
+                        <TextField
+                            multiline
+                            value={translation}
+                            label="Translation"
+                        />
                     </div>
                 )}
                 {audioUrl && (
@@ -89,11 +93,7 @@ function ToneTrainerComponent({ sample }) {
                 <div className={clsx(classes.row)}>
                     <div className={clsx(classes.column)}>
                         <div className={clsx(classes.pad)}>
-                            <TonePractice
-                                attempts={attempts}
-                                setAttempt={setAttempt}
-                                setAttempts={setAttempts}
-                            />
+                            <TonePractice display={setAttempt} />
                         </div>
                     </div>
                     <div className={clsx(classes.column)}>

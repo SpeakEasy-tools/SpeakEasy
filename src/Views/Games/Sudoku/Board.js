@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
 function Board({ boardState }) {
     const classes = useStyles(Theme);
-
+  
     const [board, setBoard] = useState([]);
 
     const [rows, setRows] = useState([]);
@@ -90,7 +90,6 @@ function Board({ boardState }) {
             let value = board[index];
             row.push({ id: index, value: value });
         }
-
         return row;
     }
 

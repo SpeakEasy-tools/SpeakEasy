@@ -79,6 +79,8 @@ function ToneGraph({ example, attempt }) {
             getBuffer(attempt)
                 .then(setAttemptBuffer)
                 .finally(() => setLoading(false));
+        } else {
+            setAttemptBuffer([]);
         }
     }, [attempt]);
     useEffect(() => {
@@ -87,6 +89,8 @@ function ToneGraph({ example, attempt }) {
             fetchF0(attemptBuffer)
                 .then(setAttemptF0)
                 .finally(() => setLoading(false));
+        } else {
+            setAttemptF0([]);
         }
     }, [attemptBuffer]);
     useEffect(() => {
@@ -105,9 +109,6 @@ function ToneGraph({ example, attempt }) {
                 .finally(() => setLoading(false));
         }
     }, [example]);
-    useEffect(() => {
-        console.log(exampleF0);
-    }, [exampleF0]);
 
     return (
         <div className={clsx(classes.root)}>
@@ -125,7 +126,7 @@ function ToneGraph({ example, attempt }) {
                         <Legend verticalAlign="top" />
                         <XAxis
                             type="number"
-                            domain={["auto", "auto"]}
+                            domain={[0, 1]}
                             allowDataOverflow
                             dataKey="t"
                         >
@@ -135,7 +136,7 @@ function ToneGraph({ example, attempt }) {
                         </XAxis>
                         <YAxis
                             type="number"
-                            domain={["auto", "auto"]}
+                            domain={[0, 1]}
                             label={{
                                 value: "F0",
                                 angle: -90,
@@ -147,6 +148,12 @@ function ToneGraph({ example, attempt }) {
                             dataKey="example"
                             stroke={Theme.palette.secondary.main}
                             fill={Theme.palette.secondary.light}
+                        />
+                        <Area
+                            type="monotone"
+                            dataKey="attempt"
+                            stroke={Theme.palette.error.main}
+                            fill={Theme.palette.error.light}
                         />
                     </AreaChart>
                 </ResponsiveContainer>

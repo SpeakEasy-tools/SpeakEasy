@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
 function Board({ boardState }) {
     const classes = useStyles(Theme);
-  
+
     const [board, setBoard] = useState([]);
 
     const [rows, setRows] = useState([]);

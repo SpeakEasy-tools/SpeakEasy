@@ -13,10 +13,11 @@ const useStyles = makeStyles(theme => ({
     },
     row: {
         display: "flex",
-        flex: "1 1 100%"
+        flex: "1 1 100%",
+        justifyContent: "start"
     },
     pad: {
-        padding: theme.spacing(0)
+        padding: theme.spacing(1)
     }
 }));
 
@@ -25,11 +26,6 @@ function Instructions() {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <div className={clsx(classes.pad)}>
-                    <Typography variant="h2">Instructions</Typography>
-                </div>
-            </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography paragraph>

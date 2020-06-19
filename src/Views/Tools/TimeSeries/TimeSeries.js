@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import DataPicker from "./DataPicker";
@@ -99,9 +98,6 @@ const TimeSeries = () => {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper />
-            </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography variant="h4">

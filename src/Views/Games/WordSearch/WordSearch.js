@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
 import Settings from "./Settings";
 import Instructions from "./Instructions";
+import { ControlBar } from "../../../Components";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,8 +45,8 @@ function WordSearch() {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper
+            <div className={clsx(classes.column)}>
+                <ControlBar
                     settings={getSettings}
                     instructions={getInstructions}
                 />

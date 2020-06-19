@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useState } from "react";
+import { useAuth } from "./Firebase";
 import { Switch } from "react-router";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
@@ -14,8 +15,7 @@ import clsx from "clsx";
 
 import { BuildRoutes } from "./Routes";
 import { GRAPHQL_URL, Theme } from "./utils";
-import { Sidebar } from "./Components";
-import { useAuth } from "./Firebase";
+import { Sidebar, ViewWrapper } from "./Components";
 
 /* This object sets up the CSS class names that will be used for this component. */
 const useStyles = makeStyles(() => ({
@@ -101,6 +101,9 @@ export default () => {
                     <Sidebar />
                 </div>
                 <div className={clsx(classes.content)}>
+                    <div className={clsx(classes.row)}>
+                        <ViewWrapper />
+                    </div>
                     <Switch>{BuildRoutes(userRole)}</Switch>
                 </div>
             </div>

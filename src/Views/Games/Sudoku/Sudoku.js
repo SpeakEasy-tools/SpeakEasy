@@ -33,93 +33,6 @@ function Sudoku() {
 
     const [board, setBoard] = useState([]);
 
-    function getBoard() {
-        // This will be replaced with a server call to fetch a board
-        return [
-            null,
-            null,
-            null,
-            2,
-            6,
-            null,
-            7,
-            null,
-            1,
-            6,
-            8,
-            null,
-            null,
-            7,
-            null,
-            null,
-            9,
-            null,
-            1,
-            9,
-            null,
-            null,
-            null,
-            4,
-            5,
-            null,
-            null,
-            8,
-            2,
-            null,
-            1,
-            null,
-            null,
-            null,
-            4,
-            null,
-            null,
-            null,
-            4,
-            6,
-            null,
-            2,
-            9,
-            null,
-            null,
-            null,
-            5,
-            null,
-            null,
-            null,
-            3,
-            null,
-            2,
-            8,
-            null,
-            null,
-            9,
-            3,
-            null,
-            null,
-            null,
-            7,
-            4,
-            null,
-            4,
-            null,
-            null,
-            5,
-            null,
-            null,
-            3,
-            6,
-            7,
-            null,
-            3,
-            null,
-            1,
-            8,
-            null,
-            null,
-            null
-        ];
-    }
-
     const getSettings = () => {
         return settings;
     };
@@ -128,7 +41,16 @@ function Sudoku() {
     };
 
     useEffect(() => {
-        setBoard(getBoard());
+        fetch("http://127.0.0.1:5000/sudoku?difficulty=medium", {
+            method: "POST"
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    setBoard(json);
+                    return json;
+                });
+            }
+        });
     }, []);
     return (
         <div className={clsx(classes.root)}>

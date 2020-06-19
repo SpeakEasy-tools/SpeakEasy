@@ -41,10 +41,29 @@ function Board({ boardState }) {
     const [validChoices, setValidChoices] = useState([]);
 
     const [selectedTile, setSelectedTile] = useState(null);
-    // To check the board we need to check rows, columns, and squares. Returns true if the board is complete, false otherwise
-    function checkBoard() {}
+
+    function checkBoard() {
+        for (let i = 0; i < 9; i++) {
+            let row = getRow(i);
+            let column = getColumn(i);
+            let square = getSquare(i);
+            for (let j = 0; j < 9; j++) {
+                if (
+                    !row.includes(j) ||
+                    !column.includes(j) ||
+                    !square.includes(j)
+                ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     function handleClick(squareId, tileId, e) {
+        if (board[tileId] !== 0 && boardState[tileId] === board[tileId]) {
+            return;
+        }
         setAnchorEl(e);
         setSelectedTile(tileId);
         setValidChoices([...getValid(squareId, tileId)]);
@@ -59,7 +78,6 @@ function Board({ boardState }) {
         setAnchorEl(null);
     }
 
-    // If we use a second board then all we need to do to clear the board is replace it with the initial board.
     function clearBoard() {
         setBoard(boardState);
     }

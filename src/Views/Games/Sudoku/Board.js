@@ -7,6 +7,7 @@ import { Button } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Square from "./Square";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
-function Board({ boardState }) {
+function Board({ boardState, setBoardState }) {
     const classes = useStyles(Theme);
 
     const [board, setBoard] = useState([]);
@@ -38,9 +39,15 @@ function Board({ boardState }) {
 
     const [anchorEl, setAnchorEl] = useState(null);
 
+    const [diffAchorEl, setDiffAnchorEl] = useState(null);
+
     const [validChoices, setValidChoices] = useState([]);
 
     const [selectedTile, setSelectedTile] = useState(null);
+
+    const [selectedDifficulty, setselectedDifficulty] = React.useState(1);
+
+    const difficultyOptions = ["Easy", "Medium", "Hard", "Extreme"];
 
     function checkBoard() {
         for (let i = 0; i < 9; i++) {
@@ -78,8 +85,44 @@ function Board({ boardState }) {
         setAnchorEl(null);
     }
 
+    function handleClear(e) {
+        let newBoard = [...board];
+        newBoard[selectedTile] = parseInt(e.target.textContent);
+        setBoard(newBoard);
+        setAnchorEl(null);
+    }
+
     function clearBoard() {
         setBoard(boardState);
+    }
+
+    function selectDifficulty(e, index) {
+        if (e.target.textContent) {
+            setselectedDifficulty(index);
+            fetch(
+                "http://127.0.0.1:5000/sudoku?difficulty=" +
+                    e.target.textContent,
+                {
+                    method: "POST"
+                }
+            ).then(response => {
+                if (response.ok) {
+                    response.json().then(json => {
+                        setBoard(json);
+                        setBoardState(json);
+                    });
+                }
+            });
+        }
+        setDiffAnchorEl(null);
+    }
+
+    function handleDifficultyClick(event) {
+        setDiffAnchorEl(event.currentTarget);
+    }
+
+    function handleDifficultyClose() {
+        setDiffAnchorEl(null);
     }
 
     // Rows go from top to bottom numbered 0-8
@@ -176,10 +219,40 @@ function Board({ boardState }) {
                 <div className={clsx(classes.pad)}>
                     <Button onClick={clearBoard}> Clear Board </Button>
                 </div>
+                <div className={clsx(classes.pad)}>
+                    <Button
+                        aria-controls="Difficulty-Select"
+                        aria-haspopup="true"
+                        onClick={handleDifficultyClick}
+                    >
+                        Select Difficulty
+                    </Button>
+                    <Menu
+                        id="Difficulty-Select"
+                        anchorEl={diffAchorEl}
+                        keepMounted
+                        open={Boolean(diffAchorEl)}
+                        onClose={handleDifficultyClose}
+                    >
+                        {difficultyOptions.map((option, index) => (
+                            <MenuItem
+                                key={index}
+                                onClick={e => selectDifficulty(e, index)}
+                                selected={index === selectedDifficulty}
+                            >
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </div>
             </div>
             {rows &&
                 rows.map((row, index) => (
-                    <div key={`row${index}`} className={clsx(classes.row)}>
+                    <div
+                        key={`row${index}`}
+                        className={clsx(classes.row)}
+                        aria-controls={"Number Select"}
+                    >
                         {row &&
                             row.map((square, id) => (
                                 <div
@@ -205,6 +278,12 @@ function Board({ boardState }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                <div className={clsx(classes.row)}>
+                    <DeleteIcon key="delete" onClick={handleClear}>
+                        {" "}
+                        {"test"}{" "}
+                    </DeleteIcon>
+                </div>
                 {validChoices.map((v, i) => (
                     <MenuItem key={i} onClick={handleClose}>
                         {v}
@@ -217,6 +296,7 @@ function Board({ boardState }) {
 
 Board.displayName = "Board";
 Board.propTypes = {
-    boardState: PropTypes.array.isRequired
+    boardState: PropTypes.array.isRequired,
+    setBoardState: PropTypes.func.isRequired
 };
 export default Board;

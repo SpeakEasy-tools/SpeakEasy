@@ -41,7 +41,7 @@ function Sudoku() {
     };
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/sudoku?difficulty=medium", {
+        fetch("http://127.0.0.1:5000/sudoku?difficulty=Medium", {
             method: "POST"
         }).then(response => {
             if (response.ok) {
@@ -61,7 +61,9 @@ function Sudoku() {
                 />
             </div>
             <div className={clsx(classes.row)}>
-                {board && board.length === 81 && <Board boardState={board} />}
+                {board && board.length === 81 && (
+                    <Board boardState={board} setBoardState={setBoard} />
+                )}
             </div>
         </div>
     );

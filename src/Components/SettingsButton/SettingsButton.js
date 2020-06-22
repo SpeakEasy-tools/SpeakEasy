@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import {
     Avatar,
-    Button,
     makeStyles,
     Menu,
     MenuItem,
@@ -13,6 +12,7 @@ import {
 import { KeyboardArrowLeft, Settings } from "@material-ui/icons";
 
 import { Theme } from "../../utils";
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,7 +45,7 @@ function SettingsButton({ settings }) {
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
-                <Button
+                <IconButton
                     onClick={handleOpen}
                     style={{ backgroundColor: Theme.palette.secondary.main }}
                 >
@@ -60,12 +60,7 @@ function SettingsButton({ settings }) {
                             }}
                         />
                     </Avatar>
-                    <Typography
-                        style={{ color: Theme.palette.secondary.contrastText }}
-                    >
-                        Settings
-                    </Typography>
-                </Button>
+                </IconButton>
                 <div>
                     <Menu
                         anchorEl={anchorE1}
@@ -110,6 +105,7 @@ function SettingsButton({ settings }) {
         </div>
     );
 }
+
 SettingsButton.displayName = "SettingsButton";
 SettingsButton.propTypes = {
     settings: PropTypes.any

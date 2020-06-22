@@ -4,9 +4,9 @@ import { Theme } from "../../../utils";
 import clsx from "clsx";
 import {
     Card,
+    ControlBar,
     GoogleMap,
-    PanoramaViewer,
-    ViewWrapper
+    PanoramaViewer
 } from "../../../Components";
 import SpyCard from "./SpyCard";
 import NarrativeCard from "./NarrativeCard";
@@ -66,6 +66,10 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         padding: theme.spacing(1)
     },
+    svContainer: {
+        width: "100%",
+        height: "calc(100% - 52px)"
+    },
     spyCard: {
         maxWidth: 300,
         zIndex: 101,
@@ -97,10 +101,9 @@ function EyeSpy() {
     /* Variable to keep track of current Point-of-View in Street View */
     const [svPov, setSvPov] = useState(null);
 
+    const instructions = Instructions();
     const getSettings = () => (
         <Settings
-            language={language}
-            setLanguage={setLanguage}
             mode={mode}
             setMode={setMode}
             config={config}
@@ -109,8 +112,11 @@ function EyeSpy() {
             setParsedConfigs={setParsedConfigs}
         />
     );
-    const getInstructions = () => <Instructions />;
-    const getScore = () => {};
+
+    function getInstructions() {
+        console.log(language);
+        return instructions;
+    }
 
     /* Set state variables from config values */
     useEffect(() => {
@@ -124,14 +130,14 @@ function EyeSpy() {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper
-                    settings={getSettings}
-                    instructions={getInstructions}
-                    score={getScore}
-                />
-            </div>
             <div className={clsx(classes.content)}>
+                <div style={{ position: "absolute", zIndex: 10 }}>
+                    <ControlBar
+                        settings={getSettings}
+                        updateLanguage={setLanguage}
+                        instructions={getInstructions}
+                    />
+                </div>
                 {/* Custom Panorama Container */}
                 {panoramaPath && (
                     <PanoramaViewer
@@ -144,14 +150,7 @@ function EyeSpy() {
                 {/* Street View Container */}
                 <div
                     ref={elem => setStreetViewContainer(elem)}
-                    style={{
-                        position: "relative",
-                        zIndex: 0,
-                        left: 0,
-                        top: 0,
-                        width: "100%",
-                        height: "100%"
-                    }}
+                    className={clsx(classes.svContainer)}
                 />
 
                 {/* Add Points of Interest */}
@@ -175,7 +174,7 @@ function EyeSpy() {
                     ))}
 
                 {/* NARRATION CARD */}
-                {narrative.length && (
+                {Boolean(narrative.length) && (
                     <NarrativeCard
                         narrative={narrative}
                         setNarrative={setNarrative}

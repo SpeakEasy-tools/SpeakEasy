@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
 import ModulesPanel from "./ModulesPanel";
 
 const useStyles = makeStyles(theme => ({
@@ -27,9 +26,6 @@ function Modules() {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper />
-            </div>
             <div className={clsx(classes.row)}>
                 <ModulesPanel />
             </div>

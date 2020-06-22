@@ -2,8 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Theme } from "../../../utils";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
-import { Typography, Divider } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -57,9 +56,6 @@ function Help() {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper />
-            </div>
             {output(headers[0], loginInfo, 0)}
             {output(headers[1], gamesInfo, 1)}
             {output(headers[2], settingInfo, 2)}
@@ -67,5 +63,6 @@ function Help() {
         </div>
     );
 }
+
 Help.displayName = "Help";
 export default Help;

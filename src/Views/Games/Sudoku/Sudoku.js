@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { ViewWrapper } from "../../../Components/ViewWrapper";
 import Board from "./Board";
-import Settings from "./Settings";
 import Instructions from "./Instructions";
+import { ControlBar } from "../../../Components";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,17 +25,15 @@ const useStyles = makeStyles(theme => ({
 
 function Sudoku() {
     document.title = "Sudoku";
-    const [language, setLanguage] = useState(null);
     const classes = useStyles(Theme);
-    const settings = Settings(language, setLanguage);
     const instructions = Instructions();
 
+    const [language, setLanguage] = useState(null);
+    const [isAdaptive, setIsAdaptive] = useState(false);
     const [board, setBoard] = useState([]);
 
-    const getSettings = () => {
-        return settings;
-    };
     const getInstructions = () => {
+        console.log(language, isAdaptive);
         return instructions;
     };
 
@@ -52,18 +49,22 @@ function Sudoku() {
             }
         });
     }, []);
+
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <ViewWrapper
-                    settings={getSettings}
+            <div className={clsx(classes.column)}>
+                <ControlBar
+                    updateLanguage={setLanguage}
+                    updateIsAdaptive={setIsAdaptive}
                     instructions={getInstructions}
                 />
             </div>
-            <div className={clsx(classes.row)}>
-                {board && board.length === 81 && (
-                    <Board boardState={board} setBoardState={setBoard} />
-                )}
+            <div className={clsx(classes.column)}>
+                <div className={clsx(classes.pad)}>
+                    {board && board.length === 81 && (
+                        <Board boardState={board} setBoardState={setBoard} />
+                    )}
+                </div>
             </div>
         </div>
     );

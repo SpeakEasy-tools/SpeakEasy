@@ -8,7 +8,9 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles(theme => ({
     root: {
         height: "100%",
-        width: "100%"
+        width: "100%",
+        backgroundColor: theme.palette.secondary.main,
+        borderRadius: 10
     },
     row: {
         display: "flex",
@@ -16,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "space-around"
     },
     pad: {
-        margin: theme.spacing(1),
+        padding: theme.spacing(1),
         borderRadius: 10
     }
 }));

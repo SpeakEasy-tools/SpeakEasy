@@ -1,5 +1,6 @@
 export { Breadcrumbs } from "./Breadcrumbs";
 export { Card } from "./Card";
+export { ControlBar } from "./ControlBar";
 export { GoogleMap } from "./GoogleMap";
 export { HomeButton } from "./HomeButton";
 export { InstructionsButton } from "./InstructionsButton";

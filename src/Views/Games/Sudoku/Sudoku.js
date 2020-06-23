@@ -37,8 +37,8 @@ function Sudoku() {
         return instructions;
     };
 
-    useEffect(() => {
-        fetch("http://127.0.0.1:5000/sudoku?difficulty=Medium", {
+    function getBoard(difficulty) {
+        fetch("api.speakeasy.services/sudoku?difficulty=" + difficulty, {
             method: "POST"
         }).then(response => {
             if (response.ok) {
@@ -48,6 +48,10 @@ function Sudoku() {
                 });
             }
         });
+    }
+
+    useEffect(() => {
+        setBoard(getBoard("Medium"));
     }, []);
 
     return (

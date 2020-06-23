@@ -51,17 +51,19 @@ function Board({ boardState, setBoardState }) {
 
     function checkBoard() {
         for (let i = 0; i < 9; i++) {
-            let row = getRow(i);
-            let column = getColumn(i);
-            let square = getSquare(i);
-            for (let j = 0; j < 9; j++) {
-                if (
-                    !row.includes(j) ||
-                    !column.includes(j) ||
-                    !square.includes(j)
-                ) {
-                    return false;
-                }
+            let rowset = new Set(getRow(i).map(a => a.value));
+            let colset = new Set(getColumn(i).map(a => a.value));
+            let squareset = new Set(
+                getSquare(i)
+                    .map(a => [a[0].value, a[1].value, a[2].value])
+                    .flat()
+            );
+            if (
+                rowset.length !== 9 ||
+                colset.length !== 9 ||
+                squareset.length !== 9
+            ) {
+                return false;
             }
         }
         return true;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { Button } from "@material-ui/core";
+import { Button, ListItemIcon } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Square from "./Square";
@@ -26,6 +26,10 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             cursor: "pointer"
         }
+    },
+    column: {
+        minwidth: "0px",
+        width: "60px"
     }
 }));
 
@@ -87,9 +91,9 @@ function Board({ boardState, setBoardState }) {
         setAnchorEl(null);
     }
 
-    function handleClear(e) {
+    function handleClear() {
         let newBoard = [...board];
-        newBoard[selectedTile] = parseInt(e.target.textContent);
+        newBoard[selectedTile] = 0;
         setBoard(newBoard);
         setAnchorEl(null);
     }
@@ -102,7 +106,7 @@ function Board({ boardState, setBoardState }) {
         if (e.target.textContent) {
             setselectedDifficulty(index);
             fetch(
-                "http://127.0.0.1:5000/sudoku?difficulty=" +
+                "api.speakeasy.services/sudoku?difficulty=" +
                     e.target.textContent,
                 {
                     method: "POST"
@@ -280,12 +284,14 @@ function Board({ boardState, setBoardState }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <div className={clsx(classes.row)}>
-                    <DeleteIcon key="delete" onClick={handleClear}>
-                        {" "}
-                        {"test"}{" "}
-                    </DeleteIcon>
-                </div>
+                <MenuItem>
+                    <ListItemIcon style={{ minWidth: "0px" }}>
+                        <DeleteIcon
+                            key="delete"
+                            onClick={handleClear}
+                        ></DeleteIcon>
+                    </ListItemIcon>
+                </MenuItem>
                 {validChoices.map((v, i) => (
                     <MenuItem key={i} onClick={handleClose}>
                         {v}

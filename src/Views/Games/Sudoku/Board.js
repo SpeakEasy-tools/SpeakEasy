@@ -26,10 +26,6 @@ const useStyles = makeStyles(theme => ({
         "&:hover": {
             cursor: "pointer"
         }
-    },
-    column: {
-        minwidth: "0px",
-        width: "60px"
     }
 }));
 

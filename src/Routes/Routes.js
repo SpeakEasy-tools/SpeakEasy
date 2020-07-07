@@ -3,6 +3,7 @@ import { Route } from "react-router";
 import {
     TwentyFortyEight,
     About,
+    CocoExplorer,
     Contact,
     Dictionary,
     EyeSpy,
@@ -66,6 +67,11 @@ export const PROFILE = {
     name: "Profile",
     component: Profile
 };
+export const COCO_EXPLORER = {
+    path: "/coco_explorer",
+    name: "Coco Explorer",
+    component: CocoExplorer
+};
 export const DICTIONARY = {
     path: "/dictionary",
     name: "Dictionary",
@@ -117,6 +123,7 @@ const routes = [
     HELP,
     HOME,
     PROFILE,
+    COCO_EXPLORER,
     DICTIONARY,
     FLASHCARDS,
     POP_QUIZ,

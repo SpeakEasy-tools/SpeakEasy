@@ -14,6 +14,7 @@ export { Home } from "./Pages/Home";
 export { Instructor } from "./Pages/Instructor";
 export { Profile } from "./Pages/Profile";
 
+export { CocoExplorer } from "./Tools/CocoExplorer";
 export { Dictionary } from "./Tools/Dictionary";
 export { Flashcards } from "./Tools/Flashcards";
 export { PopQuiz } from "./Tools/PopQuiz";

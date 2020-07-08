@@ -13,6 +13,7 @@ export { Help } from "./Pages/Help";
 export { Home } from "./Pages/Home";
 export { Instructor } from "./Pages/Instructor";
 export { Profile } from "./Pages/Profile";
+export { Page404 } from "./Pages/Page404";
 
 export { Dictionary } from "./Tools/Dictionary";
 export { Flashcards } from "./Tools/Flashcards";

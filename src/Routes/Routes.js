@@ -13,6 +13,7 @@ import {
     Instructor,
     Memory,
     Modules,
+    Page404,
     PopQuiz,
     Profile,
     Sudoku,
@@ -103,6 +104,12 @@ export const MODULES = {
     component: Modules
 };
 
+export const PAGE404 = {
+    path: "*",
+    name: "404",
+    component: Page404
+};
+
 const routes = [
     LANDING,
     HOME,
@@ -122,7 +129,8 @@ const routes = [
     POP_QUIZ,
     TIME_SERIES,
     TONE_TRAINER,
-    WORD_SEARCH
+    WORD_SEARCH,
+    PAGE404
 ];
 
 const devRoutes = [MODULES];

@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 function Help() {
     document.title = "Help";
     const classes = useStyles(Theme);
-    const headers = ["LOGIN", "GAMES", "SETTINGS", "MISC"];
+    const headers = ["Login", "Games", "Settings", "Misc."];
 
     const output = (headerContent, bodyContent, index) => (
         <div className={clsx(classes.pad)} key={index}>
@@ -46,7 +46,7 @@ function Help() {
         "Under the person icon on the left menu, you can find the login options. By logging in we are able to keep track of any progress you make through the games and tailor the experience to you over time. Login can be done through Google, Github, or any email.";
 
     const gamesInfo =
-        "Under the dice block icon on the left menu, you can find all of the games. Currently available games are 2048, Eye Spy, and Tile Slider. 2048 will steadily change from numbers to your chosen language of study as you play. [EYE SPY INFO]. [TILE SLIDER INFO].";
+        "Under the dice block icon on the left menu, you can find all of the games. Currently available games are 2048, Eye Spy, Sudoku, Memory, and Tile Slider. 2048 will steadily change from numbers to your chosen language of study as you play. In Eye Spy, you will find the object that corresponds with the given phrase. Sudoku will test your knowlege of numbers, and you will need to fill the board so that every column, row, and square has the numbers 1-9. For Memory, you will need to match tiles that contain the same phrase. The goal of Tile Slider is to order the tiles in order from 1-15, which tests your knowlege of numbers.";
 
     const settingInfo =
         "Under the wrench icon, you can find the settings and tools. The Dictionary can be used to search in Mandarin as of now. Flashcards can be used to review and study any material used throughout SpeakEasy. Pop Quiz allows you to test yourself further on what you have learned so far. Tone Trainer can help you practice pitch accent in Mandarin.";

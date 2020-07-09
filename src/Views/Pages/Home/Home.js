@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { HOME } from "../../../Routes/Routes";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import firebase from "firebase/app";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,14 +33,33 @@ const useStyles = makeStyles(theme => ({
 function Home() {
     document.title = HOME.name;
     const classes = useStyles(Theme);
+    var user = firebase.auth().currentUser;
 
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
-                    <Typography variant="h4" color="secondary">
-                        Welcome to SpeakEasy.tools
-                    </Typography>
+                    {user ? (
+                        <Typography variant="h4" color="secondary">
+                            Welcome back {user.displayName.split(" ")[0]}! To
+                            coninue learning, select a tool or game from the
+                            menu.
+                        </Typography>
+                    ) : (
+                        <Typography variant="h6" color="secondary">
+                            SpeakEasy.tools is a data-driven web application for
+                            helping people learn a second language through
+                            artificial intelligence, data science, immersion,
+                            and gamification. SpeakEasy.tools has a portable and
+                            unique combination of tone training, fun and
+                            educational games, and informative progress tracking
+                            allows you to learn to read a language faster and
+                            learn more accurate pronunciation than the average
+                            language learning program. To get started, please
+                            log in or create an account by clicking the profile
+                            icon in the top left.
+                        </Typography>
+                    )}
                     <Divider />
                 </div>
             </div>

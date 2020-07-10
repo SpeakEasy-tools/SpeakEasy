@@ -28,6 +28,8 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }));
+// {(board[id] !== boardState[id]) ? (
+// color: "#9c9c9c"
 
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
 function Board({ boardState, setBoardState }) {
@@ -72,6 +74,11 @@ function Board({ boardState, setBoardState }) {
     function handleClick(squareId, tileId, e) {
         if (board[tileId] !== 0 && boardState[tileId] === board[tileId]) {
             return;
+        } else {
+            let id =
+                9 * squareId + (Math.floor(tileId / 9) % 3) * 3 + (tileId % 3);
+            let tiles = document.querySelectorAll(".makeStyles-tileRoot-39");
+            tiles[id].style.color = "#5c5c5c";
         }
         setAnchorEl(e);
         setSelectedTile(tileId);
@@ -289,7 +296,11 @@ function Board({ boardState, setBoardState }) {
                     </ListItemIcon>
                 </MenuItem>
                 {validChoices.map((v, i) => (
-                    <MenuItem key={i} onClick={handleClose}>
+                    <MenuItem
+                        key={i}
+                        onClick={handleClose}
+                        style={{ justifyContent: "center" }}
+                    >
                         {v}
                     </MenuItem>
                 ))}

@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import clsx from "clsx";
 
 const useStyles = makeStyles(() => ({
-    root: {
+    tileRoot: {
         width: "100%"
     }
 }));
@@ -15,7 +15,7 @@ function Tile({ value }) {
     const classes = useStyles(Theme);
 
     return (
-        <div className={clsx(classes.root)}>
+        <div className={clsx(classes.tileRoot)}>
             {value ? (
                 <Typography align="center" variant="h6">
                     {value}

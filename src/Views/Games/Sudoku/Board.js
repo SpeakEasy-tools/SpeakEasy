@@ -28,8 +28,6 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }));
-// {(board[id] !== boardState[id]) ? (
-// color: "#9c9c9c"
 
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
 function Board({ boardState, setBoardState }) {

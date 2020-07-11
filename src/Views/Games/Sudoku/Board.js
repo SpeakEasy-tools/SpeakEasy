@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { Button } from "@material-ui/core";
+import { Button, ListItemIcon } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Square from "./Square";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -29,11 +30,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
-function Board({ boardState }) {
+function Board({ boardState, setBoardState }) {
     const classes = useStyles(Theme);
-    // I know it's used in almost every tutorial but never ever use var, if you need to update the variable use let.
-    // Using var can cause your variable to have scope outside of your function
-    // When you use a useState hook the output is a variable and a setter, make sure you're getting both
 
     const [board, setBoard] = useState([]);
 
@@ -41,13 +39,45 @@ function Board({ boardState }) {
 
     const [anchorEl, setAnchorEl] = useState(null);
 
+    const [diffAchorEl, setDiffAnchorEl] = useState(null);
+
     const [validChoices, setValidChoices] = useState([]);
 
     const [selectedTile, setSelectedTile] = useState(null);
-    // To check the board we need to check rows, columns, and squares. Returns true if the board is complete, false otherwise
-    function checkBoard() {}
+
+    const [selectedDifficulty, setselectedDifficulty] = React.useState(1);
+
+    const difficultyOptions = ["Easy", "Medium", "Hard", "Extreme"];
+
+    function checkBoard() {
+        for (let i = 0; i < 9; i++) {
+            let rowset = new Set(getRow(i).map(a => a.value));
+            let colset = new Set(getColumn(i).map(a => a.value));
+            let squareset = new Set(
+                getSquare(i)
+                    .map(a => [a[0].value, a[1].value, a[2].value])
+                    .flat()
+            );
+            if (
+                rowset.length !== 9 ||
+                colset.length !== 9 ||
+                squareset.length !== 9
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     function handleClick(squareId, tileId, e) {
+        if (board[tileId] !== 0 && boardState[tileId] === board[tileId]) {
+            return;
+        } else {
+            let id =
+                9 * squareId + (Math.floor(tileId / 9) % 3) * 3 + (tileId % 3);
+            let tiles = document.querySelectorAll(".makeStyles-tileRoot-39");
+            tiles[id].style.color = "#5c5c5c";
+        }
         setAnchorEl(e);
         setSelectedTile(tileId);
         setValidChoices([...getValid(squareId, tileId)]);
@@ -62,9 +92,44 @@ function Board({ boardState }) {
         setAnchorEl(null);
     }
 
-    // If we use a second board then all we need to do to clear the board is replace it with the initial board.
+    function handleClear() {
+        let newBoard = [...board];
+        newBoard[selectedTile] = 0;
+        setBoard(newBoard);
+        setAnchorEl(null);
+    }
+
     function clearBoard() {
         setBoard(boardState);
+    }
+
+    function selectDifficulty(e, index) {
+        if (e.target.textContent) {
+            setselectedDifficulty(index);
+            fetch(
+                "api.speakeasy.services/sudoku?difficulty=" +
+                    e.target.textContent,
+                {
+                    method: "POST"
+                }
+            ).then(response => {
+                if (response.ok) {
+                    response.json().then(json => {
+                        setBoard(json);
+                        setBoardState(json);
+                    });
+                }
+            });
+        }
+        setDiffAnchorEl(null);
+    }
+
+    function handleDifficultyClick(event) {
+        setDiffAnchorEl(event.currentTarget);
+    }
+
+    function handleDifficultyClose() {
+        setDiffAnchorEl(null);
     }
 
     // Rows go from top to bottom numbered 0-8
@@ -75,7 +140,6 @@ function Board({ boardState }) {
             let value = board[index];
             row.push({ id: index, value: value });
         }
-
         return row;
     }
 
@@ -162,10 +226,40 @@ function Board({ boardState }) {
                 <div className={clsx(classes.pad)}>
                     <Button onClick={clearBoard}> Clear Board </Button>
                 </div>
+                <div className={clsx(classes.pad)}>
+                    <Button
+                        aria-controls="Difficulty-Select"
+                        aria-haspopup="true"
+                        onClick={handleDifficultyClick}
+                    >
+                        Select Difficulty
+                    </Button>
+                    <Menu
+                        id="Difficulty-Select"
+                        anchorEl={diffAchorEl}
+                        keepMounted
+                        open={Boolean(diffAchorEl)}
+                        onClose={handleDifficultyClose}
+                    >
+                        {difficultyOptions.map((option, index) => (
+                            <MenuItem
+                                key={index}
+                                onClick={e => selectDifficulty(e, index)}
+                                selected={index === selectedDifficulty}
+                            >
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </div>
             </div>
             {rows &&
                 rows.map((row, index) => (
-                    <div key={`row${index}`} className={clsx(classes.row)}>
+                    <div
+                        key={`row${index}`}
+                        className={clsx(classes.row)}
+                        aria-controls={"Number Select"}
+                    >
                         {row &&
                             row.map((square, id) => (
                                 <div
@@ -191,8 +285,20 @@ function Board({ boardState }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                <MenuItem>
+                    <ListItemIcon style={{ minWidth: "0px" }}>
+                        <DeleteIcon
+                            key="delete"
+                            onClick={handleClear}
+                        ></DeleteIcon>
+                    </ListItemIcon>
+                </MenuItem>
                 {validChoices.map((v, i) => (
-                    <MenuItem key={i} onClick={handleClose}>
+                    <MenuItem
+                        key={i}
+                        onClick={handleClose}
+                        style={{ justifyContent: "center" }}
+                    >
                         {v}
                     </MenuItem>
                 ))}
@@ -203,6 +309,7 @@ function Board({ boardState }) {
 
 Board.displayName = "Board";
 Board.propTypes = {
-    boardState: PropTypes.array.isRequired
+    boardState: PropTypes.array.isRequired,
+    setBoardState: PropTypes.func.isRequired
 };
 export default Board;

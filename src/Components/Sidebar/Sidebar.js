@@ -90,6 +90,7 @@ function Sidebar() {
     };
     const handleSignIn = () => {
         setSignIn(true);
+        handleSelection("user");
     };
 
     useEffect(() => {
@@ -136,7 +137,7 @@ function Sidebar() {
                     </ListItem>
                 </List>
             </div>
-            {signIn && (
+            {signIn && selected && selected === "user" && (
                 <div className={clsx(classes.column)}>
                     <List>
                         <ListItem button onClick={() => setSignIn(false)}>
@@ -150,7 +151,7 @@ function Sidebar() {
                     <FirebaseUI />
                 </div>
             )}
-            {selected && selected === "user" && (
+            {!signIn && selected && selected === "user" && (
                 <div className={clsx(classes.column)}>
                     <List>
                         <ListItem button onClick={handleSelection}>

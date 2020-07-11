@@ -93,11 +93,11 @@ function Tile({ value, label }) {
                         }}
                     >
                         {label ? (
-                            <Typography noWrap align="center" variant="h4">
+                            <Typography align="center" variant="h6">
                                 {label}
                             </Typography>
                         ) : (
-                            <Typography align="center" variant="h4">
+                            <Typography align="center" variant="h6">
                                 &nbsp;
                             </Typography>
                         )}

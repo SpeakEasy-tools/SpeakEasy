@@ -41,28 +41,37 @@ function TileSlider() {
     const [vacant, setVacant] = useState(15);
 
     const [language, setLanguage] = useState();
-
-    const initializeBoard = () => {
-        const squares = Shuffle([
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15
-        ]);
-
+    function isntSolvable(board) {
+        let inv_count = 0;
+        for (let i = 0; i < 16 - 1; i++) {
+            for (let j = i + 1; j < 16; j++) {
+                if (board[j] && board[i] && board[i] > board[j]) inv_count++;
+            }
+        }
+        return inv_count & 1;
+    }
+    const initializeBoard = useCallback(() => {
+        do {
+            var squares = Shuffle([
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]);
+        } while (isntSolvable(squares));
         return [...squares, null];
-    };
+    }, []);
 
     const shift = useCallback(
         direction => {
@@ -118,7 +127,7 @@ function TileSlider() {
 
     useEffect(() => {
         setBoard(initializeBoard());
-    }, []);
+    }, [initializeBoard]);
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
         return () => {

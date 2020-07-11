@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function CocoExplorer() {
+    document.title = "Coco Explorer";
     const classes = useStyles(Theme);
 
     const cocoCategories = GetCocoCategories();

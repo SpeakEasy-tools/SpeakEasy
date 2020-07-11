@@ -26,106 +26,32 @@ const useStyles = makeStyles(theme => ({
 function Sudoku() {
     document.title = "Sudoku";
     const classes = useStyles(Theme);
+    const instructions = Instructions();
 
     const [language, setLanguage] = useState(null);
     const [isAdaptive, setIsAdaptive] = useState(false);
     const [board, setBoard] = useState([]);
 
-    const instructions = Instructions();
-
-    function getInstructions() {
+    const getInstructions = () => {
         console.log(language, isAdaptive);
         return instructions;
-    }
-    function getBoard() {
-        // This will be replaced with a server call to fetch a board
-        return [
-            null,
-            null,
-            null,
-            2,
-            6,
-            null,
-            7,
-            null,
-            1,
-            6,
-            8,
-            null,
-            null,
-            7,
-            null,
-            null,
-            9,
-            null,
-            1,
-            9,
-            null,
-            null,
-            null,
-            4,
-            5,
-            null,
-            null,
-            8,
-            2,
-            null,
-            1,
-            null,
-            null,
-            null,
-            4,
-            null,
-            null,
-            null,
-            4,
-            6,
-            null,
-            2,
-            9,
-            null,
-            null,
-            null,
-            5,
-            null,
-            null,
-            null,
-            3,
-            null,
-            2,
-            8,
-            null,
-            null,
-            9,
-            3,
-            null,
-            null,
-            null,
-            7,
-            4,
-            null,
-            4,
-            null,
-            null,
-            5,
-            null,
-            null,
-            3,
-            6,
-            7,
-            null,
-            3,
-            null,
-            1,
-            8,
-            null,
-            null,
-            null
-        ];
+    };
+
+    function getBoard(difficulty) {
+        fetch("api.speakeasy.services/sudoku?difficulty=" + difficulty, {
+            method: "POST"
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(json => {
+                    setBoard(json);
+                    return json;
+                });
+            }
+        });
     }
 
     useEffect(() => {
-        setBoard(getBoard());
+        setBoard(getBoard("Medium"));
     }, []);
 
     return (
@@ -140,7 +66,7 @@ function Sudoku() {
             <div className={clsx(classes.column)}>
                 <div className={clsx(classes.pad)}>
                     {board && board.length === 81 && (
-                        <Board boardState={board} />
+                        <Board boardState={board} setBoardState={setBoard} />
                     )}
                 </div>
             </div>

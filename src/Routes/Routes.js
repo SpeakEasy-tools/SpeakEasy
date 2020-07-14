@@ -136,8 +136,7 @@ const routes = [
     POP_QUIZ,
     TIME_SERIES,
     TONE_TRAINER,
-    WORD_SEARCH,
-    PAGE404
+    WORD_SEARCH
 ];
 
 const devRoutes = [MODULES];
@@ -148,8 +147,10 @@ export const Routes = userRole => {
     if (userRole === "admin") {
         newRoutes = [...newRoutes].concat([...adminRoutes]);
     }
-    if (process.env.NODE_ENV === "production") return newRoutes;
-    return [...newRoutes].concat([...devRoutes]);
+    if (process.env.NODE_ENV === "production") {
+        return [...newRoutes].concat([PAGE404]);
+    }
+    return [...newRoutes].concat([...devRoutes]).concat([PAGE404]);
 };
 
 export const BuildRoutes = userRole =>

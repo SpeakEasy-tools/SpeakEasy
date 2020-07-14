@@ -14,11 +14,11 @@ jobs:
       node-version: 12.x
 
     steps:
+    - uses: actions/checkout@v2
+
     - run: openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -pass env:pass -d -in config.asc -out src/config.js
       env:
-        pass: ${{ secrets.ENCPASS }}
-
-    - uses: actions/checkout@v2
+        pass: ${{ secrets.ENCPASS }} 
 
     - name: Use Node.js ${{ env.node-version }}
       uses: actions/setup-node@v1

@@ -16,10 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -pass env:pass -d -in config.asc -out src/config.js
-      env:
-        pass: ${{ secrets.ENCPASS }} 
-
     - name: Use Node.js ${{ env.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -41,5 +37,9 @@ jobs:
     - run: yarn install --frozen-lockfile --prefer-offline
 
     - run: yarn lint
+
+    - run: openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -pass env:pass -d -in config.asc -out src/config.js
+      env:
+        pass: ${{ secrets.ENCPASS }}
 
     - run: yarn build

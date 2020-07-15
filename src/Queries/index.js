@@ -1,3 +1,6 @@
+export { GetCocoCategories } from "./CocoCategories";
+export { GetCocoAnnotationsByImageId } from "./CocoAnnotations";
+export { GetCocoImagesByCategory } from "./CocoImages";
 export { GetCorpus, GetRandomCorpus, GetCorpusById } from "./Corpus";
 export {
     DeleteCourse,

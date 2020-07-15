@@ -3,6 +3,7 @@ import { Route } from "react-router";
 import {
     TwentyFortyEight,
     About,
+    CocoExplorer,
     Contact,
     Dictionary,
     EyeSpy,
@@ -67,6 +68,11 @@ export const PROFILE = {
     name: "Profile",
     component: Profile
 };
+export const COCO_EXPLORER = {
+    path: "/coco_explorer",
+    name: "Coco Explorer",
+    component: CocoExplorer
+};
 export const DICTIONARY = {
     path: "/dictionary",
     name: "Dictionary",
@@ -124,13 +130,13 @@ const routes = [
     HELP,
     HOME,
     PROFILE,
+    COCO_EXPLORER,
     DICTIONARY,
     FLASHCARDS,
     POP_QUIZ,
     TIME_SERIES,
     TONE_TRAINER,
-    WORD_SEARCH,
-    PAGE404
+    WORD_SEARCH
 ];
 
 const devRoutes = [MODULES];
@@ -141,8 +147,10 @@ export const Routes = userRole => {
     if (userRole === "admin") {
         newRoutes = [...newRoutes].concat([...adminRoutes]);
     }
-    if (process.env.NODE_ENV === "production") return newRoutes;
-    return [...newRoutes].concat([...devRoutes]);
+    if (process.env.NODE_ENV === "production") {
+        return [...newRoutes].concat([PAGE404]);
+    }
+    return [...newRoutes].concat([...devRoutes]).concat([PAGE404]);
 };
 
 export const BuildRoutes = userRole =>

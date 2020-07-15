@@ -63,7 +63,6 @@ function LanguageSelect({ setLanguage }) {
                 Boolean(languages.length) && (
                     <div className={clsx(classes.pad)}>
                         <Autocomplete
-                            freeSolo
                             options={languages}
                             getOptionLabel={option => option.name}
                             renderInput={params => (
@@ -75,7 +74,7 @@ function LanguageSelect({ setLanguage }) {
                                 />
                             )}
                             onChange={(e, v) => setLanguage(v)}
-                            style={{ width: 150 }}
+                            style={{ width: 200 }}
                         />
                     </div>
                 )

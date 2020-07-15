@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
@@ -29,44 +29,24 @@ function Sudoku() {
     const instructions = Instructions();
 
     const [language, setLanguage] = useState(null);
-    const [isAdaptive, setIsAdaptive] = useState(false);
-    const [board, setBoard] = useState([]);
 
     const getInstructions = () => {
-        console.log(language, isAdaptive);
+        console.log(language);
         return instructions;
     };
-
-    function getBoard(difficulty) {
-        fetch("api.speakeasy.services/sudoku?difficulty=" + difficulty, {
-            method: "POST"
-        }).then(response => {
-            if (response.ok) {
-                response.json().then(json => {
-                    setBoard(json);
-                    return json;
-                });
-            }
-        });
-    }
-
-    useEffect(() => {
-        setBoard(getBoard("Medium"));
-    }, []);
 
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.column)}>
                 <ControlBar
                     updateLanguage={setLanguage}
-                    updateIsAdaptive={setIsAdaptive}
                     instructions={getInstructions}
                 />
             </div>
             <div className={clsx(classes.column)}>
                 <div className={clsx(classes.pad)}>
-                    {board && board.length === 81 && (
-                        <Board boardState={board} setBoardState={setBoard} />
+                    {language && language.name && (
+                        <Board languageCode={language.code} />
                     )}
                 </div>
             </div>

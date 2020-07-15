@@ -39,5 +39,5 @@ jobs:
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSHKEY }}
-        source: "build"
-        target: "/var/www/speakeasy.tools/html"
+        source: build/*
+        target: /var/www/speakeasy.tools/html

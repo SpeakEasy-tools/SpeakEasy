@@ -182,7 +182,7 @@ function Board({ languageCode }) {
         if (e && e.target.textContent) {
             setLoading(true);
             setselectedDifficulty(index);
-            fetch("http://localhost:5000/sudoku/1")
+            fetch("http://api.speakeasy.services/sudoku/1")
                 .then(response => {
                     if (response.ok) {
                         response.json().then(json => {
@@ -289,7 +289,7 @@ function Board({ languageCode }) {
     }, [handleTranslation]);
     useEffect(() => {
         if (translation) {
-            fetch("http://localhost:5000/sudoku/1")
+            fetch("http://api.speakeasy.services/sudoku/1")
                 .then(response => {
                     if (response.ok) {
                         response.json().then(json => {

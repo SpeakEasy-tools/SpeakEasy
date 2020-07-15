@@ -8,6 +8,7 @@ import { getTranslations } from "../../../CloudFunctions/Translate";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
+import Instructions from "./Instructions";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,8 +49,12 @@ function TileSlider() {
     const [translation, setTranslation] = useState(Array(15).fill(""));
     const [loading, setLoading] = useState(false);
     const [gameWon, setGameWon] = useState(false);
-
     const [language, setLanguage] = useState("");
+    const instructions = Instructions();
+
+    function getInstructions() {
+        return instructions;
+    }
     function isntSolvable(board) {
         let inv_count = 0;
         for (let i = 0; i < 16 - 1; i++) {
@@ -238,7 +243,10 @@ function TileSlider() {
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.column)} style={{ maxWidth: 250 }}>
-                <ControlBar updateLanguage={setLanguage} />
+                <ControlBar
+                    updateLanguage={setLanguage}
+                    instructions={getInstructions}
+                />
             </div>
             {language && language.name && board && (
                 <div className={clsx(classes.column)}>

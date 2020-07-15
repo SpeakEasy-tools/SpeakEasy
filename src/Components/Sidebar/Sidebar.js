@@ -4,6 +4,7 @@ import { Theme } from "../../utils";
 import clsx from "clsx";
 import {
     Build,
+    BurstMode,
     Casino,
     Contacts,
     CropFree,
@@ -220,6 +221,12 @@ function Sidebar() {
                                 <KeyboardArrowLeft
                                     className={clsx(classes.icon)}
                                 />
+                            </ListItemIcon>
+                        </ListItem>
+
+                        <ListItem button component={Link} to="/coco_explorer">
+                            <ListItemIcon>
+                                <BurstMode className={clsx(classes.icon)} />
                             </ListItemIcon>
                         </ListItem>
                         <ListItem button component={Link} to="/dictionary">

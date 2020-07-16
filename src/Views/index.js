@@ -1,6 +1,7 @@
 export { EyeSpy } from "./Games/EyeSpy";
 export { Memory } from "./Games/Memory";
 export { Sudoku } from "./Games/Sudoku";
+export { Kakuro } from "./Games/Kakuro";
 export { TileSlider } from "./Games/TileSlider";
 export { TwentyFortyEight } from "./Games/TwentyFortyEight";
 export { WordSearch } from "./Games/WordSearch";

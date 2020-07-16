@@ -210,6 +210,9 @@ function Sidebar() {
                         <ListItem button component={Link} to="/sudoku">
                             <GridOn />
                         </ListItem>
+                        <ListItem button component={Link} to="/kakuro">
+                            <GridOn />
+                        </ListItem>
                     </List>
                 </div>
             )}

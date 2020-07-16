@@ -18,6 +18,7 @@ import {
     PopQuiz,
     Profile,
     Sudoku,
+    Kakuro,
     TileSlider,
     TimeSeries,
     ToneTrainerView,
@@ -49,6 +50,7 @@ export const TWENTY_FORTY_EIGHT = {
 export const EYE_SPY = { path: "/eye_spy", name: "Eye Spy", component: EyeSpy };
 export const MEMORY = { path: "/memory", name: "Memory", component: Memory };
 export const SUDOKU = { path: "/sudoku", name: "Sudoku", component: Sudoku };
+export const KAKURO = { path: "/kakuro", name: "Kakuro", component: Kakuro };
 export const TILE_SLIDER = {
     path: "/tile_slider",
     name: "Tile Slider",
@@ -123,6 +125,7 @@ const routes = [
     EYE_SPY,
     MEMORY,
     SUDOKU,
+    KAKURO,
     TILE_SLIDER,
     ABOUT,
     CONTACT,

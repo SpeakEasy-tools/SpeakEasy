@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-// boardState is a 1-d list of integers representing the 81 tiles in sudoku
+// boardState is a 1-d list of integers representing the 81 tiles in Kakuro
 function Board({ boardState }) {
     const classes = useStyles(Theme);
     // I know it's used in almost every tutorial but never ever use var, if you need to update the variable use let.

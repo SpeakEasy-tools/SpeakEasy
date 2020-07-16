@@ -43,7 +43,7 @@ function Board({ languageCode }) {
 
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const [diffAchorEl, setDiffAnchorEl] = useState(null);
+    const [diffAnchorEl, setDiffAnchorEl] = useState(null);
 
     const [validChoices, setValidChoices] = useState([]);
 
@@ -325,9 +325,9 @@ function Board({ languageCode }) {
                     </Button>
                     <Menu
                         id="Difficulty-Select"
-                        anchorEl={diffAchorEl}
+                        anchorEl={diffAnchorEl}
                         keepMounted
-                        open={Boolean(diffAchorEl)}
+                        open={Boolean(diffAnchorEl)}
                         onClose={handleDifficultyClose}
                     >
                         {difficultyOptions.map((option, index) => (

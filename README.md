@@ -4,21 +4,25 @@ SpeakEasy.tools is a data-driven web application for helping people to
 learn a second language through artificial intelligence, data science, immersion, and 
 gamification.
 
-## Installation
-
-This project uses NPM (Node Package Manager) handle it's dependencies. NPM is included in the Node.js installation. Once Node.js and NPM are installed the project dependencies can be installed by running `npm install` in the project root from the command line. To run the application locally run `npm run start`. 
-
-### Dependencies
+## Dependencies
 
 * [Node.js](https://nodejs.org/en/)
+* [yarn](https://yarnpkg.com/), installable by doing `npm install -g yarn`
 
-### NPM Scripts
+## Installation
 
-* `npm install` Installs dependencies listed in *package.json*
-* `npm run start` Runs the application locally at http://localhost:3000
-* `npm run build` Builds an optimized bundle for production
-* `npm run build:deploy` Don't use
-* `npm run lint` Shows smelly code that you should fix
+This project uses [yarn](https://yarnpkg.com/) package manager to handle its dependencies, and related
+lockfile. With Node.js and yarn installed, you can install the project dependencies by doing `yarn install`.
+You can then run the application locally by running `yarn start`.
+
+### Yarn Scripts
+
+* `yarn install` Installs dependencies listed in *package.json*
+* `yarn start` Runs the application locally at http://localhost:3000
+* `yarn build` Builds an optimized bundle for production
+* `yarn build:deploy` Builds the project, and then copies files to the speakeasy server. You should _not_ use this!
+* `yarn lint` Shows smelly code that you should fix
+* `yarn lint:fix` Attempst to fix all that smelly code for you
 
 ## Contributing
 

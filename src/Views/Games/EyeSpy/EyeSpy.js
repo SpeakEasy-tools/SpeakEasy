@@ -66,6 +66,10 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         padding: theme.spacing(1)
     },
+    svContainer: {
+        width: "100%",
+        height: "calc(100% - 52px)"
+    },
     spyCard: {
         maxWidth: 300,
         zIndex: 101,
@@ -146,14 +150,7 @@ function EyeSpy() {
                 {/* Street View Container */}
                 <div
                     ref={elem => setStreetViewContainer(elem)}
-                    style={{
-                        position: "relative",
-                        zIndex: 0,
-                        left: 0,
-                        top: 0,
-                        width: "100%",
-                        height: "100%"
-                    }}
+                    className={clsx(classes.svContainer)}
                 />
 
                 {/* Add Points of Interest */}
@@ -177,7 +174,7 @@ function EyeSpy() {
                     ))}
 
                 {/* NARRATION CARD */}
-                {narrative.length && (
+                {Boolean(narrative.length) && (
                     <NarrativeCard
                         narrative={narrative}
                         setNarrative={setNarrative}

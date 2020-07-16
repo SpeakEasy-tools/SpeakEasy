@@ -4,6 +4,7 @@ import { Theme } from "../../utils";
 import clsx from "clsx";
 import {
     Build,
+    BurstMode,
     Casino,
     Contacts,
     CropFree,
@@ -90,6 +91,7 @@ function Sidebar() {
     };
     const handleSignIn = () => {
         setSignIn(true);
+        handleSelection("user");
     };
 
     useEffect(() => {
@@ -136,7 +138,7 @@ function Sidebar() {
                     </ListItem>
                 </List>
             </div>
-            {signIn && (
+            {signIn && selected && selected === "user" && (
                 <div className={clsx(classes.column)}>
                     <List>
                         <ListItem button onClick={() => setSignIn(false)}>
@@ -150,7 +152,7 @@ function Sidebar() {
                     <FirebaseUI />
                 </div>
             )}
-            {selected && selected === "user" && (
+            {!signIn && selected && selected === "user" && (
                 <div className={clsx(classes.column)}>
                     <List>
                         <ListItem button onClick={handleSelection}>
@@ -219,6 +221,12 @@ function Sidebar() {
                                 <KeyboardArrowLeft
                                     className={clsx(classes.icon)}
                                 />
+                            </ListItemIcon>
+                        </ListItem>
+
+                        <ListItem button component={Link} to="/coco_explorer">
+                            <ListItemIcon>
+                                <BurstMode className={clsx(classes.icon)} />
                             </ListItemIcon>
                         </ListItem>
                         <ListItem button component={Link} to="/dictionary">

@@ -77,7 +77,10 @@ const get3dFov = zoom => {
 };
 
 const povToPixel3d = (targetPov, currentPov, viewport) => {
-    viewport = viewport ? viewport : { offsetHeight: 0, offsetWidth: 0 };
+    viewport = viewport
+        ? viewport
+        : { offsetHeight: 0, offsetWidth: 0, offsetLeft: 0, offsetTop: 0 };
+    var margin = { top: viewport.offsetTop, left: viewport.offsetLeft };
     var width = viewport.offsetWidth;
     var height = viewport.offsetHeight;
     var target = {
@@ -127,7 +130,7 @@ const povToPixel3d = (targetPov, currentPov, viewport) => {
     // Sanity check: the vectors shouldn't be perpendicular because the line
     // from camera through target would never intersect with the image plane
     if (Math.abs(nDotD) < 1e-6) {
-        return null;
+        return { display: "none" };
     }
 
     // t is the scale to use for the target vector such that its end
@@ -140,7 +143,7 @@ const povToPixel3d = (targetPov, currentPov, viewport) => {
     // direction. In fact, it should even be t >= 1.0 since the image plane
     // is always outside the pano sphere (except at the viewport center)
     if (t < 0.0) {
-        return null;
+        return { display: "none" };
     }
 
     // (tx, ty, tz) are the coordinates of the intersection point between a
@@ -173,11 +176,22 @@ const povToPixel3d = (targetPov, currentPov, viewport) => {
     target.left += du;
     target.top -= dv;
 
+    target.left += margin.left;
+    target.top += margin.top;
+
+    if (
+        isNaN(target.left) ||
+        isNaN(target.top) ||
+        target.left > width ||
+        target.left < margin.left ||
+        target.top > height ||
+        target.top < margin.top
+    ) {
+        target.display = "none";
+    }
+
     target.left = target.left + "px";
     target.top = target.top + "px";
-
-    //   console.log("target3d", target);
-    // return target;
     return target;
 };
 
@@ -213,8 +227,11 @@ const wrapHeading = heading => {
  */
 const povToPixel2d = (targetPov, currentPov, viewport) => {
     // Gather required variables
-    viewport = viewport ? viewport : { offsetHeight: 0, offsetWidth: 0 };
+    viewport = viewport
+        ? viewport
+        : { offsetHeight: 0, offsetWidth: 0, offsetLeft: 0, offsetTop: 0 };
 
+    var margin = { top: viewport.offsetTop, left: viewport.offsetLeft };
     var width = viewport.offsetWidth || 0;
     var height = viewport.offsetHeight || 0;
     var target = {
@@ -231,9 +248,22 @@ const povToPixel2d = (targetPov, currentPov, viewport) => {
     target.left += (dh / hfov) * width;
     target.top -= (dv / vfov) * height;
 
+    target.left += margin.left;
+    target.top += margin.top;
+
+    if (
+        isNaN(target.left) ||
+        isNaN(target.top) ||
+        target.left > width ||
+        target.left < margin.left ||
+        target.top > height ||
+        target.top < margin.top
+    ) {
+        target.display = "none";
+    }
+
     target.left = target.left + "px";
     target.top = target.top + "px";
-    //   console.log("target2d", target);
     return target;
 };
 

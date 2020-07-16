@@ -227,6 +227,7 @@ function Board({ languageCode, adaptive, updateScore }) {
         setBoard(initialBoard);
         setLoading(false);
         setGameOver(false);
+        setScore(0);
     }
     function getProps(value) {
         let index =
@@ -257,57 +258,57 @@ function Board({ languageCode, adaptive, updateScore }) {
             case 2:
                 return {
                     label: translation["two"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 2
                 };
             case 4:
                 return {
                     label: translation["four"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 4
                 };
             case 8:
                 return {
                     label: translation["eight"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 8
                 };
             case 16:
                 return {
                     label: translation["sixteen"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 16
                 };
             case 32:
                 return {
                     label: translation["thirty two"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 32
                 };
             case 64:
                 return {
                     label: translation["sixty four"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 64
                 };
             case 128:
                 return {
                     label: translation["one hundred twenty eight"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 128
                 };
             case 256:
                 return {
                     label: translation["two hundred fifty six"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 256
                 };
             case 512:
                 return {
                     label: translation["five hundred twelve"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 512
                 };
             case 1024:
                 return {
                     label: translation["one thousand twenty four"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 1024
                 };
             case 2048:
                 return {
                     label: translation["two thousand forty eight"],
-                    value: index === 2 ? value : 0
+                    value: index === 2 ? value : 2048
                 };
             default:
                 return { label: "", value: 0 };

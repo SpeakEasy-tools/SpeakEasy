@@ -13,7 +13,8 @@ const useStyles = makeStyles(theme => ({
     content: {
         width: "100%",
         display: "flex",
-        flexFlow: "column noWrap"
+        flexFlow: "column noWrap",
+        minHeight: "60px"
     },
     column: {
         flex: "1 1 100%",
@@ -37,7 +38,7 @@ function Tile({ value }) {
 
     const getBody = () => {
         return (
-            <div className={clsx(classes.content, classes[value])}>
+            <div className={clsx(classes.content)}>
                 <div className={clsx(classes.column)}>
                     <div>
                         <Typography variant="h4">{getText(value)}</Typography>
@@ -49,7 +50,11 @@ function Tile({ value }) {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.pad)}>{getBody()}</div>
+            {value ? (
+                <div className={clsx(classes.pad)}>{getBody()}</div>
+            ) : (
+                <> </>
+            )}
         </div>
     );
 }

@@ -118,6 +118,7 @@ function ControlBar({
                                             placeholder="Language"
                                         />
                                     )}
+                                    blurOnSelect
                                     options={languages}
                                     getOptionLabel={option => option.name}
                                     style={{

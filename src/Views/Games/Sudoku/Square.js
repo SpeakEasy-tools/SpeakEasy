@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1),
         border: `1px solid ${theme.palette.secondary.light}`,
         flex: "1 1 auto",
-        width: "75px",
+        width: "90px",
         "&:hover": {
             cursor: "pointer"
         }

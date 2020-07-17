@@ -28,11 +28,12 @@ function Instructions() {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography paragraph>
-                        The goal of Kakuro is to fill all empty squares using numbers
-                        1 through 9 so that the sum of each horizontal block equals the
-                        clue on its left, while the sum of each vertical block equals
-                        the clue on its top. Similar to Sudoku, no number can be used in
-                        the same block more than once.
+                        The goal of Kakuro is to fill all empty squares using
+                        numbers 1 through 9 so that the sum of each horizontal
+                        block equals the clue on its left, while the sum of each
+                        vertical block equals the clue on its top. Similar to
+                        Sudoku, no number can be used in the same block more
+                        than once.
                     </Typography>
                 </div>
             </div>

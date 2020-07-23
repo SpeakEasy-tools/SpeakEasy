@@ -35,3 +35,46 @@ export const GetCocoAnnotationsByImageId = ({ imageId }) => {
         loading: loading
     };
 };
+
+export const GetNRandomSeedCocoAnnotations = ({ n, seed }) => {
+    const COCO_ANNOTATIONS = gql`
+        query getNRandomSeedCocoAnnotations($n: Int!, $seed: float8!) {
+            random_seed_coco_annotations(
+                args: { sample_limit: $n, seed: $seed }
+                where: { category_id: { _is_null: false } }
+            ) {
+                id
+                image_id
+                category_id
+                annotation
+                coco_category {
+                    supercategory
+                    name
+                }
+            }
+        }
+    `;
+
+    const [cocoAnnotations, setCocoAnnotations] = useState();
+
+    const { data, refetch, loading } = useQuery(COCO_ANNOTATIONS, {
+        variables: {
+            n: n,
+            seed: seed
+        },
+        fetchPolicy: "cache-and-network"
+    });
+
+    useEffect(() => {
+        if (data) {
+            console.log(data);
+            setCocoAnnotations(data["random_seed_coco_annotations"]);
+        }
+    }, [data]);
+
+    return {
+        annotations: cocoAnnotations,
+        refetch: refetch,
+        loading: loading
+    };
+};

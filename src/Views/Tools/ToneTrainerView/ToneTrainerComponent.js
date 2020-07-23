@@ -93,7 +93,11 @@ function ToneTrainerComponent({ sample }) {
                 <div className={clsx(classes.row)}>
                     <div className={clsx(classes.column)}>
                         <div className={clsx(classes.pad)}>
-                            <TonePractice display={setAttempt} />
+                            <TonePractice
+                                display={setAttempt}
+                                language={language.code}
+                                transcript={text}
+                            />
                         </div>
                     </div>
                     <div className={clsx(classes.column)}>

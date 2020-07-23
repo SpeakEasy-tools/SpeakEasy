@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Shuffle, Theme } from "../../../utils";
 import clsx from "clsx";
 import Tile from "./Tile";
-import { ControlBar } from "../../../Components/ControlBar";
+import { ControlBar } from "../../../Components";
 
 const useStyles = makeStyles(theme => ({
     root: {

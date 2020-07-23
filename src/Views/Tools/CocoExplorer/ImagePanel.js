@@ -134,6 +134,12 @@ function ImagePanel({ image, language }) {
         }
     }, [image]);
     useEffect(() => {
+        console.log(language);
+    }, [language]);
+    useEffect(() => {
+        console.log(translations, translating);
+    }, [translations, translating]);
+    useEffect(() => {
         if (
             captionHashes &&
             Boolean(captionHashes.length) &&

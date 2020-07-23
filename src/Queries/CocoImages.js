@@ -51,3 +51,36 @@ export const GetCocoImagesByCategory = ({ category, limit, offset }) => {
         loading: loading
     };
 };
+
+export const GetNRandomSeedCocoImages = ({ n, seed }) => {
+    const COCO_IMAGES = gql`
+        query getNRandomSeedImages($n: Int!, $seed: float8!) {
+            random_seed_coco_images(args: { sample_limit: $n, seed: $seed }) {
+                id
+            }
+        }
+    `;
+
+    const [cocoImages, setCocoImages] = useState();
+
+    const { data, refetch, loading } = useQuery(COCO_IMAGES, {
+        variables: {
+            n: n,
+            seed: seed
+        },
+        fetchPolicy: "cache-and-network"
+    });
+
+    useEffect(() => {
+        if (data) {
+            console.log(data);
+            setCocoImages(data["random_seed_coco_images"]);
+        }
+    }, [data]);
+
+    return {
+        images: cocoImages,
+        refetch: refetch,
+        loading: loading
+    };
+};

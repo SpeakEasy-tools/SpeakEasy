@@ -13,10 +13,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const boardSizes = [
-    { size: "12" },
+    { size: "16" },
     { size: "24" },
-    { size: "36" },
-    { size: "48" }
+    { size: "32" },
+    { size: "40" }
 ];
 
 function Settings({ boardSize, setBoardSize }) {

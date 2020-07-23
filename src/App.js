@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "./Firebase";
+import { useUser } from "./UserProvider";
 import { Switch } from "react-router";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
@@ -15,7 +16,7 @@ import clsx from "clsx";
 
 import { BuildRoutes } from "./Routes";
 import { GRAPHQL_URL, Theme } from "./utils";
-import { Sidebar, ViewWrapper } from "./Components";
+import { Header, Sidebar } from "./Components";
 
 /* This object sets up the CSS class names that will be used for this component. */
 const useStyles = makeStyles(() => ({
@@ -43,10 +44,12 @@ export default () => {
     const classes = useStyles(Theme);
 
     const auth = useAuth();
+    const user = useUser();
 
     /* The user's access token. Lets them access data based on their role; admin, user, or anonymous. */
     const [accessToken, setAccessToken] = useState("");
-    const [userRole] = useState("admin");
+    const [allowedRoles, setAllowedRoles] = useState(["anonymous"]);
+    const [userId, setUserId] = useState("");
 
     /*
      * Fetch the token asynchronously so it doesn't lock loading of other visual elements. If it fails display
@@ -81,10 +84,33 @@ export default () => {
         cache: new InMemoryCache()
     });
 
+    /* Display a message to users who like to look at console output */
     useEffect(() => {
-        if (!(auth && auth["token"])) return;
-        setAccessToken(auth["token"]);
+        console.debug(`
+    Move along people, nothing to see here.
+    `);
+    }, []);
+
+    useEffect(() => {
+        if (auth) {
+            if (
+                auth.token &&
+                auth.allowedRoles &&
+                Boolean(auth.allowedRoles.length) &&
+                auth.userId
+            ) {
+                setAccessToken(auth["token"]);
+                setAllowedRoles(auth["allowedRoles"]);
+                setUserId(auth.userId);
+            }
+        }
     }, [auth]);
+
+    useEffect(() => {
+        if (user && userId) {
+            user.updateUserId(userId);
+        }
+    }, [userId, user]);
 
     /*
      * Apollo Provider wraps the application so that any page within the application will use the same Apollo Provider.
@@ -102,9 +128,9 @@ export default () => {
                 </div>
                 <div className={clsx(classes.content)}>
                     <div className={clsx(classes.row)}>
-                        <ViewWrapper />
+                        <Header />
                     </div>
-                    <Switch>{BuildRoutes(userRole)}</Switch>
+                    <Switch>{BuildRoutes(allowedRoles)}</Switch>
                 </div>
             </div>
         </ApolloProvider>

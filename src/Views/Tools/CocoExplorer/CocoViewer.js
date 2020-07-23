@@ -13,6 +13,8 @@ import IconButton from "@material-ui/core/IconButton";
 import GalleryPanel from "./GalleryPanel";
 import Divider from "@material-ui/core/Divider";
 
+import { useUser } from "../../../UserProvider";
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: "98%",
@@ -35,11 +37,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function CocoViewer({ category, language }) {
+function CocoViewer({ category }) {
     const classes = useStyles(Theme);
+
+    const user = useUser();
 
     const limit = 10;
     const [offset, setOffset] = useState(0);
+
+    const [language, setLanguage] = useState({});
 
     const [selectedImage, setSelectedImage] = useState(null);
 
@@ -67,6 +73,15 @@ function CocoViewer({ category, language }) {
         }
     }, [category]);
 
+    useEffect(() => {
+        if (
+            user &&
+            !user.loading &&
+            Boolean(Object.keys(user.translationLanguage).length)
+        ) {
+            setLanguage(user.translationLanguage);
+        }
+    }, [user]);
     return (
         <div className={clsx(classes.root)}>
             <div
@@ -123,7 +138,9 @@ function CocoViewer({ category, language }) {
                 </div>
             )}
             <div className={clsx(classes.row)}>
-                {selectedImage ? (
+                {selectedImage &&
+                language &&
+                Boolean(Object.keys(language).length) ? (
                     <ImagePanel image={selectedImage} language={language} />
                 ) : (
                     !loading && (
@@ -151,7 +168,6 @@ function CocoViewer({ category, language }) {
 
 CocoViewer.displayName = "CocoViewer";
 CocoViewer.propTypes = {
-    category: PropTypes.string.isRequired,
-    language: PropTypes.object.isRequired
+    category: PropTypes.string.isRequired
 };
 export default CocoViewer;

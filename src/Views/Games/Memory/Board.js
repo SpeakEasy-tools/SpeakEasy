@@ -1,172 +1,136 @@
-import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { v4 as uuid } from "uuid";
-import PlayingCard from "./PlayingCard";
-import shuffle from "../../../utils/Shuffle";
+import { GetNRandomSeedCocoCategories } from "../../../Queries";
+import Transcript from "./Transcript";
+import { UserProfile } from "../../../UserProfile";
+import { LoadingBar } from "../../../Components/LoadingBar";
+import Key from "./Key";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flex: "1 1 100%",
         display: "flex",
-        flexFlow: "row wrap"
+        width: "100%",
+        backgroundColor: theme.palette.secondary.light,
+        borderRadius: 10
+    },
+    column: {
+        height: "100%",
+        display: "flex",
+        flexFlow: "column noWrap",
+        flex: "1 1 auto",
+        padding: theme.spacing(1)
+    },
+    row: {
+        width: "100%",
+        display: "flex",
+        flex: "1 1 auto"
     },
     pad: {
-        margin: theme.spacing(1),
-        flex: "1 1 auto",
-        width: 150
-    },
-    matched: {
-        opacity: 0.5
+        width: "20%",
+        padding: theme.spacing(1),
+        flex: "1 1 auto"
     }
 }));
 
-function Board({ tiles, language, setScore, setTime }) {
+function Board() {
     const classes = useStyles(Theme);
 
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
+    const tileCount = 40;
+    const [puzzleSeed, setPuzzleSeed] = useState(null);
 
-    const [board, setBoard] = useState(null);
-    const [flipped, setFlipped] = useState(null);
-    const [matched, setMatched] = useState(null);
+    const { categories, loading } = GetNRandomSeedCocoCategories({
+        n: tileCount,
+        seed: puzzleSeed
+    });
+
+    const [translations, setTranslations] = useState([]);
+    const [translationsLoading, setTranslationsLoading] = useState(false);
+
+    const [tiles, setTiles] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingLabel, setLoadingLabel] = useState("");
+
+    const [language, setLanguage] = useState();
+    const { profile } = UserProfile();
 
     useEffect(() => {
-        if (!tiles) return;
-        let t = shuffle([...tiles].concat([...tiles]));
-        setBoard(t);
-        setFlipped(Array(t.length).fill(false));
-        setMatched(Array(t.length).fill(false));
-    }, [tiles]);
+        if (profile && profile["secondLanguage"]) {
+            setLanguage(profile["secondLanguage"].code);
+            setPuzzleSeed(Math.random());
+        }
+    }, [profile]);
+    useEffect(() => {
+        function randomEvenInRange() {
+            const minPairs = 8;
+            const maxPairs = 20;
+            const n =
+                Math.floor(Math.random() * (maxPairs - minPairs + 1)) +
+                minPairs;
+            return n % 2 !== 0 ? randomEvenInRange() : n;
+        }
 
-    const incrementScore = () => {
-        setScore(prevState => prevState + 2);
-    };
+        if (categories) {
+            setTranslationsLoading(true);
+            const pairCount = randomEvenInRange();
+            const transcript = categories.slice(0, pairCount).map(c => c.name);
+            Promise.resolve(Transcript(transcript, language)).then(ts =>
+                setTranslations(ts)
+            );
+        }
+    }, [categories, language]);
+    useEffect(() => {
+        if (translations && Boolean(Object.keys(translations).length)) {
+            setTranslationsLoading(false);
+            setTiles(
+                Object.keys(translations).map(t => {
+                    return {
+                        transcript: t,
+                        translation: translations[t]
+                    };
+                })
+            );
+        }
+    }, [translations]);
 
-    const handleMatch = async () => {
-        const flippedIndices = await flipped.reduce(
-            (out, bool, index) => (bool ? out.concat(index) : out),
-            []
-        );
-        if (flippedIndices.length === 2) {
-            if (board[flippedIndices[0]].id === board[flippedIndices[1]].id) {
-                const prevMatched = [...matched];
-                prevMatched[flippedIndices[0]] = true;
-                prevMatched[flippedIndices[1]] = true;
-                setMatched(prevMatched);
-                incrementScore();
+    useEffect(() => {
+        if (loading || translationsLoading) {
+            setIsLoading(true);
+            if (loading) {
+                setLoadingLabel(prevState => prevState + "Labels ");
             }
-            setTimeout(clearFlipped, 0.75 * 1000);
-        }
-    };
-
-    const clearFlipped = () => {
-        setFlipped(Array(board.length).fill(false));
-    };
-
-    const flip = async i => {
-        await setFlipped(prevState => {
-            prevState[i] = !prevState[i];
-            return [...prevState];
-        });
-        await handleMatch();
-    };
-
-    const handleFlip = i => {
-        const flipCount = flipped.filter(e => e).length;
-        if (!startTime) {
-            setStartTime(new Date());
-        }
-        if (
-            !flipped[i] &&
-            (flipCount === 1 || flipCount === 0) &&
-            !matched[i]
-        ) {
-            flip(i);
-            setTimeout(console.log, 0.2 * 1000, false);
+            if (translationsLoading) {
+                setLoadingLabel(prevState => prevState + "Translations ");
+            }
         } else {
-            clearFlipped();
+            setLoadingLabel("");
+            setIsLoading(false);
         }
-    };
-
-    useEffect(() => {
-        if (!matched) return;
-        const matchCount = matched.filter(e => e).length;
-        if (matchCount >= matched.length) {
-            setEndTime(new Date());
-        }
-    }, [matched]);
-
-    useEffect(() => {
-        if (!(startTime && endTime)) return;
-        setTime((endTime - startTime) / 1000);
-    }, [startTime, endTime, setTime]);
+    }, [loading, translationsLoading]);
 
     return (
         <div className={clsx(classes.root)}>
-            {board &&
-                language &&
-                board.map((b, i) => (
-                    <div
-                        onClick={() => handleFlip(i)}
-                        key={uuid()}
-                        className={clsx(classes.pad, {
-                            [classes.matched]: matched[i]
-                        })}
-                    >
-                        {language === "Chaos" ? (
-                            <PlayingCard
-                                topText={
-                                    b[
-                                        ["chinese", "english", "pinyin"][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    ]
-                                }
-                                middleText={
-                                    b[
-                                        ["chinese", "english", "pinyin"][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    ]
-                                }
-                                bottomText={
-                                    b[
-                                        ["chinese", "english", "pinyin"][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    ]
-                                }
-                                flipped={flipped[i] || matched[i]}
-                            />
-                        ) : (
-                            <PlayingCard
-                                topText={language === "Hybrid" && b.english}
-                                middleText={
-                                    language === "Chinese"
-                                        ? b.chinese
-                                        : language === "English"
-                                        ? b.english
-                                        : language === "Pinyin"
-                                        ? b.pinyin
-                                        : b.chinese
-                                }
-                                bottomText={language === "Hybrid" && b.pinyin}
-                                flipped={flipped[i] || matched[i]}
-                            />
-                        )}
+            {isLoading ? (
+                <div className={clsx(classes.row)}>
+                    <div className={clsx(classes.pad)}>
+                        <LoadingBar label={loadingLabel} />
                     </div>
-                ))}
+                </div>
+            ) : (
+                tiles && (
+                    <>
+                        <div className={clsx(classes.column)}></div>
+                        <div>
+                            <Key pairs={tiles} />
+                        </div>
+                    </>
+                )
+            )}
         </div>
     );
 }
+
 Board.displayName = "Board";
-Board.propTypes = {
-    tiles: PropTypes.any,
-    language: PropTypes.any,
-    setScore: PropTypes.any,
-    setTime: PropTypes.any
-};
+
 export default Board;

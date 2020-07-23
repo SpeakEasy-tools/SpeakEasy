@@ -2,6 +2,7 @@ import React from "react";
 import { Route } from "react-router";
 import {
     TwentyFortyEight,
+    Attributions,
     About,
     CocoExplorer,
     Contact,
@@ -15,6 +16,7 @@ import {
     Memory,
     Modules,
     Page404,
+    People,
     PopQuiz,
     Profile,
     Sudoku,
@@ -56,6 +58,11 @@ export const TILE_SLIDER = {
 };
 
 export const ABOUT = { path: "/about", name: "About", component: About };
+export const ATTRIBUTIONS = {
+    path: "/attributions",
+    name: "Attributions",
+    component: Attributions
+};
 export const CONTACT = {
     path: "/contact",
     name: "Contact",
@@ -63,6 +70,7 @@ export const CONTACT = {
 };
 export const FAQS = { path: "/faq", name: "FAQ", component: FAQ };
 export const HELP = { path: "/help", name: "Help", component: Help };
+export const PEOPLE = { path: "/people", name: "People", component: People };
 export const PROFILE = {
     path: "/profile",
     name: "Profile",
@@ -125,10 +133,12 @@ const routes = [
     SUDOKU,
     TILE_SLIDER,
     ABOUT,
+    ATTRIBUTIONS,
     CONTACT,
     FAQS,
     HELP,
     HOME,
+    PEOPLE,
     PROFILE,
     COCO_EXPLORER,
     DICTIONARY,
@@ -142,19 +152,20 @@ const routes = [
 const devRoutes = [MODULES];
 const adminRoutes = [INSTRUCTOR];
 
-export const Routes = userRole => {
+export const Routes = allowedRoles => {
     let newRoutes = [...routes];
-    if (userRole === "admin") {
-        newRoutes = [...newRoutes].concat([...adminRoutes]);
+    if (allowedRoles.includes("admin")) {
+        newRoutes = newRoutes.concat(adminRoutes);
     }
-    if (process.env.NODE_ENV === "production") {
-        return [...newRoutes].concat([PAGE404]);
+    if (allowedRoles.includes("dev")) {
+        newRoutes = newRoutes.concat(devRoutes);
     }
-    return [...newRoutes].concat([...devRoutes]).concat([PAGE404]);
+    newRoutes.push(PAGE404);
+    return newRoutes;
 };
 
-export const BuildRoutes = userRole =>
-    Routes(userRole).map((route, index) => {
+export const BuildRoutes = allowedRoles =>
+    Routes(allowedRoles).map((route, index) => {
         return (
             <Route
                 key={index}

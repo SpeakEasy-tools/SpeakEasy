@@ -1,50 +1,44 @@
-import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { getTranslations } from "../../../CloudFunctions/Translate";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Tile from "./Tile";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { ScoreBoard } from "../../../Components/ScoreBoard";
+import { LoadingBar, ScoreBoard } from "../../../Components";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import { Help } from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import Key from "./Key";
+import Transcript, { colors, transcript } from "./Transcript";
+import { UserProfile } from "../../../UserProfile";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: "100%"
+        display: "flex",
+        width: "100%",
+        backgroundColor: theme.palette.secondary.light,
+        borderRadius: 10
     },
-    content: {
-        padding: theme.spacing(1),
-        flex: "1 1 100%",
+    column: {
         height: "100%",
         display: "flex",
-        flexFlow: "column noWrap"
+        flexFlow: "column noWrap",
+        flex: "1 1 auto",
+        padding: theme.spacing(1)
     },
     row: {
         width: "100%",
-        display: "flex"
+        display: "flex",
+        flex: "1 1 auto"
     },
     pad: {
         width: "20%",
         padding: theme.spacing(1),
-        flex: "1 1 100%"
+        flex: "1 1 auto"
     }
 }));
-
-const transcript = {
-    two: "two",
-    four: "four",
-    eight: "eight",
-    sixteen: "sixteen",
-    "thirty two": "thirty two",
-    "sixty four": "sixty four",
-    "one hundred twenty eight": "one hundred twenty eight",
-    "two hundred fifty six": "two hundred fifty six",
-    "five hundred twelve": "five hundred twelve",
-    "one thousand twenty four": "one thousand twenty four",
-    "two thousand forty eight": "two thousand forty eight"
-};
 
 function addNewTile(boardState) {
     let vacancies = [];
@@ -60,29 +54,29 @@ function addNewTile(boardState) {
     return newBoardState;
 }
 
-function Board({ languageCode, adaptive, updateScore }) {
+function Board() {
     const classes = useStyles(Theme);
+    const [loading, setLoading] = useState(true);
 
-    const [loading, setLoading] = useState(false);
+    const [isAdaptive, setIsAdaptive] = useState(false);
+
     const [gameOver, setGameOver] = useState(false);
 
     const [board, setBoard] = useState([]);
 
-    const [translation, setTranslation] = useState();
-
     const [score, setScore] = useState(0);
-    const handleTranslation = useCallback(() => {
-        setLoading(true);
-        return Promise.resolve(
-            getTranslations(Object.values(transcript), languageCode)
-        )
-            .then(ts => {
-                let trans = {};
-                ts.forEach(t => (trans[t.text] = t.translation));
-                setTranslation(trans);
-            })
-            .finally(() => setLoading(false));
-    }, [languageCode]);
+
+    const [rows, setRows] = useState([]);
+
+    const [language, setLanguage] = useState({});
+
+    const [translations, setTranslations] = useState({});
+
+    const { profile } = UserProfile();
+
+    function handleAdaptiveChange() {
+        setIsAdaptive(prevState => !prevState);
+    }
 
     const shift = useCallback(
         direction => {
@@ -225,161 +219,176 @@ function Board({ languageCode, adaptive, updateScore }) {
     function handleRestart() {
         const initialBoard = addNewTile(Array(16).fill(undefined));
         setBoard(initialBoard);
-        setLoading(false);
         setGameOver(false);
         setScore(0);
     }
-    function getProps(value) {
-        let index =
-            Math.random() *
-            Math.log2(
-                Math.max(
-                    Math.log2(Math.max(Math.log2(Math.max(score, 3)), 3)),
-                    3
-                )
-            );
-        index = Math.round(index + Number.EPSILON);
-
-        if (adaptive) {
-            switch (index) {
-                case 0:
-                    return { label: "", value: value ? value : 0 };
-                case 1:
-                    return {
-                        label: value ? value.toString() : "",
-                        value: value ? value : 0
-                    };
-
-                default:
-                    break;
-            }
-        }
-        switch (value) {
-            case 2:
-                return {
-                    label: translation["two"],
-                    value: index === 2 ? value : 2
-                };
-            case 4:
-                return {
-                    label: translation["four"],
-                    value: index === 2 ? value : 4
-                };
-            case 8:
-                return {
-                    label: translation["eight"],
-                    value: index === 2 ? value : 8
-                };
-            case 16:
-                return {
-                    label: translation["sixteen"],
-                    value: index === 2 ? value : 16
-                };
-            case 32:
-                return {
-                    label: translation["thirty two"],
-                    value: index === 2 ? value : 32
-                };
-            case 64:
-                return {
-                    label: translation["sixty four"],
-                    value: index === 2 ? value : 64
-                };
-            case 128:
-                return {
-                    label: translation["one hundred twenty eight"],
-                    value: index === 2 ? value : 128
-                };
-            case 256:
-                return {
-                    label: translation["two hundred fifty six"],
-                    value: index === 2 ? value : 256
-                };
-            case 512:
-                return {
-                    label: translation["five hundred twelve"],
-                    value: index === 2 ? value : 512
-                };
-            case 1024:
-                return {
-                    label: translation["one thousand twenty four"],
-                    value: index === 2 ? value : 1024
-                };
-            case 2048:
-                return {
-                    label: translation["two thousand forty eight"],
-                    value: index === 2 ? value : 2048
-                };
-            default:
-                return { label: "", value: 0 };
-        }
-    }
-
-    function GetRows() {
-        let rows = [];
-        for (let i = 0; i < 4; i++) {
-            rows.push(
-                <div key={`row-${i}`} className={classes.row}>
-                    {getTiles(i)}
-                </div>
-            );
-        }
-        return rows;
-    }
-
-    function getTiles(rowNum) {
-        let tiles = [];
-        for (let i = 0; i < 4; i++) {
-            let index = rowNum * 4 + i;
-            tiles.push(
-                <Tile key={`tile-${index}`} {...getProps(board[index])} />
-            );
-        }
-        return tiles;
-    }
 
     useEffect(() => {
-        if (handleTranslation) {
-            const initialBoard = addNewTile(Array(16).fill(undefined));
+        if (
+            profile &&
+            profile["secondLanguage"] &&
+            Boolean(Object.keys(profile["secondLanguage"]).length)
+        ) {
+            setLoading(true);
+            let initialBoard = Array(16).fill(null);
+            initialBoard = addNewTile(initialBoard);
+
             setBoard(initialBoard);
-            handleTranslation().finally();
+            setLanguage(profile["secondLanguage"].code);
         }
-    }, [handleTranslation]);
+    }, [profile]);
+    useEffect(() => {
+        if (language && Boolean(Object.keys(language).length)) {
+            Promise.resolve(Transcript(language)).then(ts =>
+                setTranslations(ts)
+            );
+        }
+    }, [language]);
+    useEffect(() => {
+        if (
+            board &&
+            Boolean(board.length) &&
+            translations &&
+            Boolean(Object.keys(translations).length) &&
+            transcript &&
+            Boolean(Object.keys(transcript).length)
+        ) {
+            const rs = [];
+            for (let i = 0; i < 4; i++) {
+                let ts = [];
+                for (let j = 0; j < 4; j++) {
+                    let index = i * 4 + j;
+                    const color = board[index]
+                        ? colors[board[index]]
+                        : {
+                              backgroundColor: Theme.palette.secondary.main,
+                              color: Theme.palette.primary.main
+                          };
+                    const val = board[index]
+                        ? isAdaptive
+                            ? transcript[board[index]]
+                            : translations[transcript[board[index]]]
+                        : null;
+                    ts.push(
+                        <Tile
+                            key={`tile-${index}`}
+                            color={color.color}
+                            backgroundColor={color.backgroundColor}
+                            value={val}
+                        />
+                    );
+                }
+                rs.push(
+                    <div key={`row-${i}`} className={classes.row}>
+                        {ts}
+                    </div>
+                );
+            }
+            setRows(rs);
+            setLoading(false);
+        }
+    }, [board, classes, translations, isAdaptive]);
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown, false);
         return () => {
             document.removeEventListener("keydown", handleKeyDown, false);
         };
     }, [handleKeyDown]);
-    useEffect(() => {
-        updateScore(score);
-    }, [score, updateScore]);
+
     return (
         <div className={clsx(classes.root)}>
-            {gameOver && (
-                <div className={clsx(classes.row)}>
-                    <div className={clsx(classes.pad)}>
-                        <Typography variant="h4" color="secondary">
-                            Game over
-                        </Typography>
-                    </div>
-                    <div className={clsx(classes.pad)} onClick={handleRestart}>
-                        <Button>Restart</Button>
-                    </div>
-                </div>
-            )}
             {loading ? (
                 <div className={clsx(classes.row)}>
                     <div className={clsx(classes.pad)}>
-                        <CircularProgress color="secondary" />
+                        <LoadingBar label="Translations" />
                     </div>
                 </div>
             ) : (
                 <>
-                    <div className={clsx(classes.row)}>
-                        <ScoreBoard score={() => score} />
+                    <div className={clsx(classes.column)}>
+                        <div
+                            className={clsx(classes.row)}
+                            style={{
+                                backgroundColor: Theme.palette.secondary.dark,
+                                borderRadius: 10
+                            }}
+                        >
+                            <div className={clsx(classes.pad)}>
+                                <div
+                                    className={clsx(classes.row)}
+                                    style={{
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            margin: Theme.spacing(1),
+                                            padding: Theme.spacing(2)
+                                        }}
+                                    >
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={isAdaptive}
+                                                    onChange={
+                                                        handleAdaptiveChange
+                                                    }
+                                                    style={{
+                                                        color:
+                                                            Theme.palette
+                                                                .primary.main
+                                                    }}
+                                                />
+                                            }
+                                            style={{
+                                                color:
+                                                    Theme.palette.primary.main
+                                            }}
+                                            label="Adaptive"
+                                        />
+                                    </div>
+                                    <div className={clsx(classes.pad)}>
+                                        <IconButton
+                                            style={{
+                                                color:
+                                                    Theme.palette.primary.main
+                                            }}
+                                        >
+                                            <Help />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={clsx(classes.pad)}>
+                                <ScoreBoard score={() => score} />
+                            </div>
+                            <div className={clsx(classes.pad)}>
+                                <div className={clsx(classes.row)}>
+                                    {gameOver && (
+                                        <>
+                                            <div className={clsx(classes.pad)}>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    color="secondary"
+                                                >
+                                                    Game over
+                                                </Typography>
+                                            </div>
+                                            <div className={clsx(classes.pad)}>
+                                                <Button onClick={handleRestart}>
+                                                    Restart
+                                                </Button>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        {rows}
                     </div>
-                    {board && GetRows()}
+                    <div>
+                        <Key />
+                    </div>
                 </>
             )}
         </div>
@@ -387,9 +396,4 @@ function Board({ languageCode, adaptive, updateScore }) {
 }
 
 Board.displayName = "Board";
-Board.propTypes = {
-    languageCode: PropTypes.string.isRequired,
-    updateScore: PropTypes.func,
-    adaptive: PropTypes.bool
-};
 export default Board;

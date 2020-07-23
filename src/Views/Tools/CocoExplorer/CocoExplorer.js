@@ -8,7 +8,6 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { GetCocoCategories } from "../../../Queries";
 import TextField from "@material-ui/core/TextField";
 import CocoViewer from "./CocoViewer";
-import { LanguageSelect } from "../../../Components/LanguageSelect";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -50,8 +49,6 @@ function CocoExplorer() {
 
     const [category, setCategory] = useState();
 
-    const [language, setLanguage] = useState();
-
     function handleCategoryChange(e, v) {
         setCategory(v.name);
     }
@@ -73,7 +70,6 @@ function CocoExplorer() {
             </div>
             {Boolean(options.length) && (
                 <div className={clsx(classes.row)}>
-                    <LanguageSelect setLanguage={setLanguage} />
                     <div className={clsx(classes.pad)}>
                         <Autocomplete
                             options={options
@@ -95,14 +91,11 @@ function CocoExplorer() {
                             )}
                             onChange={handleCategoryChange}
                             style={{ width: 200 }}
-                            disabled={!language}
                         />
                     </div>
                 </div>
             )}
-            {category && language && (
-                <CocoViewer category={category} language={language} />
-            )}
+            {category && <CocoViewer category={category} />}
         </div>
     );
 }

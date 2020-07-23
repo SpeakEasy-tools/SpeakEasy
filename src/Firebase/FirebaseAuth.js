@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { CONFIG } from "./FirebaseConfig";
@@ -12,6 +12,7 @@ export function ProvideAuth({ children }) {
     const auth = useProvideAuth();
     return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
+
 ProvideAuth.displayName = "ProvideAuth";
 ProvideAuth.propTypes = {
     children: PropTypes.any
@@ -23,7 +24,10 @@ export const useAuth = () => {
 
 function useProvideAuth() {
     const [user, setUser] = useState(null);
+    const [userId, setUserId] = useState(null);
     const [token, setToken] = useState(null);
+    const [role, setRole] = useState("anonymous");
+    const [allowedRoles, setAllowedRoles] = useState(["anonymous"]);
 
     const signIn = (email, password) => {
         return firebase
@@ -72,7 +76,6 @@ function useProvideAuth() {
                 return true;
             });
     };
-
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
             if (user) {
@@ -89,6 +92,16 @@ function useProvideAuth() {
                                         "https://hasura.io/jwt/claims"
                                     ]
                                 ) {
+                                    setRole(
+                                        result.claims[
+                                            "https://hasura.io/jwt/claims"
+                                        ]["x-hasura-default-role"]
+                                    );
+                                    setAllowedRoles(
+                                        result.claims[
+                                            "https://hasura.io/jwt/claims"
+                                        ]["x-hasura-allowed-roles"]
+                                    );
                                     return token;
                                 }
                                 const endpoint = "/refreshToken";
@@ -114,9 +127,17 @@ function useProvideAuth() {
         return () => unsubscribe();
     }, []);
 
+    useEffect(() => {
+        if (user && user.uid) {
+            setUserId(user.uid);
+        }
+    }, [user]);
     return {
         user: user,
+        userId: userId,
         token: token,
+        role: role,
+        allowedRoles: allowedRoles,
         signIn: signIn,
         signUp: signUp,
         signOut: signOut,

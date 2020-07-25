@@ -295,6 +295,16 @@ function Sidebar() {
                             </ListItemIcon>
                             <ListItemText primary="Sudoku" />
                         </ListItem>
+                        <ListItem button component={Link} to="/simon">
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faBorderNone}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="Simon" />
+                        </ListItem>
                     </List>
                 </div>
             )}

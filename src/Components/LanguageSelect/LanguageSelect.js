@@ -77,8 +77,10 @@ function LanguageSelect() {
         getLanguages().finally();
     }, []);
     useEffect(() => {
+        console.log(profile);
         if (
             profile &&
+            Boolean(Object.keys(profile).length) &&
             Boolean(Object.keys(profile).includes("secondLanguage")) &&
             Boolean(
                 Object.keys(profile["secondLanguage"]).includes("code") &&

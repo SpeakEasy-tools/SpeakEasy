@@ -4,39 +4,25 @@ import { Theme } from "../../../utils";
 import clsx from "clsx";
 import { ControlBar } from "../../../Components";
 import Instructions from "./Instructions";
+import Board from "./Board";
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({    
     root: {
         height: "100%",
         display: "flex",
         flexFlow: "row wrap"
     },
-    bottomLeftPanel: {
-        borderBottomLeftRadius: 200,
-        width: 100,
-        backgroundColor: 'red',
-        height: 100
-    }, 
-    bottomRightPanel: {
-        borderBottomRightRadius: 200,
-        width: 100,
-        backgroundColor: 'yellow',
-        height: 100
+    row: {
+        flex: "1 1 100%"
     },
-    topLeftPanel: {
-        borderTopLeftRadius: 200,
-        width: 100,
-        backgroundColor: 'blue',
-        height: 100
-    },
-    topRightPanel: {
-        borderTopRightRadius: 200,
-        width: 100,
-        backgroundColor: 'green ',
-        height: 100
-    } 
+    column: {},
+    content: {},
+    pad: {
+        margin: theme.spacing(1),
+        flex: "1 1 100px"
+    }
 }));
+  
 
 function Simon() {
     document.title = "Simon";
@@ -60,9 +46,7 @@ function Simon() {
             </div>
             <div className={clsx(classes.column)}>
                 <div className={clsx(classes.pad)}>
-                    {language && language.name && (
-                        <p>EXAMPLE TEXT</p>
-                    )}
+                    <Board />
                 </div>
             </div>
         </div>

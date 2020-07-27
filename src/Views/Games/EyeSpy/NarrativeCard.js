@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
     narratationCard: {
         width: "auto",
         position: "fixed",
+        zIndex: 102,
         bottom: theme.spacing(8),
         marginLeft: theme.spacing(15),
         marginRight: theme.spacing(4)

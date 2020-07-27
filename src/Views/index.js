@@ -15,7 +15,7 @@ export { Instructor } from "./Pages/Instructor";
 export { Profile } from "./Pages/Profile";
 
 export { Dictionary } from "./Tools/Dictionary";
-export { Flashcards } from "./Tools/Flashcards";
+export { Flashcards } from "./Tools/FlashCards";
 export { PopQuiz } from "./Tools/PopQuiz";
 export { TimeSeries } from "./Tools/TimeSeries";
 export { ToneTrainerView } from "./Tools/ToneTrainerView";

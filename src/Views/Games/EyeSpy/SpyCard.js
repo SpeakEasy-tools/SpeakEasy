@@ -1,10 +1,16 @@
 import PropType from "prop-types";
-import React from "react";
+// import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
 import { Card } from "../../../Components/Card";
 import Typography from "@material-ui/core/Typography";
+// import ToneTrainerComponent from "../../Tools/ToneTrainerView/ToneTrainerComponent";
+// import {translate} from "../../../CloudFunctions";
+import { CircularProgress, IconButton } from "@material-ui/core";
+import { RecordVoiceOver } from "@material-ui/icons";
+import { translate } from "../../../CloudFunctions/Translate";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,10 +34,35 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function SpyCard({ poi, parsedConfigs, setConfig }) {
-    const { type, title, body, sceneId } = poi;
+function SpyCard({ poi, language, parsedConfigs, setConfig, setTrainerText }) {
+    // const { type, title, body, sceneId } = poi;
+    const { type, title, sceneId } = poi;
 
     const classes = useStyles(Theme);
+
+    const [sample, setSample] = useState({});
+
+    const [loading, setLoading] = useState(false);
+    // const [trainerOpen, setTrainerOpen] = useState(false);
+    const [text, setText] = useState("");
+
+    useEffect(() => {
+        // setLanguage(language)
+        if (type === "vocab") {
+            setText(title);
+        }
+    }, [poi, title, type]);
+
+    useEffect(() => {
+        text.length && translateText();
+    }, [text]);
+
+    async function translateText() {
+        setLoading(true);
+        return await Promise.resolve(translate(text, language.code))
+            .then(s => setSample(s))
+            .finally(() => setLoading(false));
+    }
 
     const getOnOpen = () => {
         if (type === "waypoint" && sceneId) {
@@ -48,7 +79,15 @@ function SpyCard({ poi, parsedConfigs, setConfig }) {
                 <div className={clsx(classes.content)}>
                     <div className={clsx(classes.column)}>
                         <div className={clsx(classes.pad)}>
-                            <Typography variant="h6">{title}</Typography>
+                            <Typography
+                                style={{
+                                    marginRight: "36px",
+                                    marginLeft: "36px"
+                                }}
+                                variant="h6"
+                            >
+                                {title}
+                            </Typography>
                         </div>
                     </div>
                 </div>
@@ -58,11 +97,33 @@ function SpyCard({ poi, parsedConfigs, setConfig }) {
 
     const getBody = () => {
         return (
-            body && (
+            true && (
                 <div className={clsx(classes.content)}>
                     <div className={clsx(classes.column)}>
                         <div className={clsx(classes.pad)}>
-                            <Typography variant="h6">{body}</Typography>
+                            {/* <Typography variant="h6">{body}</Typography> */}
+                            {loading ? (
+                                <div className={clsx(classes.row)}>
+                                    <div className={clsx(classes.pad)}>
+                                        <CircularProgress color="primary" />
+                                    </div>
+                                </div>
+                            ) : (
+                                sample && (
+                                    <>
+                                        <Typography variant="h6">
+                                            {sample["translation"]}
+                                        </Typography>
+                                        <IconButton
+                                            onClick={() =>
+                                                setTrainerText(title)
+                                            }
+                                        >
+                                            <RecordVoiceOver />
+                                        </IconButton>
+                                    </>
+                                )
+                            )}
                         </div>
                     </div>
                 </div>
@@ -88,7 +149,9 @@ function SpyCard({ poi, parsedConfigs, setConfig }) {
 SpyCard.displayName = "SpyCard";
 SpyCard.propTypes = {
     poi: PropType.any,
+    language: PropType.any,
     parsedConfigs: PropType.any,
-    setConfig: PropType.any
+    setConfig: PropType.any,
+    setTrainerText: PropType.any
 };
 export default SpyCard;

@@ -8,13 +8,19 @@ import {
     GoogleMap,
     PanoramaViewer
 } from "../../../Components";
-import SpyCard from "./SpyCard";
-import NarrativeCard from "./NarrativeCard";
+import SpyIcon from "./SpyIcon";
+import AllCard from "./AllCard";
+// import SpyCard from "./SpyCard";
+// import NarrativeCard from "./NarrativeCard";
+// import TrainerCard from "./TrainerCard";
 import Settings from "./Settings";
 import Instructions from "./Instructions";
 import { v4 as uuid } from "uuid";
 
 import povToPixel from "../../../utils/povToPixel";
+// import ToneTrainerComponent from "../../Tools/ToneTrainerView/ToneTrainerComponent";
+// import { TextToSpeech } from "../../../CloudFunctions";
+// import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -66,7 +72,20 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         padding: theme.spacing(1)
     },
-    spyCard: {
+    trainer: {
+        flex: "1 1 100%",
+        zIndex: 102,
+        // top: ,
+        position: "fixed",
+        bottom: theme.spacing(8),
+        marginLeft: theme.spacing(4),
+        marginRight: theme.spacing(15)
+    },
+    svContainer: {
+        width: "100%",
+        height: "calc(100% - 52px)"
+    },
+    spyIcon: {
         maxWidth: 300,
         zIndex: 101,
         position: "absolute"
@@ -91,11 +110,19 @@ function EyeSpy() {
     const [panoramaPath, setPanoramaPath] = useState(null);
     const [gmap, setGmap] = useState(null);
     const [pois, setPois] = useState(null);
+    const [currentPoi, setCurrentPoi] = useState(null);
 
     const [narrative, setNarrative] = useState([]);
 
     /* Variable to keep track of current Point-of-View in Street View */
     const [svPov, setSvPov] = useState(null);
+
+    /* Tone Trainer */
+    // const [trainerSample, setTrainerSample] = useState({});
+
+    // const [trainerLoading, setTrainerLoading] = useState(false);
+    // const [trainerOpen, setTrainerOpen] = useState(false);
+    const [trainerText, setTrainerText] = useState("");
 
     const instructions = Instructions();
     const getSettings = () => (
@@ -113,6 +140,18 @@ function EyeSpy() {
         console.log(language);
         return instructions;
     }
+
+    // async function handleTrainerWord() {
+    //     setTrainerLoading(true);
+    //     return await Promise.resolve(TextToSpeech(trainerText, language))
+    //         .then(s => setTrainerSample(s))
+    //         .finally(() => setTrainerLoading(false));
+    // }
+
+    // useEffect(() => {
+    //     setTrainerOpen(Boolean(trainerText));
+    //     trainerText && handleTrainerWord();
+    // }, [trainerText])
 
     /* Set state variables from config values */
     useEffect(() => {
@@ -146,14 +185,7 @@ function EyeSpy() {
                 {/* Street View Container */}
                 <div
                     ref={elem => setStreetViewContainer(elem)}
-                    style={{
-                        position: "relative",
-                        zIndex: 0,
-                        left: 0,
-                        top: 0,
-                        width: "100%",
-                        height: "100%"
-                    }}
+                    className={clsx(classes.svContainer)}
                 />
 
                 {/* Add Points of Interest */}
@@ -161,28 +193,66 @@ function EyeSpy() {
                     pois.map(v => (
                         <div
                             key={uuid()}
-                            className={clsx(classes.spyCard)}
+                            className={clsx(classes.spyIcon)}
                             style={povToPixel(
                                 { heading: v.x, pitch: v.y },
                                 svPov || { heading: 0, pitch: 0 },
                                 streetViewContainer
                             )}
                         >
-                            <SpyCard
+                            {/* <SpyCard
+                                poi={v}
+                                language={language}
+                                setTrainerText={setTrainerText}
+                                setConfig={setConfig}
+                                parsedConfigs={parsedConfigs}
+                                heading={v.x}
+                                pitch={v.y}
+                            /> */}
+                            <SpyIcon
                                 poi={v}
                                 setConfig={setConfig}
                                 parsedConfigs={parsedConfigs}
+                                setCurrentPoi={setCurrentPoi}
                             />
                         </div>
                     ))}
 
-                {/* NARRATION CARD */}
-                {narrative.length && (
-                    <NarrativeCard
-                        narrative={narrative}
-                        setNarrative={setNarrative}
+                {currentPoi && (
+                    <AllCard
+                        currentPoi={currentPoi}
+                        language={language}
+                        setTrainerText={setTrainerText}
                     />
                 )}
+
+                {/* NARRATION CARD */}
+                {Boolean(narrative.length) && <AllCard narrative={narrative} />}
+
+                {/* {Boolean(narrative.length) && ( */}
+                {Boolean(trainerText.length) && (
+                    <AllCard language={language} trainerText={trainerText} />
+                )}
+                {/* )} */}
+                {/* {trainerOpen &&
+                    <div className={clsx(classes.trainer)}>
+                        <Card
+                            stayOpen
+                            darkMode
+                            title={() => "Tone Trainer"}
+                            body={() =>
+                                (trainerLoading ?
+                                    <div className={clsx(classes.row)}>
+                                        <div className={clsx(classes.pad)}>
+                                            <CircularProgress color="secondary" />
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className={clsx(classes.pad)}>
+                                        <ToneTrainerComponent sample={trainerSample} />
+                                    </div>)}
+                        />
+                    </div>} */}
 
                 {/* Add Google Map */}
                 {gmap && (

@@ -21,6 +21,7 @@ import povToPixel from "../../../utils/povToPixel";
 // import ToneTrainerComponent from "../../Tools/ToneTrainerView/ToneTrainerComponent";
 // import { TextToSpeech } from "../../../CloudFunctions";
 // import { CircularProgress } from "@material-ui/core";
+import { UserProfile } from "../../../UserProfile";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -99,8 +100,11 @@ function EyeSpy() {
     /* Reference to the div to place Dynamic Street View */
     const [streetViewContainer, setStreetViewContainer] = useState(null);
 
-    /* Variables from Settings Gear */
+    const { profile } = UserProfile();
+
     const [language, setLanguage] = useState(null);
+
+    /* Variables from Settings Gear */
     const [mode, setMode] = useState(null);
     const [config, setConfig] = useState(null);
     const [parsedConfigs, setParsedConfigs] = useState(null);
@@ -162,6 +166,12 @@ function EyeSpy() {
         setPois(config.poi);
         setNarrative(config.narrative);
     }, [config]);
+
+    useEffect(() => {
+        if (profile && profile["secondLanguage"]) {
+            setLanguage(profile["secondLanguage"]);
+        }
+    }, [profile]);
 
     return (
         <div className={clsx(classes.root)}>

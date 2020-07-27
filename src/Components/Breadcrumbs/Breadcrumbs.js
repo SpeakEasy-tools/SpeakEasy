@@ -14,13 +14,15 @@ function BreadcrumbItem({ match }) {
             to={match.url || ""}
             activeStyle={{
                 fontWeight: "bold",
-                color: Theme.palette.secondary.contrastText
+                color: Theme.palette.primary.main
             }}
             style={{
-                color: Theme.palette.secondary.contrastText
+                color: Theme.palette.primary.main
             }}
         >
-            <Typography align="center">{match.url.toUpperCase()}</Typography>
+            <Typography variant="h4" color="primary" align="center">
+                {match.url.toUpperCase()}
+            </Typography>
             <Route path={`${match.url}/:path`} component={BreadcrumbItem} />
         </NavLink>
     );

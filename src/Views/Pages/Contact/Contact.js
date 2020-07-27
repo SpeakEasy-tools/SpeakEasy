@@ -2,21 +2,44 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Theme } from "../../../utils";
+import Typography from "@material-ui/core/Typography";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import { ExpandMore } from "@material-ui/icons";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: "100%",
+        width: "100%",
+        height: "90%",
         display: "flex",
-        flexFlow: "row wrap"
+        flexFlow: "column noWrap",
+        overflow: "auto"
     },
     row: {
-        flex: "1 1 100%"
+        width: "100%",
+        display: "flex",
+        flexFlow: "row noWrap",
+        justifyContent: "start",
+        alignItems: "center"
     },
-    column: {},
-    content: {},
     pad: {
-        margin: theme.spacing(1),
-        flex: "1 1 100px"
+        margin: theme.spacing(1)
+    },
+    section: {
+        backgroundColor: theme.palette.secondary.light,
+        width: "100%"
+    },
+    details: {
+        backgroundColor: theme.palette.secondary.main,
+        border: `5px solid ${theme.palette.secondary.dark}`
+    },
+    logo: {
+        maxWidth: "200px",
+        maxHeight: "60px"
+    },
+    header: {
+        width: "100%"
     }
 }));
 
@@ -24,7 +47,138 @@ function Contacts() {
     document.title = "Contact";
     const classes = useStyles(Theme);
 
-    return <div className={clsx(classes.root)}></div>;
+    return (
+        <div className={clsx(classes.root)}>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="email-control"
+                            id="email-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        Email
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            Jeramey Tyler:{" "}
+                                            <a
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                href="mailto:tylerj2@rpi.edu"
+                                            >{`${"tylerj2"}@${"rpi.edu"}`}</a>
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="issues-control"
+                            id="issues-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        Issues
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            Issues can be reported on GitHub
+                                            here.
+                                            <a
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                href="https://github.com/SpeakEasy-tools/SpeakEasy/issues/new/choose"
+                                            >
+                                                github.com/SpeakEasy-tools/SpeakEasy/issues
+                                            </a>
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="issues-control"
+                            id="issues-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        Code Repository
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            Code can be viewed on GitHub here.{" "}
+                                            <a
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                href="https://github.com/SpeakEasy-tools"
+                                            >
+                                                github.com/SpeakEasy-tools
+                                            </a>
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 Contacts.displayName = "Contacts";

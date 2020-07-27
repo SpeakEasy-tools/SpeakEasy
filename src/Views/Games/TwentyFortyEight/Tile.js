@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { Card } from "../../../Components/Card";
+import { Card } from "../../../Components";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
@@ -76,12 +76,18 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Tile({ value, label }) {
+function Tile({ value, color, backgroundColor }) {
     const classes = useStyles(Theme);
 
     const getBody = () => {
         return (
-            <div className={clsx(classes.content, classes[value])}>
+            <div
+                className={clsx(classes.content, classes[value])}
+                style={{
+                    color: color,
+                    backgroundColor: backgroundColor
+                }}
+            >
                 <div className={clsx(classes.column)}>
                     <div
                         className={clsx(classes.pad)}
@@ -92,12 +98,12 @@ function Tile({ value, label }) {
                             textOverflow: "ellipsis"
                         }}
                     >
-                        {label ? (
-                            <Typography noWrap align="center" variant="h4">
-                                {label}
+                        {value ? (
+                            <Typography align="center" variant="h6">
+                                {value}
                             </Typography>
                         ) : (
-                            <Typography align="center" variant="h4">
+                            <Typography align="center" variant="h6">
                                 &nbsp;
                             </Typography>
                         )}
@@ -123,7 +129,8 @@ function Tile({ value, label }) {
 
 Tile.displayName = "Tile";
 Tile.propTypes = {
-    value: PropTypes.number,
-    label: PropTypes.string
+    value: PropTypes.string,
+    color: PropTypes.string.isRequired,
+    backgroundColor: PropTypes.string.isRequired
 };
 export default Tile;

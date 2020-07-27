@@ -2,64 +2,224 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Theme } from "../../../utils";
-import { Divider, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import { ExpandMore } from "@material-ui/icons";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: "100%",
+        width: "100%",
+        height: "90%",
         display: "flex",
         flexFlow: "column noWrap",
         overflow: "auto"
     },
     row: {
-        flex: "1 1 100%"
-    },
-    column: {},
-    content: {},
-    header: {
         width: "100%",
-        textAlign: "center",
-        verticalAlign: "text-top"
+        display: "flex",
+        flexFlow: "row noWrap",
+        justifyContent: "start",
+        alignItems: "center"
     },
     pad: {
-        margin: theme.spacing(1),
-        flex: "1 1 100px"
+        margin: theme.spacing(1)
+    },
+    section: {
+        backgroundColor: theme.palette.secondary.light,
+        width: "100%"
+    },
+    details: {
+        backgroundColor: theme.palette.secondary.light,
+        border: `5px solid ${theme.palette.secondary.main}`
+    },
+    logo: {
+        maxWidth: "200px",
+        maxHeight: "60px"
+    },
+    header: {
+        width: "100%"
     }
 }));
 
 function Help() {
     document.title = "Help";
     const classes = useStyles(Theme);
-    const headers = ["LOGIN", "GAMES", "SETTINGS", "MISC"];
-
-    const output = (headerContent, bodyContent, index) => (
-        <div className={clsx(classes.pad)} key={index}>
-            <Typography color="secondary" variant="h2">
-                {headerContent}
-            </Typography>
-            <Divider />
-            <Typography color="secondary"> {bodyContent} </Typography>
-        </div>
-    );
-
-    const loginInfo =
-        "Under the person icon on the left menu, you can find the login options. By logging in we are able to keep track of any progress you make through the games and tailor the experience to you over time. Login can be done through Google, Github, or any email.";
-
-    const gamesInfo =
-        "Under the dice block icon on the left menu, you can find all of the games. Currently available games are 2048, Eye Spy, and Tile Slider. 2048 will steadily change from numbers to your chosen language of study as you play. [EYE SPY INFO]. [TILE SLIDER INFO].";
-
-    const settingInfo =
-        "Under the wrench icon, you can find the settings and tools. The Dictionary can be used to search in Mandarin as of now. Flashcards can be used to review and study any material used throughout SpeakEasy. Pop Quiz allows you to test yourself further on what you have learned so far. Tone Trainer can help you practice pitch accent in Mandarin.";
-
-    const miscInfo =
-        "Under the three dots icon on the left menu, you can find miscelaneous project information. Here you can find the About, contact information, FAQ, and Help pages.";
 
     return (
         <div className={clsx(classes.root)}>
-            {output(headers[0], loginInfo, 0)}
-            {output(headers[1], gamesInfo, 1)}
-            {output(headers[2], settingInfo, 2)}
-            {output(headers[3], miscInfo, 3)}
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="create-account-control"
+                            id="create-account-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        How do I create an account?
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            To create an account, click the
+                                            button that says
+                                            &ldquo;Sign-In&rdquo; in the upper
+                                            left-hand corner. If you have an
+                                            existing Gmail, Twitter, or GitHub
+                                            account you can sign-in using it. If
+                                            you would like to create an account
+                                            using an email address press the
+                                            button that says &ldquo;Sign in with
+                                            Email&rdquo;
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="sign-in-control"
+                            id="sign-in-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        How do I sign-in?
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            To sign-in to an account, click the
+                                            button that says
+                                            &ldquo;Sign-In&rdquo; in the upper
+                                            left-hand corner. Next press the
+                                            button that matches your sign-in
+                                            method.
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="language-control"
+                            id="language-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        How do I change the language?
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            To change languages, locate the
+                                            language selection box in the top
+                                            bar and press the downward pointing
+                                            arrow. Now select the desired
+                                            language from the list. This
+                                            language is used across
+                                            SpeakEasy.tools and can be changed
+                                            at anytime. Your progress from one
+                                            language will not carry over to
+                                            another language.
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad, classes.header)}>
+                    <ExpansionPanel className={clsx(classes.section)}>
+                        <ExpansionPanelSummary
+                            expandIcon={<ExpandMore />}
+                            aria-controls="settings-control"
+                            id="settings-header"
+                        >
+                            <div className={clsx(classes.row)}>
+                                <div className={clsx(classes.pad)}>
+                                    <Typography variant="h4" color="primary">
+                                        How do I change a game&apos;s settings?
+                                    </Typography>
+                                </div>
+                            </div>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                            className={clsx(classes.details)}
+                        >
+                            <div className={clsx(classes.root)}>
+                                <div className={classes.row}>
+                                    <div className={clsx(classes.pad)}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="justify"
+                                        >
+                                            To change a games settings menu,
+                                            locate and press the settings gear
+                                            towards the upper left-hand side of
+                                            the page, note that not all games
+                                            have a settings gear.
+                                        </Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                </div>
+            </div>
         </div>
     );
 }

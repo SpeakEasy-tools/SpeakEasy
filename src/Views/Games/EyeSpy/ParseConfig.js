@@ -6,7 +6,7 @@ export default configs => {
     useEffect(() => {
         if (!configs) return;
         let cs = configs.map(c => {
-            if (!("config" in c)) return;
+            if (!("config" in c)) return null;
             let newConfig = JSON.parse(c["config"]);
 
             let panorama = {};

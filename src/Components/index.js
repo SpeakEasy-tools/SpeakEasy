@@ -1,12 +1,13 @@
 export { Breadcrumbs } from "./Breadcrumbs";
 export { Card } from "./Card";
 export { ControlBar } from "./ControlBar";
+export { Flashcard } from "./Flashcard";
 export { GoogleMap } from "./GoogleMap";
-export { HomeButton } from "./HomeButton";
-export { InstructionsButton } from "./InstructionsButton";
+export { Header } from "./Header";
+export { LanguageSelect } from "./LanguageSelect";
 export { PanoramaViewer } from "./PanoramaViewer";
 export { Recorder } from "./Recorder";
 export { ScoreBoard } from "./ScoreBoard";
-export { SettingsButton } from "./SettingsButton";
+export { SearchBar } from "./SearchBar";
 export { Sidebar } from "./Sidebar";
-export { ViewWrapper } from "./ViewWrapper";
+export { LoadingBar } from "./LoadingBar";

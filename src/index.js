@@ -5,6 +5,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { history, Theme, serviceWorker } from "./utils";
 import App from "./App";
 import { ProvideAuth } from "./Firebase";
+import { ProvideUser } from "./UserProvider";
 
 /*
  * This function returns a React Router component for our application. There is a Router wrapper that handles application
@@ -15,7 +16,9 @@ const mainRoutes = (
     <Router history={history}>
         <MuiThemeProvider theme={Theme}>
             <ProvideAuth>
-                <App />
+                <ProvideUser>
+                    <App />
+                </ProvideUser>
             </ProvideAuth>
         </MuiThemeProvider>
     </Router>

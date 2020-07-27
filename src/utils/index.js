@@ -12,3 +12,4 @@ export { default as history } from "./history";
 export { serviceWorker };
 export { encodeImageFileAsURL } from "./FileConversion";
 export { getRandomColor } from "./RandomColorGenerator";
+export { default as rgbToHex } from "./RgbToHex";

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { SearchBar } from "../../../Components/SearchBar";
+import { SearchBar } from "../../../Components";
 import ToneTrainerComponent from "./ToneTrainerComponent";
 
 const useStyles = makeStyles(theme => ({

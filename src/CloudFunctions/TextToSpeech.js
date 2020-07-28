@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/functions";
+import "firebase/storage";
 import { translate } from "./Translate";
 
 const Synthesize = firebase.functions().httpsCallable("synthesize");

@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/functions";
+
 const DetectLanguage = firebase.functions().httpsCallable("detectLanguage");
 const ListLanguages = firebase.functions().httpsCallable("listLanguages");
 const Translate = firebase.functions().httpsCallable("translate");

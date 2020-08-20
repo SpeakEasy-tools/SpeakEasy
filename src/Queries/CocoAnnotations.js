@@ -23,6 +23,7 @@ export const GetCocoAnnotationsByImageId = ({ imageId }) => {
 
     const [cocoAnnotations, setCocoAnnotations] = useState();
     const [count, setCount] = useState();
+
     const { data, loading } = useQuery(COCO_ANNOTATIONS, {
         variables: {
             id: imageId

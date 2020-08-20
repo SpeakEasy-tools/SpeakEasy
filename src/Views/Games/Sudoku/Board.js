@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
@@ -8,6 +8,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Square from "./Square";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { getTranslations } from "../../../CloudFunctions/Translate";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,25 +33,92 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // boardState is a 1-d list of integers representing the 81 tiles in sudoku
-function Board({ boardState, setBoardState }) {
+function Board({ languageCode }) {
     const classes = useStyles(Theme);
 
     const [board, setBoard] = useState([]);
+    const [boardState, setBoardState] = useState([]);
 
     const [rows, setRows] = useState([]);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const [diffAchorEl, setDiffAnchorEl] = useState(null);
+    const [diffAnchorEl, setDiffAnchorEl] = useState(null);
 
     const [validChoices, setValidChoices] = useState([]);
 
     const [selectedTile, setSelectedTile] = useState(null);
 
     const [selectedDifficulty, setselectedDifficulty] = React.useState(1);
+    const [loading, setLoading] = useState(false);
+    const [gameWon, setGameWon] = useState(false);
+    const [translation, setTranslation] = useState();
 
-    const difficultyOptions = ["Easy", "Medium", "Hard", "Extreme"];
+    const difficultyOptions = ["Beginner", "Easy", "Medium", "Hard", "Extreme"];
 
+    const translate = useCallback(
+        tiles => {
+            for (let i = 0; i < 81; i++) {
+                switch (tiles[i]) {
+                    case 1:
+                        tiles[i] = translation[0];
+                        break;
+                    case 2:
+                        tiles[i] = translation[1];
+                        break;
+                    case 3:
+                        tiles[i] = translation[2];
+                        break;
+                    case 4:
+                        tiles[i] = translation[3];
+                        break;
+                    case 5:
+                        tiles[i] = translation[4];
+                        break;
+                    case 6:
+                        tiles[i] = translation[5];
+                        break;
+                    case 7:
+                        tiles[i] = translation[6];
+                        break;
+                    case 8:
+                        tiles[i] = translation[7];
+                        break;
+                    case 9:
+                        tiles[i] = translation[8];
+                        break;
+                    default:
+                        tiles[i] = 0;
+                }
+            }
+            setBoard(tiles);
+            return tiles;
+        },
+        [translation]
+    );
+    const handleTranslation = useCallback(() => {
+        setLoading(true);
+        let transcript = [
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine"
+        ];
+        return Promise.resolve(
+            getTranslations(Object.values(transcript), languageCode)
+        )
+            .then(ts => {
+                let trans = [];
+                ts.forEach(t => trans.push(t.translation));
+                setTranslation(trans);
+            })
+            .finally(() => setBoard([]));
+    }, [languageCode]);
     function checkBoard() {
         for (let i = 0; i < 9; i++) {
             let rowset = new Set(getRow(i).map(a => a.value));
@@ -59,13 +129,14 @@ function Board({ boardState, setBoardState }) {
                     .flat()
             );
             if (
-                rowset.length !== 9 ||
-                colset.length !== 9 ||
-                squareset.length !== 9
+                rowset.size !== 9 ||
+                colset.size !== 9 ||
+                squareset.size !== 9
             ) {
                 return false;
             }
         }
+        setGameWon(true);
         return true;
     }
 
@@ -75,7 +146,9 @@ function Board({ boardState, setBoardState }) {
         } else {
             let id =
                 9 * squareId + (Math.floor(tileId / 9) % 3) * 3 + (tileId % 3);
-            let tiles = document.querySelectorAll(".makeStyles-tileRoot-39");
+            let tiles = document.querySelectorAll(
+                "[class^='makeStyles-tileRoot']"
+            );
             tiles[id].style.color = "#5c5c5c";
         }
         setAnchorEl(e);
@@ -86,7 +159,7 @@ function Board({ boardState, setBoardState }) {
     function handleClose(e) {
         if (e.target.textContent) {
             let newBoard = [...board];
-            newBoard[selectedTile] = parseInt(e.target.textContent);
+            newBoard[selectedTile] = e.target.textContent;
             setBoard(newBoard);
         }
         setAnchorEl(null);
@@ -97,30 +170,29 @@ function Board({ boardState, setBoardState }) {
         newBoard[selectedTile] = 0;
         setBoard(newBoard);
         setAnchorEl(null);
+        setGameWon(false);
     }
 
     function clearBoard() {
         setBoard(boardState);
+        setGameWon(false);
     }
 
     function selectDifficulty(e, index) {
-        if (e.target.textContent) {
+        if (e && e.target.textContent) {
+            setLoading(true);
             setselectedDifficulty(index);
-            fetch(
-                "api.speakeasy.services/sudoku?difficulty=" +
-                    e.target.textContent,
-                {
-                    method: "POST"
-                }
-            ).then(response => {
-                if (response.ok) {
-                    response.json().then(json => {
-                        setBoard(json);
-                        setBoardState(json);
-                    });
-                }
-            });
+            fetch("http://api.speakeasy.services/sudoku/1")
+                .then(response => {
+                    if (response.ok) {
+                        response.json().then(json => {
+                            setBoardState(translate(json["board"].flat()));
+                        });
+                    }
+                })
+                .finally(() => setLoading(false));
         }
+        setGameWon(false);
         setDiffAnchorEl(null);
     }
 
@@ -131,7 +203,6 @@ function Board({ boardState, setBoardState }) {
     function handleDifficultyClose() {
         setDiffAnchorEl(null);
     }
-
     // Rows go from top to bottom numbered 0-8
     function getRow(rowNum) {
         const row = [];
@@ -181,7 +252,7 @@ function Board({ boardState, setBoardState }) {
             .flat(1)
             .map(s => s.value);
 
-        const options = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        const options = new Set(translation);
         const invalid = new Set([...row, ...col, ...square]);
         return new Set([...options].filter(x => !invalid.has(x)));
     }
@@ -211,15 +282,33 @@ function Board({ boardState, setBoardState }) {
             ]);
         }
     }, [board]);
-
+    useEffect(() => {
+        if (handleTranslation) {
+            handleTranslation();
+        }
+    }, [handleTranslation]);
+    useEffect(() => {
+        if (translation) {
+            fetch("http://api.speakeasy.services/sudoku/1")
+                .then(response => {
+                    if (response.ok) {
+                        response.json().then(json => {
+                            setBoardState(translate(json["board"].flat()));
+                        });
+                    }
+                })
+                .finally(() => setLoading(false));
+        }
+    }, [translate, translation]);
     useEffect(() => {
         if (boardState && boardState.length === 81) {
             setBoard([...boardState]);
         }
     }, [boardState]);
+
     return (
         <div className={clsx(classes.root)}>
-            <div className={classes.row}>
+            <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Button onClick={checkBoard}> Check Board </Button>
                 </div>
@@ -236,9 +325,9 @@ function Board({ boardState, setBoardState }) {
                     </Button>
                     <Menu
                         id="Difficulty-Select"
-                        anchorEl={diffAchorEl}
+                        anchorEl={diffAnchorEl}
                         keepMounted
-                        open={Boolean(diffAchorEl)}
+                        open={Boolean(diffAnchorEl)}
                         onClose={handleDifficultyClose}
                     >
                         {difficultyOptions.map((option, index) => (
@@ -253,7 +342,23 @@ function Board({ boardState, setBoardState }) {
                     </Menu>
                 </div>
             </div>
-            {rows &&
+            {gameWon && (
+                <div className={clsx(classes.row)}>
+                    <div className={clsx(classes.pad)}>
+                        <Typography variant="h4" color="secondary">
+                            Complete!
+                        </Typography>
+                    </div>
+                </div>
+            )}
+            {loading ? (
+                <div className={clsx(classes.row)}>
+                    <div className={clsx(classes.pad)}>
+                        <CircularProgress color="secondary" />
+                    </div>
+                </div>
+            ) : (
+                rows &&
                 rows.map((row, index) => (
                     <div
                         key={`row${index}`}
@@ -277,7 +382,8 @@ function Board({ boardState, setBoardState }) {
                                 </div>
                             ))}
                     </div>
-                ))}
+                ))
+            )}
             <Menu
                 id="Number select"
                 anchorEl={anchorEl}
@@ -309,7 +415,6 @@ function Board({ boardState, setBoardState }) {
 
 Board.displayName = "Board";
 Board.propTypes = {
-    boardState: PropTypes.array.isRequired,
-    setBoardState: PropTypes.func.isRequired
+    languageCode: PropTypes.string.isRequired
 };
 export default Board;

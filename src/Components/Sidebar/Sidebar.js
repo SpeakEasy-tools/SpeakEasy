@@ -26,7 +26,6 @@ import {
     faUserGraduate,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
-
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { ListItemIcon } from "@material-ui/core";
@@ -309,6 +308,7 @@ function Sidebar() {
                             </ListItemIcon>
                             <ListItemText primary="Coco Explorer" />
                         </ListItem>
+
                         <ListItem button component={Link} to="/dictionary">
                             <ListItemIcon>
                                 <FontAwesomeIcon

@@ -29,13 +29,13 @@ function Instructions() {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography paragraph>
-                        The goal of 2048 is to create a tile with the value 2048
-                        by combining tiles with the same number to add them
-                        together. This can be done by pressing the arrow keys on
-                        your keyboard to slide all tiles in the designated
-                        direction. After every move, a new 2 or 4 tile will
-                        randomly appear. Once the board is completely filled
-                        with tiles the game is over.
+                        To begin, select a language. The goal of 2048 is to
+                        create a tile with the value 2048 by combining tiles
+                        with the same number to add them together. This can be
+                        done by pressing the arrow keys on your keyboard to
+                        slide all tiles in the designated direction. After every
+                        move, a new 2 or 4 tile will randomly appear. Once the
+                        board is completely filled with tiles the game is over.
                     </Typography>
                 </div>
             </div>

@@ -13,10 +13,11 @@ const useStyles = makeStyles(theme => ({
     },
     row: {
         display: "flex",
-        flex: "1 1 100%"
+        flex: "1 1 100%",
+        justifyContent: "start"
     },
     pad: {
-        padding: theme.spacing(0)
+        padding: theme.spacing(1)
     }
 }));
 
@@ -28,9 +29,11 @@ function Instructions() {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography paragraph>
-                        To begin, select a language. The goal of Sudoku is to
-                        fill the entire grid so that each column, row, and 3 x 3
-                        grid contains every number from one to nine.
+                        To begin, select a language. The goal of Tile Slider is
+                        to use the arrow keys to order the tiles from 1-15, with
+                        the blank space in the bottom right. The tile in the
+                        corresponding arrow key direction will move into the
+                        free space.
                     </Typography>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
+
 import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles(theme => ({

@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getRandomColor, Theme } from "../../../utils";
 import clsx from "clsx";
 import { GetCocoAnnotationsByImageId } from "../../../Queries";
+
 import { getTranslations } from "../../../CloudFunctions/Translate";
 import ClickableImage from "./ClickableImage";
 import { LoadingBar } from "../../../Components/LoadingBar";
@@ -71,6 +72,7 @@ function ImagePanel({ image, language }) {
     const [segments, setSegments] = useState({});
 
     const [translations, setTranslations] = useState({});
+
     const [found, setFound] = useState({});
 
     function handleFound(key) {
@@ -138,6 +140,7 @@ function ImagePanel({ image, language }) {
                 )
             ).finally(() => {
                 setTranslations({ ...results });
+
                 setIsLoading(false);
             });
         }
@@ -154,6 +157,7 @@ function ImagePanel({ image, language }) {
 
             setIsLoading(true);
             setLoadingLabel("Captions and objects");
+
             annotations.forEach(a => {
                 const annotation = JSON.parse(a["annotation"]);
                 let color = getRandomColor();
@@ -195,6 +199,7 @@ function ImagePanel({ image, language }) {
         ) {
             setIsLoading(true);
             setLoadingLabel("Annotation translations");
+
             let caps = {};
             let segs = {};
             Object.entries(captionHashes).forEach(([, v]) => {

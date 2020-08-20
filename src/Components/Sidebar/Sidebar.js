@@ -6,9 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faAddressCard,
     faBook,
-    faBorderNone,
     faCaretLeft,
-    faChartLine,
     faDice,
     faEllipsisH,
     faEye,
@@ -33,9 +31,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { ListItemIcon } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../Firebase";
+import { FirebaseUI, useAuth } from "../../Firebase";
 import Avatar from "@material-ui/core/Avatar";
-import { FirebaseUI } from "../../Firebase";
 import ListItemText from "@material-ui/core/ListItemText";
 
 const useStyles = makeStyles(theme => ({
@@ -285,16 +282,6 @@ function Sidebar() {
                             </ListItemIcon>
                             <ListItemText primary="Memory" />
                         </ListItem>
-                        <ListItem button component={Link} to="/sudoku">
-                            <ListItemIcon>
-                                <FontAwesomeIcon
-                                    className={clsx(classes.icon)}
-                                    size="lg"
-                                    icon={faBorderNone}
-                                />
-                            </ListItemIcon>
-                            <ListItemText primary="Sudoku" />
-                        </ListItem>
                     </List>
                 </div>
             )}
@@ -351,16 +338,6 @@ function Sidebar() {
                                 />
                             </ListItemIcon>
                             <ListItemText primary="Pop Quiz" />
-                        </ListItem>
-                        <ListItem button component={Link} to="/tone_trainer">
-                            <ListItemIcon>
-                                <FontAwesomeIcon
-                                    className={clsx(classes.icon)}
-                                    size="lg"
-                                    icon={faChartLine}
-                                />
-                            </ListItemIcon>
-                            <ListItemText primary="Tone Trainer" />
                         </ListItem>
                     </List>
                 </div>
@@ -444,5 +421,6 @@ function Sidebar() {
         </div>
     );
 }
+
 Sidebar.displayName = "Sidebar";
 export default Sidebar;

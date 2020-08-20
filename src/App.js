@@ -17,6 +17,8 @@ import clsx from "clsx";
 import { BuildRoutes } from "./Routes";
 import { GRAPHQL_URL, Theme } from "./utils";
 import { Header, Sidebar } from "./Components";
+import Typography from "@material-ui/core/Typography";
+import { Build } from "@material-ui/icons";
 
 /* This object sets up the CSS class names that will be used for this component. */
 const useStyles = makeStyles(() => ({
@@ -34,9 +36,17 @@ const useStyles = makeStyles(() => ({
      * The div that will hold our primary content. The flex property allows it to stretch and shrink with its parent.
      */
     content: {
-        flex: "1 1 100%"
+        flex: "1 1 100%",
+        width: "auto",
+        height: "auto",
+        display: "flex",
+        flexFlow: "column noWrap",
+        overflow: "hidden"
     },
-    column: {}
+    column: {},
+    row: {
+        width: "100%"
+    }
 }));
 
 export default () => {
@@ -130,7 +140,42 @@ export default () => {
                     <div className={clsx(classes.row)}>
                         <Header />
                     </div>
-                    <Switch>{BuildRoutes(allowedRoles)}</Switch>
+                    <div
+                        className={clsx(classes.content)}
+                        style={{
+                            margin: Theme.spacing(1)
+                        }}
+                    >
+                        <Switch>{BuildRoutes(allowedRoles)}</Switch>
+                    </div>
+                    <div
+                        className={clsx(classes.row)}
+                        style={{
+                            backgroundColor: "yellow",
+                            display: "flex",
+                            justifyContent: "center"
+                        }}
+                    >
+                        <div className={clsx(classes.pad)}>
+                            <Build />
+                        </div>
+                        <div className={clsx(classes.pad)}>
+                            <Typography>
+                                Excuse our mess while we are under construction.
+                                Please report issues, bugs, suggestions, etc. to{" "}
+                                <a
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    href="https://github.com/SpeakEasy-tools/SpeakEasy/issues/new"
+                                >
+                                    this link
+                                </a>
+                            </Typography>
+                        </div>
+                        <div className={clsx(classes.pad)}>
+                            <Build />
+                        </div>
+                    </div>
                 </div>
             </div>
         </ApolloProvider>

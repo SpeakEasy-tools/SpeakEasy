@@ -1,136 +1,120 @@
-import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { GetNRandomSeedCocoCategories } from "../../../Queries";
-import Transcript from "./Transcript";
-import { UserProfile } from "../../../UserProfile";
-import { LoadingBar } from "../../../Components/LoadingBar";
-import Key from "./Key";
+import Typography from "@material-ui/core/Typography";
+import Tile from "./Tile";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles(theme => ({
-    root: {
+    content: {
+        flex: 1,
         display: "flex",
-        width: "100%",
+        flexFlow: "column noWrap",
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        overflow: "hidden",
         backgroundColor: theme.palette.secondary.light,
         borderRadius: 10
     },
-    column: {
-        height: "100%",
-        display: "flex",
-        flexFlow: "column noWrap",
-        flex: "1 1 auto",
-        padding: theme.spacing(1)
-    },
     row: {
-        width: "100%",
+        width: "auto",
         display: "flex",
-        flex: "1 1 auto"
+        flexFlow: "row noWrap",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: theme.spacing(1),
+        borderRadius: 10
+    },
+    title: {
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.primary.main
     },
     pad: {
-        width: "20%",
-        padding: theme.spacing(1),
-        flex: "1 1 auto"
+        margin: theme.spacing(1),
+        padding: theme.spacing(1)
+    },
+    tile: {
+        flex: "1 1 20%"
     }
 }));
 
-function Board() {
+function Board({ tiles, handleFlip }) {
     const classes = useStyles(Theme);
 
-    const tileCount = 40;
-    const [puzzleSeed, setPuzzleSeed] = useState(null);
-
-    const { categories, loading } = GetNRandomSeedCocoCategories({
-        n: tileCount,
-        seed: puzzleSeed
-    });
-
-    const [translations, setTranslations] = useState([]);
-    const [translationsLoading, setTranslationsLoading] = useState(false);
-
-    const [tiles, setTiles] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [loadingLabel, setLoadingLabel] = useState("");
-
-    const [language, setLanguage] = useState();
-    const { profile } = UserProfile();
-
-    useEffect(() => {
-        if (profile && profile["secondLanguage"]) {
-            setLanguage(profile["secondLanguage"].code);
-            setPuzzleSeed(Math.random());
-        }
-    }, [profile]);
-    useEffect(() => {
-        function randomEvenInRange() {
-            const minPairs = 8;
-            const maxPairs = 20;
-            const n =
-                Math.floor(Math.random() * (maxPairs - minPairs + 1)) +
-                minPairs;
-            return n % 2 !== 0 ? randomEvenInRange() : n;
-        }
-
-        if (categories) {
-            setTranslationsLoading(true);
-            const pairCount = randomEvenInRange();
-            const transcript = categories.slice(0, pairCount).map(c => c.name);
-            Promise.resolve(Transcript(transcript, language)).then(ts =>
-                setTranslations(ts)
-            );
-        }
-    }, [categories, language]);
-    useEffect(() => {
-        if (translations && Boolean(Object.keys(translations).length)) {
-            setTranslationsLoading(false);
-            setTiles(
-                Object.keys(translations).map(t => {
-                    return {
-                        transcript: t,
-                        translation: translations[t]
-                    };
-                })
-            );
-        }
-    }, [translations]);
-
-    useEffect(() => {
-        if (loading || translationsLoading) {
-            setIsLoading(true);
-            if (loading) {
-                setLoadingLabel(prevState => prevState + "Labels ");
-            }
-            if (translationsLoading) {
-                setLoadingLabel(prevState => prevState + "Translations ");
-            }
-        } else {
-            setLoadingLabel("");
-            setIsLoading(false);
-        }
-    }, [loading, translationsLoading]);
+    function handleClick(t) {
+        console.log("click");
+        handleFlip(t["id"]);
+    }
 
     return (
-        <div className={clsx(classes.root)}>
-            {isLoading ? (
-                <div className={clsx(classes.row)}>
-                    <div className={clsx(classes.pad)}>
-                        <LoadingBar label={loadingLabel} />
-                    </div>
-                </div>
-            ) : (
-                tiles && (
+        <div className={clsx(classes.content)}>
+            <div className={clsx(classes.row, classes.title)}>
+                {tiles && Boolean(tiles.length) && (
                     <>
-                        <div className={clsx(classes.column)}></div>
-                        <div>
-                            <Key pairs={tiles} />
+                        <div className={clsx(classes.pad)}>
+                            <Typography
+                                variant="h6"
+                                color="primary"
+                                align="center"
+                            >
+                                Matches{" "}
+                                {Math.floor(
+                                    tiles.filter(d => d["isMatched"]).length / 2
+                                )}{" "}
+                                of {Math.floor(Object.keys(tiles).length / 2)}
+                            </Typography>
                         </div>
+                        {Math.floor(
+                            tiles.filter(d => d["isMatched"]).length / 2
+                        ) === Math.floor(Object.keys(tiles).length / 2) && (
+                            <div className={clsx(classes.pad)}>
+                                <Checkbox
+                                    checked={true}
+                                    style={{
+                                        color: Theme.palette.primary.main
+                                    }}
+                                />
+                            </div>
+                        )}
                     </>
-                )
+                )}
+            </div>
+            {tiles && Boolean(tiles.length) && (
+                <div
+                    style={{
+                        flex: "1 1 20%",
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexFlow: "row wrap",
+                        overflow: "auto",
+                        margin: Theme.spacing(1),
+                        padding: Theme.spacing(1),
+                        backgroundColor: Theme.palette.secondary.dark,
+                        borderRadius: 10
+                    }}
+                >
+                    {tiles &&
+                        tiles.map(t => (
+                            <div
+                                className={clsx(classes.tile)}
+                                key={`${t.id}_board`}
+                                onClick={() => handleClick(t)}
+                            >
+                                <Tile tile={t} />
+                            </div>
+                        ))}
+                </div>
             )}
         </div>
     );
 }
 
 Board.displayName = "Board";
-
+Board.propTypes = {
+    tiles: PropTypes.array.isRequired,
+    handleFlip: PropTypes.func.isRequired
+};
 export default Board;

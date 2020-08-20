@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -127,7 +128,7 @@ function TonePractice({ display, language, transcript }) {
                 </ListItem>
                 {samples &&
                     samples.map((a, i) => (
-                        <ListItem key={i}>
+                        <ListItem key={uuid()}>
                             <ListItemIcon>
                                 <Checkbox
                                     edge="start"
@@ -141,7 +142,10 @@ function TonePractice({ display, language, transcript }) {
                                     }
                                 />
                             </ListItemIcon>
-                            <ListItemText primary={`Attempt #${i + 1}`} />
+                            <ListItemText
+                                primary={`Attempt #${i + 1}`}
+                                color="primary"
+                            />
                             <ListItemSecondaryAction>
                                 <IconButton
                                     edge="end"

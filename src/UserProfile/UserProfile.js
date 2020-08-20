@@ -1,5 +1,20 @@
 import { useUser } from "../UserProvider";
 
+export function getUserLanguage() {
+    const userProfile = UserProfile();
+    if (
+        userProfile &&
+        Boolean(Object.keys(userProfile).length) &&
+        userProfile.profile &&
+        Boolean(Object.keys(userProfile.profile).length) &&
+        userProfile.profile.secondLanguage &&
+        Boolean(Object.keys(userProfile.profile.secondLanguage).length)
+    ) {
+        return userProfile.profile.secondLanguage;
+    }
+    return null;
+}
+
 function UserProfile() {
     const user = useUser();
     const profile = user.userProfile;

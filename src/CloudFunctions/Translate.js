@@ -12,7 +12,7 @@ export async function detectLanguage(text) {
 }
 
 export async function listLanguages() {
-    const languages = await Promise.resolve(
+    return await Promise.resolve(
         ListLanguages()
             .then(res => res.data)
             .then(path =>
@@ -24,7 +24,6 @@ export async function listLanguages() {
             .then(url => fetch(url).then(response => response.json()))
             .catch(e => e.message)
     );
-    return languages;
 }
 
 export async function translate(text, target) {

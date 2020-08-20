@@ -45,9 +45,6 @@ const useStyles = makeStyles(theme => ({
             borderColor: theme.palette.primary.dark
         }
     },
-    textField: {
-        color: theme.palette.primary.main
-    },
     label: {
         color: theme.palette.primary.main
     }
@@ -79,6 +76,7 @@ function LanguageSelect() {
     useEffect(() => {
         if (
             profile &&
+            Boolean(Object.keys(profile).length) &&
             Boolean(Object.keys(profile).includes("secondLanguage")) &&
             Boolean(
                 Object.keys(profile["secondLanguage"]).includes("code") &&
@@ -93,8 +91,6 @@ function LanguageSelect() {
                     l => l.code === profile["secondLanguage"].code
                 )[0]
             );
-        } else {
-            setSelectedLanguage(languages.filter(l => l.code === "en")[0]);
         }
     }, [profile, languages]);
     return (

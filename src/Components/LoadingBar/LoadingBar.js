@@ -23,14 +23,14 @@ function LoadingBar({ label, progress }) {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography variant="h6" color="primary">
-                        Loading {label}
+                        Loading {label} ...
                     </Typography>
                 </div>
                 <div className={clsx(classes.pad)}>
                     {progress ? (
-                        <LinearProgress color="primary" value={progress} />
+                        <LinearProgress color="secondary" value={progress} />
                     ) : (
-                        <LinearProgress color="primary" />
+                        <LinearProgress color="secondary" />
                     )}
                 </div>
             </div>

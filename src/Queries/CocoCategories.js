@@ -26,7 +26,7 @@ export const GetCocoCategories = () => {
     return cocoCategories;
 };
 
-export const GetNRandomSeedCocoCategories = ({ n, seed }) => {
+export const GetNRandomSeedCocoCategories = (n, seed) => {
     const COCO_CATEGORIES = gql`
         query getNRandomSeedCocoCategories($n: Int!, $seed: float8!) {
             random_seed_coco_categories(
@@ -40,25 +40,34 @@ export const GetNRandomSeedCocoCategories = ({ n, seed }) => {
         }
     `;
 
-    const [cocoCategories, setCocoCategories] = useState();
+    const [categories, setCategories] = useState([]);
+    const [skipQuery, setSkipQuery] = useState(false);
 
-    const { data, refetch, loading } = useQuery(COCO_CATEGORIES, {
+    let { loading, error, data } = useQuery(COCO_CATEGORIES, {
         variables: {
             n: n,
             seed: seed
         },
-        fetchPolicy: "cache-and-network"
+        skip: skipQuery
     });
 
     useEffect(() => {
-        if (data) {
-            setCocoCategories(data["random_seed_coco_categories"].slice(0, n));
+        if (!skipQuery && n) {
+            const onCompleted = () => {};
+            const onError = () => {};
+            if (onCompleted || onError) {
+                if (onCompleted && !loading && !error) {
+                    setCategories(
+                        data["random_seed_coco_categories"].slice(0, n)
+                    );
+                    setSkipQuery(true);
+                } else if (onError && !loading && error) {
+                    setSkipQuery(true);
+                }
+            }
         }
-    }, [data, n]);
-
+    }, [loading, data, error, skipQuery, n]);
     return {
-        categories: cocoCategories,
-        refetch: refetch,
-        loading: loading
+        categories: categories
     };
 };

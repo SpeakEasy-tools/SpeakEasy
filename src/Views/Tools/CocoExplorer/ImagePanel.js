@@ -4,58 +4,73 @@ import { makeStyles } from "@material-ui/core/styles";
 import { getRandomColor, Theme } from "../../../utils";
 import clsx from "clsx";
 import { GetCocoAnnotationsByImageId } from "../../../Queries";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { getTranslations } from "../../../CloudFunctions/Translate";
-import CaptionsPanel from "./CaptionsPanel";
-import SegmentsPanel from "./SegmentsPanel";
 import ClickableImage from "./ClickableImage";
+import { LoadingBar } from "../../../Components/LoadingBar";
+import SegmentsPanel from "./SegmentsPanel";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: "100%",
-        background: theme.palette.secondary.light,
-        border: `5px solid ${theme.palette.primary.dark}`,
-        borderRadius: "10px",
-        display: "flex",
-        flexFlow: "column noWrap",
-        alignItems: "center",
-        justifyContent: "center",
-        margin: theme.spacing(1)
-    },
-    row: {
-        flex: "1 1 auto",
-        width: "98%",
+        flex: "1 1 100%",
+        width: "auto",
+        height: "auto",
         display: "flex",
         flexFlow: "row noWrap",
-        alignItems: "center",
-        justifyContent: "center",
-        margin: theme.spacing(1)
+        overflow: "hidden",
+        backgroundColor: theme.palette.secondary.main,
+        borderRadius: 10
+    },
+    column: {
+        flex: 1,
+        width: "auto",
+        height: "auto",
+        display: "flex",
+        flexFlow: "column noWrap",
+        overflow: "hidden",
+        borderRadius: 10,
+        backgroundColor: Theme.palette.secondary.dark
+    },
+    row: {
+        display: "flex",
+        width: "auto",
+        height: "auto",
+        flexFlow: "row noWrap",
+        overflow: "hidden",
+        padding: theme.spacing(1),
+        margin: theme.spacing(1),
+        borderRadius: 10,
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.primary.main
     },
     pad: {
-        padding: theme.spacing(1),
-        border: `5px solid ${theme.palette.primary.dark}`,
-        borderRadius: "10px"
+        margin: theme.spacing(1),
+        padding: theme.spacing(1)
     }
 }));
 
 function ImagePanel({ image, language }) {
     const classes = useStyles(Theme);
 
-    const [translating, setTranslating] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingLabel, setLoadingLabel] = useState("Image");
+
     const [imageId, setImageId] = useState(null);
-
-    const { annotations, loading } = GetCocoAnnotationsByImageId({
+    const annotationParams = {
         imageId: imageId
-    });
+    };
 
-    const [translations, setTranslations] = useState({});
+    const cocoAnnotations = GetCocoAnnotationsByImageId(annotationParams);
+
+    const [annotations, setAnnotations] = useState([]);
 
     const [captionHashes, setCaptionHashes] = useState([]);
-    const [segmentHashes, setSegmentHashes] = useState([]);
-
     const [captions, setCaptions] = useState({});
+
+    const [segmentHashes, setSegmentHashes] = useState([]);
     const [segments, setSegments] = useState({});
 
+    const [translations, setTranslations] = useState({});
     const [found, setFound] = useState({});
 
     function handleFound(key) {
@@ -66,25 +81,64 @@ function ImagePanel({ image, language }) {
         }
     }
 
+    function getCaption() {
+        if (captions && Boolean(Object.keys(captions).length)) {
+            return captions[Object.keys(captions)[0]].translation;
+        } else {
+            return "";
+        }
+    }
+
+    useEffect(() => {
+        if (image && Boolean(Object.keys(image).length)) {
+            setImageId(image.id);
+        }
+    }, [image]);
+    useEffect(() => {
+        if (
+            cocoAnnotations &&
+            Boolean(Object.keys(cocoAnnotations).length) &&
+            cocoAnnotations.annotations &&
+            !cocoAnnotations.loading &&
+            cocoAnnotations.count
+        ) {
+            setIsLoading(false);
+            setAnnotations(cocoAnnotations.annotations);
+        } else if (
+            cocoAnnotations &&
+            Boolean(Object.keys(cocoAnnotations).length) &&
+            cocoAnnotations.loading
+        ) {
+            setIsLoading(true);
+            setLoadingLabel("Image annotations");
+        }
+    }, [cocoAnnotations]);
     useEffect(() => {
         function translate(transcript, languageCode) {
-            setTranslating(true);
-            let transcripts = [];
-            let keys = [];
+            setIsLoading(true);
+            setLoadingLabel("Translating annotations");
+            let transcripts = new Set();
+            let keys = {};
             let results = {};
             Object.entries(transcript).forEach(([k, v]) => {
-                keys.push(k);
-                transcripts.push(v);
+                if (keys && Boolean(Object.keys(keys))) {
+                    if (!(v in keys)) {
+                        keys[v] = [];
+                    }
+                    keys[v] = [...keys[v], k];
+                }
+                transcripts.add(v);
             });
             Promise.resolve(
-                getTranslations(transcripts, languageCode).then(result =>
-                    result.forEach((r, i) => {
-                        results[keys[i]] = r;
+                getTranslations([...transcripts], languageCode).then(result =>
+                    result.forEach(r => {
+                        keys[r["transcript"]].forEach(k => (results[k] = r));
+                        results[keys[r["transcript"]]] = r;
                     })
                 )
             ).finally(() => {
                 setTranslations({ ...results });
-                setTranslating(false);
+                setIsLoading(false);
             });
         }
 
@@ -98,6 +152,8 @@ function ImagePanel({ image, language }) {
             let caps = [];
             let segs = [];
 
+            setIsLoading(true);
+            setLoadingLabel("Captions and objects");
             annotations.forEach(a => {
                 const annotation = JSON.parse(a["annotation"]);
                 let color = getRandomColor();
@@ -129,17 +185,6 @@ function ImagePanel({ image, language }) {
         }
     }, [annotations, language]);
     useEffect(() => {
-        if (image) {
-            setImageId(image["id"]);
-        }
-    }, [image]);
-    useEffect(() => {
-        console.log(language);
-    }, [language]);
-    useEffect(() => {
-        console.log(translations, translating);
-    }, [translations, translating]);
-    useEffect(() => {
         if (
             captionHashes &&
             Boolean(captionHashes.length) &&
@@ -148,6 +193,8 @@ function ImagePanel({ image, language }) {
             translations &&
             Boolean(Object.keys(translations).length)
         ) {
+            setIsLoading(true);
+            setLoadingLabel("Annotation translations");
             let caps = {};
             let segs = {};
             Object.entries(captionHashes).forEach(([, v]) => {
@@ -165,39 +212,53 @@ function ImagePanel({ image, language }) {
             setSegments({ ...segs });
         }
     }, [captionHashes, segmentHashes, translations]);
+
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                {loading ? (
-                    <div className={clsx(classes.pad)}>
-                        <CircularProgress color="primary" />
-                    </div>
-                ) : (
-                    translating && (
-                        <div className={clsx(classes.pad)}>
-                            <CircularProgress color="secondary" />
+            {image &&
+                segments &&
+                Boolean(Object.keys(segments).length) &&
+                found && (
+                    <>
+                        <div className={clsx(classes.column)}>
+                            {captions && (
+                                <div className={clsx(classes.pad)}>
+                                    <Typography
+                                        variant="h6"
+                                        color="primary"
+                                        align="center"
+                                    >
+                                        {getCaption()}
+                                    </Typography>
+                                </div>
+                            )}
+                            <div className={clsx(classes.pad)}>
+                                <SegmentsPanel
+                                    segments={segments}
+                                    found={found}
+                                />
+                            </div>
                         </div>
-                    )
+                        <div className={clsx(classes.column)}>
+                            <div className={clsx(classes.pad)}>
+                                <ClickableImage
+                                    image={image}
+                                    segments={segments}
+                                    found={found}
+                                    handleFound={handleFound}
+                                />
+                            </div>
+                        </div>
+                    </>
                 )}
-            </div>
-            {!loading && (
+            {isLoading && (
                 <div className={clsx(classes.row)}>
-                    {captions && Boolean(Object.keys(captions).length) && (
-                        <CaptionsPanel captions={captions} />
-                    )}
-                    {image &&
-                        segments &&
-                        Boolean(Object.keys(segments).length) && (
-                            <ClickableImage
-                                image={image}
-                                segments={segments}
-                                found={found}
-                                handleFound={handleFound}
-                            />
-                        )}
-                    {segments && Boolean(Object.keys(segments).length) && (
-                        <SegmentsPanel segments={segments} found={found} />
-                    )}
+                    <div
+                        className={clsx(classes.pad)}
+                        style={{ flex: "1 1 100%" }}
+                    >
+                        <LoadingBar label={loadingLabel} />
+                    </div>
                 </div>
             )}
         </div>

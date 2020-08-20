@@ -13,3 +13,4 @@ export { serviceWorker };
 export { encodeImageFileAsURL } from "./FileConversion";
 export { getRandomColor } from "./RandomColorGenerator";
 export { default as rgbToHex } from "./RgbToHex";
+export { default as RandomSample } from "./RandomSample";

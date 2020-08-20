@@ -13,11 +13,16 @@ export const GetCocoAnnotationsByImageId = ({ imageId }) => {
                     is_thing
                 }
             }
+            coco_annotations_aggregate(where: { image_id: { _eq: $id } }) {
+                aggregate {
+                    count
+                }
+            }
         }
     `;
 
     const [cocoAnnotations, setCocoAnnotations] = useState();
-
+    const [count, setCount] = useState();
     const { data, loading } = useQuery(COCO_ANNOTATIONS, {
         variables: {
             id: imageId
@@ -28,11 +33,13 @@ export const GetCocoAnnotationsByImageId = ({ imageId }) => {
     useEffect(() => {
         if (!data) return;
         setCocoAnnotations(data["coco_annotations"]);
+        setCount(data["coco_annotations_aggregate"]["aggregate"]["count"]);
     }, [data]);
 
     return {
         annotations: cocoAnnotations,
-        loading: loading
+        loading: loading,
+        count: count
     };
 };
 

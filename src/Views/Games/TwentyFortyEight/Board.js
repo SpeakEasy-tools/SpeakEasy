@@ -344,7 +344,7 @@ function Board() {
                                                 color:
                                                     Theme.palette.primary.main
                                             }}
-                                            label="Adaptive"
+                                            label="English"
                                         />
                                     </div>
                                     <div className={clsx(classes.pad)}>

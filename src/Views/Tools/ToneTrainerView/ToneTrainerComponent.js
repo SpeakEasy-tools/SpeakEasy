@@ -1,116 +1,99 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import Button from "@material-ui/core/Button";
-import { PlayArrow } from "@material-ui/icons";
-import TextField from "@material-ui/core/TextField";
-import TonePractice from "./TonePractice";
-import ToneGraph from "./ToneGraph";
+import PracticePanel from "./PracticePanel";
+import GraphPanel from "./GraphPanel";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: "100%",
-        height: "100%"
-    },
-    column: {
-        flex: "1 1 auto",
-        display: "flex",
-        flexFlow: "column noWrap"
-    },
-    row: {
         flex: "1 1 100%",
         width: "100%",
+        height: "100%",
         display: "flex",
-        justifyContent: "start",
+        flexFlow: "column noWrap",
+        overflow: "hidden",
+        borderRadius: 10,
+        backgroundColor: theme.palette.secondary.main
+    },
+    column: {
+        flex: 1,
+        width: "auto",
+        height: "auto",
+        display: "flex",
+        flexFlow: "column noWrap",
+        overflow: "hidden",
+        borderRadius: 10,
+        backgroundColor: theme.palette.secondary.light
+    },
+    row: {
+        width: "auto",
+        height: "auto",
+        display: "flex",
+        flexFlow: "row noWrap",
+        overflow: "hidden",
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        borderRadius: 10,
+        backgroundColor: theme.palette.secondary.dark,
+        justifyContent: "center",
         alignItems: "center"
     },
     pad: {
-        flex: "1 1 auto",
+        margin: theme.spacing(1),
         padding: theme.spacing(1)
+    },
+    button: {
+        backgroundColor: theme.palette.primary.main
+    },
+    icon: {
+        color: theme.palette.primary.main
     }
 }));
 
 function ToneTrainerComponent({ sample }) {
     const classes = useStyles(Theme);
 
-    const [text, setText] = useState("");
-    const [language, setLanguage] = useState({});
-    const [translation, setTranslation] = useState("");
-    const [audioUrl, setAudioUrl] = useState("");
-
-    const [example, setExample] = useState("");
-    const [attempt, setAttempt] = useState("");
-
-    useEffect(() => {
-        if (sample && sample.audioUrl && !sample.audioUrl.includes("404")) {
-            setText(sample["text"]);
-            setLanguage({ ...sample["language"] });
-            setTranslation(sample["translation"]);
-            setAudioUrl(sample["audioUrl"]);
-            setExample(sample["audioUrl"]);
-        }
-    }, [sample]);
+    const [attempt, setAttempt] = useState(null);
 
     return (
-        <>
-            <div className={clsx(classes.row)}>
-                {text && (
-                    <div className={clsx(classes.pad)}>
-                        <TextField multiline value={text} label="Text input" />
-                    </div>
-                )}
-                {language && language.name && (
-                    <div className={clsx(classes.pad)}>
-                        <TextField value={language.name} label="Language" />
-                    </div>
-                )}
-                {translation && (
-                    <div className={clsx(classes.pad)}>
-                        <TextField
-                            multiline
-                            value={translation}
-                            label="Translation"
-                        />
-                    </div>
-                )}
-                {audioUrl && (
-                    <div className={clsx(classes.pad)}>
-                        <Button
-                            onClick={() => {
-                                const audio = new Audio();
-                                audio.src = audioUrl;
-                                return audio.play();
-                            }}
-                        >
-                            <PlayArrow />
-                        </Button>
-                    </div>
-                )}
-            </div>
-            {example && !example.includes("404") && Boolean(example.length) && (
-                <div className={clsx(classes.row)}>
-                    <div className={clsx(classes.column)}>
-                        <div className={clsx(classes.pad)}>
-                            <TonePractice
-                                display={setAttempt}
-                                language={language.code}
-                                transcript={text}
-                            />
-                        </div>
-                    </div>
-                    <div className={clsx(classes.column)}>
-                        <div
-                            className={clsx(classes.pad)}
-                            style={{ width: 700 }}
-                        >
-                            <ToneGraph example={example} attempt={attempt} />
-                        </div>
-                    </div>
+        <div className={clsx(classes.root)}>
+            <div
+                className={clsx(classes.row)}
+                style={{
+                    flex: "1 1 100%"
+                }}
+            >
+                <div
+                    className={clsx(classes.column)}
+                    style={{
+                        width: "auto",
+                        height: "100%",
+                        maxWidth: "30%",
+                        margin: Theme.spacing(1),
+                        padding: Theme.spacing(1)
+                    }}
+                >
+                    <PracticePanel sample={sample} attempt={setAttempt} />
                 </div>
-            )}
-        </>
+                <div
+                    className={clsx(classes.column)}
+                    style={{
+                        width: "auto",
+                        height: "100%",
+                        maxWidth: "70%",
+                        margin: Theme.spacing(1),
+                        padding: Theme.spacing(1)
+                    }}
+                >
+                    <GraphPanel
+                        example={sample}
+                        attempt={attempt ? attempt : {}}
+                    />
+                </div>
+            </div>
+        </div>
     );
 }
 

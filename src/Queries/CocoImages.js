@@ -22,7 +22,13 @@ export const GetCocoImagesByCategory = ({ category, limit, offset }) => {
                 id
                 metadata
             }
-            coco_images_aggregate(distinct_on: file_name) {
+            coco_images_aggregate(
+                where: {
+                    coco_annotations: {
+                        coco_category: { name: { _eq: $category } }
+                    }
+                }
+            ) {
                 aggregate {
                     count
                 }

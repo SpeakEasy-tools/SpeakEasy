@@ -1,267 +1,145 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { Translate } from "@material-ui/icons";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles(theme => ({
-    root: {
+    content: {
+        flex: 1,
         display: "flex",
-        width: "100%",
+        flexFlow: "column noWrap",
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        overflow: "auto",
         backgroundColor: theme.palette.secondary.light,
         borderRadius: 10
     },
-    column: {
-        height: "100%",
-        display: "flex",
-        flexFlow: "column noWrap",
-        flex: "1 1 auto",
-        padding: theme.spacing(1)
-    },
     row: {
-        width: "100%",
+        width: "auto",
         display: "flex",
-        flex: "1 1 auto"
+        flexFlow: "row noWrap",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: theme.spacing(1),
+        borderRadius: 10
+    },
+    title: {
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.primary.main
     },
     pad: {
-        width: "20%",
-        padding: theme.spacing(1),
-        flex: "1 1 auto"
+        margin: theme.spacing(1),
+        padding: theme.spacing(1)
     }
 }));
 
-function Key({ pairs }) {
+function Key({ tiles, language }) {
     const classes = useStyles(Theme);
 
-    const [open, setOpen] = useState(true);
-    const [flipped, setFlipped] = useState({});
-
-    function handleOpen() {
-        setOpen(prevState => !prevState);
-    }
-
-    function handleFlip(key) {
-        setFlipped(prevState => {
-            let newState = { ...prevState };
-            newState[key] = !newState[key];
-            return { ...newState };
-        });
-    }
-
     return (
-        <div className={clsx(classes.root)}>
-            <div className={clsx(classes.column)}>
+        <div className={clsx(classes.content)}>
+            <div className={clsx(classes.row, classes.title)}>
+                <div className={clsx(classes.pad)}>
+                    <Typography variant="h6" color="primary" align="center">
+                        Cards
+                    </Typography>
+                </div>
+            </div>
+            <div className={clsx(classes.row)}>
+                <div className={clsx(classes.pad)}>
+                    <Typography
+                        variant="subtitle1"
+                        color="primary"
+                        align="justify"
+                    >
+                        The words in the list below have been translated to{" "}
+                        {language} and shuffled into a deck of cards. Your goal
+                        is to find a matching pair of cards for each word. Only
+                        two cards can be flipped face up at a time. If two cards
+                        are flipped and they are a match, the are removed from
+                        play and are left face up.
+                    </Typography>
+                </div>
+            </div>
+            {tiles && Boolean(tiles.length) && (
                 <div
-                    className={clsx(classes.row)}
                     style={{
+                        flex: "1 1 100%",
+                        width: "auto",
+                        height: "auto",
+                        display: "flex",
+                        margin: Theme.spacing(1),
+                        padding: Theme.spacing(1),
                         backgroundColor: Theme.palette.secondary.dark,
                         borderRadius: 10
                     }}
                 >
                     <div
                         style={{
-                            padding: Theme.spacing(1)
-                        }}
-                    >
-                        <IconButton
-                            style={{
-                                color: Theme.palette.primary.main
-                            }}
-                            onClick={handleOpen}
-                        >
-                            <FontAwesomeIcon
-                                icon={open ? faCaretLeft : faCaretRight}
-                                size="lg"
-                            />
-                        </IconButton>
-                    </div>
-                    <div
-                        style={{
+                            flex: "1 1 100%",
+                            width: "auto",
+                            height: "auto",
+                            display: "flex",
+                            flexFlow: "row wrap",
                             margin: Theme.spacing(1),
-                            padding: Theme.spacing(2)
+                            padding: Theme.spacing(1),
+                            backgroundColor: Theme.palette.secondary.main,
+                            borderRadius: 10
                         }}
                     >
-                        <Typography variant="h6" color="primary" align="center">
-                            Key
-                        </Typography>
+                        {[...tiles]
+                            .sort(
+                                (a, b) =>
+                                    -b["transcript"].localeCompare(
+                                        a["transcript"]
+                                    )
+                            )
+                            .map(t => (
+                                <div
+                                    key={`${t.id}_key`}
+                                    style={{
+                                        flex: "1 1 20%",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        margin: Theme.spacing(1),
+                                        padding: Theme.spacing(1),
+                                        backgroundColor:
+                                            Theme.palette.secondary.light,
+                                        border: `2px solid ${t.color}`,
+                                        borderRadius: 10
+                                    }}
+                                >
+                                    <div style={{ display: "flex" }}>
+                                        <Checkbox
+                                            style={{ color: t.color }}
+                                            checked={t.isMatched}
+                                        />
+                                    </div>
+                                    <div style={{ display: "flex" }}>
+                                        <Typography
+                                            variant="subtitle1"
+                                            color="primary"
+                                            align="center"
+                                        >
+                                            {t.transcript}
+                                        </Typography>
+                                    </div>
+                                </div>
+                            ))}
                     </div>
                 </div>
-
-                {open && (
-                    <>
-                        <div className={clsx(classes.row)}>
-                            <div className={clsx(classes.pad)}>
-                                <Typography
-                                    variant="h6"
-                                    color="primary"
-                                    align="center"
-                                >
-                                    Instructions
-                                </Typography>
-                                <Divider />
-                            </div>
-                        </div>
-                        <div className={clsx(classes.row)}>
-                            <div className={clsx(classes.pad)}>
-                                <Typography
-                                    variant="subtitle1"
-                                    color="primary"
-                                    align="center"
-                                >
-                                    Flip over the cards and try to find the
-                                    matches. You can only flip two cards at once
-                                </Typography>
-                                <Divider />
-                            </div>
-                        </div>
-                        <div className={clsx(classes.row)}>
-                            <div className={clsx(classes.pad)}>
-                                <Typography
-                                    variant="h6"
-                                    color="primary"
-                                    align="center"
-                                >
-                                    Tiles
-                                </Typography>
-                                <Divider />
-                            </div>
-                        </div>
-                        <div className={clsx(classes.row)}>
-                            <div className={clsx(classes.column)}>
-                                <List>
-                                    {pairs &&
-                                        pairs
-                                            .slice(
-                                                0,
-                                                Math.floor(pairs.length / 2)
-                                            )
-                                            .map((p, i) => (
-                                                <ListItem
-                                                    key={i}
-                                                    style={{
-                                                        borderBottom: `1px solid ${Theme.palette.secondary.main}`
-                                                    }}
-                                                >
-                                                    <ListItemText
-                                                        primary={
-                                                            flipped[i]
-                                                                ? p[
-                                                                      "transcript"
-                                                                  ]
-                                                                : p[
-                                                                      "translation"
-                                                                  ]
-                                                        }
-                                                    />
-                                                    <ListItemIcon>
-                                                        <IconButton
-                                                            className={clsx(
-                                                                classes.icon,
-                                                                {
-                                                                    [classes.transcript]:
-                                                                        flipped[
-                                                                            i
-                                                                        ],
-                                                                    [classes.translation]: !flipped[
-                                                                        i
-                                                                    ]
-                                                                }
-                                                            )}
-                                                            onClick={() =>
-                                                                handleFlip(i)
-                                                            }
-                                                        >
-                                                            <Translate
-                                                                style={{
-                                                                    color:
-                                                                        Theme
-                                                                            .palette
-                                                                            .primary
-                                                                            .main
-                                                                }}
-                                                            />
-                                                        </IconButton>
-                                                    </ListItemIcon>
-                                                </ListItem>
-                                            ))}
-                                </List>
-                            </div>
-                            <div className={clsx(classes.column)}>
-                                <ul>
-                                    {pairs &&
-                                        pairs
-                                            .slice(Math.floor(pairs.length / 2))
-                                            .map((p, i) => (
-                                                <ListItem
-                                                    key={i}
-                                                    style={{
-                                                        borderBottom: `1px solid ${Theme.palette.secondary.main}`
-                                                    }}
-                                                >
-                                                    <ListItemText
-                                                        primary={
-                                                            flipped[i]
-                                                                ? p[
-                                                                      "transcript"
-                                                                  ]
-                                                                : p[
-                                                                      "translation"
-                                                                  ]
-                                                        }
-                                                    />
-                                                    <ListItemIcon>
-                                                        <IconButton
-                                                            className={clsx(
-                                                                classes.icon,
-                                                                {
-                                                                    [classes.transcript]:
-                                                                        flipped[
-                                                                            i
-                                                                        ],
-                                                                    [classes.translation]: !flipped[
-                                                                        i
-                                                                    ]
-                                                                }
-                                                            )}
-                                                            onClick={() =>
-                                                                handleFlip(i)
-                                                            }
-                                                        >
-                                                            <Translate
-                                                                style={{
-                                                                    color:
-                                                                        Theme
-                                                                            .palette
-                                                                            .primary
-                                                                            .main
-                                                                }}
-                                                            />
-                                                        </IconButton>
-                                                    </ListItemIcon>
-                                                </ListItem>
-                                            ))}
-                                </ul>
-                            </div>
-                        </div>
-                    </>
-                )}
-            </div>
+            )}
         </div>
     );
 }
 
 Key.displayName = "Key";
 Key.propTypes = {
-    pairs: PropTypes.array.isRequired
+    tiles: PropTypes.array.isRequired,
+    language: PropTypes.string.isRequired
 };
 export default Key;

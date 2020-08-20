@@ -13,8 +13,9 @@ export async function uploadAttempt(userId, language, transcript, blob) {
         UploadAudioAttempt({
             userId: userId,
             language: language,
-            url: blob,
-            transcript: transcript
+            contents: blob,
+            transcript: transcript,
+            timestamp: Date.now()
         })
             .then(res => res.data)
             .then(path =>
@@ -27,7 +28,7 @@ export async function uploadAttempt(userId, language, transcript, blob) {
 }
 
 export async function getAttempts(language, transcript, userId) {
-    return await Promise.resolve(
+    const attempts = await Promise.resolve(
         DownloadAudioAttempts({
             userId: userId,
             language: language.code,
@@ -35,5 +36,13 @@ export async function getAttempts(language, transcript, userId) {
         })
             .then(res => res.data)
             .catch(e => e.message)
+    );
+    return await Promise.all(
+        attempts.map(path =>
+            storage
+                .ref()
+                .child(path)
+                .getDownloadURL()
+        )
     );
 }

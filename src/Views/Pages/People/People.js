@@ -191,7 +191,14 @@ function People() {
                                                     variant="subtitle1"
                                                     color="primary"
                                                 >
-                                                    Bio
+                                                    Yalun “Helen” Zhou is an
+                                                    Associate Professor at
+                                                    Rensselaer Polytechnic
+                                                    Institute (USA). Her
+                                                    research interests lie in
+                                                    the intersection of SLA and
+                                                    emerging technology-assisted
+                                                    L2 pedagogy.
                                                 </Typography>
                                             </ExpansionPanelDetails>
                                         </ExpansionPanel>

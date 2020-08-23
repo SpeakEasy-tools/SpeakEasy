@@ -42,4 +42,4 @@ jobs:
       env:
         pass: ${{ secrets.ENCPASS }}
 
-    - run: yarn build --max_old_space_size=4096
+    - run: yarn build --max-old-space-size=4096

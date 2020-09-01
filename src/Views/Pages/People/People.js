@@ -4,10 +4,10 @@ import clsx from "clsx";
 import { Theme } from "../../../utils";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Accordion from "@material-ui/core/Accordion";
 import { ExpandMore } from "@material-ui/icons";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -52,8 +52,8 @@ function People() {
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="cisl-faculty-control"
                             id="cisl-faculty-header"
@@ -74,10 +74,8 @@ function People() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div
@@ -86,10 +84,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="hui-su-control"
                                                 id="hui-su-header"
@@ -122,8 +120,8 @@ function People() {
                                                         Hui Su
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -134,8 +132,8 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -145,10 +143,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="helen-zhou-control"
                                                 id="helen-zhou-header"
@@ -181,8 +179,8 @@ function People() {
                                                         Helen Zhou
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -200,8 +198,8 @@ function People() {
                                                     emerging technology-assisted
                                                     L2 pedagogy.
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -211,10 +209,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="jonas-braasch-control"
                                                 id="jonas-braasch-header"
@@ -247,8 +245,8 @@ function People() {
                                                         Jonas Braasch
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -259,8 +257,8 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -270,10 +268,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="mei-si-control"
                                                 id="mei-si-header"
@@ -306,8 +304,8 @@ function People() {
                                                         Mei Si
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -318,20 +316,20 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
 
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="cisl-students-control"
                             id="cisl-students-header"
@@ -352,10 +350,8 @@ function People() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div
@@ -364,10 +360,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="jeramey-tyler-control"
                                                 id="jeramey-tyler-header"
@@ -400,8 +396,8 @@ function People() {
                                                         Jeramey Tyler
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -412,8 +408,8 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -423,10 +419,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="matthew-peveler-control"
                                                 id="matthew-peveler-header"
@@ -459,8 +455,8 @@ function People() {
                                                         Matthew Peveler
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -471,8 +467,8 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -482,10 +478,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="samuel-chabot-control"
                                                 id="samuel-chabot-header"
@@ -518,8 +514,8 @@ function People() {
                                                         Samuel Chabot
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -550,8 +546,8 @@ function People() {
                                                     with artists and creatives
                                                     within these environments.
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -561,10 +557,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="justin-orefice-control"
                                                 id="justin-orefice-header"
@@ -597,8 +593,8 @@ function People() {
                                                         Justin Orefice
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -646,8 +642,8 @@ function People() {
                                                     of the data coming in from
                                                     satellites.
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                                 <div className={classes.row}>
@@ -657,10 +653,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="nico-cobb-control"
                                                 id="nico-cobb-header"
@@ -693,8 +689,8 @@ function People() {
                                                         Nico Cobb
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -705,20 +701,20 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
 
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="rcos-faculty-control"
                             id="rcos-faculty-header"
@@ -739,10 +735,8 @@ function People() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div
@@ -751,10 +745,10 @@ function People() {
                                             classes.header
                                         )}
                                     >
-                                        <ExpansionPanel
+                                        <Accordion
                                             className={clsx(classes.section)}
                                         >
-                                            <ExpansionPanelSummary
+                                            <AccordionSummary
                                                 expandIcon={<ExpandMore />}
                                                 aria-controls="wesley-turner-control"
                                                 id="wesly-turner-header"
@@ -787,8 +781,8 @@ function People() {
                                                         Wesley Turner
                                                     </Typography>
                                                 </div>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails
+                                            </AccordionSummary>
+                                            <AccordionDetails
                                                 className={clsx(
                                                     classes.details
                                                 )}
@@ -799,20 +793,20 @@ function People() {
                                                 >
                                                     Bio
                                                 </Typography>
-                                            </ExpansionPanelDetails>
-                                        </ExpansionPanel>
+                                            </AccordionDetails>
+                                        </Accordion>
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
 
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="rcos-students-control"
                             id="rcos-students-header"
@@ -833,10 +827,8 @@ function People() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div
@@ -847,15 +839,15 @@ function People() {
                                     />
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
 
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="contributors-control"
                             id="contributors-header"
@@ -867,10 +859,8 @@ function People() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div className={clsx(classes.pad)}>
@@ -884,8 +874,8 @@ function People() {
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
         </div>

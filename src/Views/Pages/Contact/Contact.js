@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Theme } from "../../../utils";
 import Typography from "@material-ui/core/Typography";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { ExpandMore } from "@material-ui/icons";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -51,8 +51,8 @@ function Contacts() {
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="email-control"
                             id="email-header"
@@ -64,10 +64,8 @@ function Contacts() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div className={clsx(classes.pad)}>
@@ -86,14 +84,14 @@ function Contacts() {
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="issues-control"
                             id="issues-header"
@@ -105,10 +103,8 @@ function Contacts() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div className={clsx(classes.pad)}>
@@ -130,14 +126,14 @@ function Contacts() {
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad, classes.header)}>
-                    <ExpansionPanel className={clsx(classes.section)}>
-                        <ExpansionPanelSummary
+                    <Accordion className={clsx(classes.section)}>
+                        <AccordionSummary
                             expandIcon={<ExpandMore />}
                             aria-controls="issues-control"
                             id="issues-header"
@@ -149,10 +145,8 @@ function Contacts() {
                                     </Typography>
                                 </div>
                             </div>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails
-                            className={clsx(classes.details)}
-                        >
+                        </AccordionSummary>
+                        <AccordionDetails className={clsx(classes.details)}>
                             <div className={clsx(classes.root)}>
                                 <div className={classes.row}>
                                     <div className={clsx(classes.pad)}>
@@ -173,8 +167,8 @@ function Contacts() {
                                     </div>
                                 </div>
                             </div>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
+                        </AccordionDetails>
+                    </Accordion>
                 </div>
             </div>
         </div>

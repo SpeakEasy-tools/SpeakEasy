@@ -28,9 +28,9 @@ function Instructions() {
             <div className={clsx(classes.row)}>
                 <div className={clsx(classes.pad)}>
                     <Typography paragraph>
-                        The goal of Sudoku is to fill the entire grid so that
-                        each column, row, and 3 x 3 grid contains every number
-                        from one to nine.
+                        To begin, select a language. The goal of Sudoku is to
+                        fill the entire grid so that each column, row, and 3 x 3
+                        grid contains every number from one to nine.
                     </Typography>
                 </div>
             </div>

@@ -7,12 +7,14 @@ export { TwentyFortyEight } from "./Games/TwentyFortyEight";
 export { WordSearch } from "./Games/WordSearch";
 
 export { About } from "./Pages/About";
+export { Attributions } from "./Pages/Attributions";
 export { Modules } from "./Pages/Modules";
 export { Contact } from "./Pages/Contact";
 export { FAQ } from "./Pages/FAQ";
 export { Help } from "./Pages/Help";
 export { Home } from "./Pages/Home";
 export { Instructor } from "./Pages/Instructor";
+export { People } from "./Pages/People";
 export { Profile } from "./Pages/Profile";
 export { Page404 } from "./Pages/Page404";
 

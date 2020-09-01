@@ -22,7 +22,13 @@ export const GetCocoImagesByCategory = ({ category, limit, offset }) => {
                 id
                 metadata
             }
-            coco_images_aggregate(distinct_on: file_name) {
+            coco_images_aggregate(
+                where: {
+                    coco_annotations: {
+                        coco_category: { name: { _eq: $category } }
+                    }
+                }
+            ) {
                 aggregate {
                     count
                 }
@@ -48,6 +54,39 @@ export const GetCocoImagesByCategory = ({ category, limit, offset }) => {
     return {
         images: cocoImages,
         count: count,
+        loading: loading
+    };
+};
+
+export const GetNRandomSeedCocoImages = ({ n, seed }) => {
+    const COCO_IMAGES = gql`
+        query getNRandomSeedImages($n: Int!, $seed: float8!) {
+            random_seed_coco_images(args: { sample_limit: $n, seed: $seed }) {
+                id
+            }
+        }
+    `;
+
+    const [cocoImages, setCocoImages] = useState();
+
+    const { data, refetch, loading } = useQuery(COCO_IMAGES, {
+        variables: {
+            n: n,
+            seed: seed
+        },
+        fetchPolicy: "cache-and-network"
+    });
+
+    useEffect(() => {
+        if (data) {
+            console.log(data);
+            setCocoImages(data["random_seed_coco_images"]);
+        }
+    }, [data]);
+
+    return {
+        images: cocoImages,
+        refetch: refetch,
         loading: loading
     };
 };

@@ -1,12 +1,10 @@
 import PitchFinder from "pitchfinder";
 import { MinMaxScaler } from "machinelearn/preprocessing";
 
-export async function arrayBufferFromUrl({ url }) {
-    const audioContext = new AudioContext();
-
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    return await audioContext.decodeAudioData(arrayBuffer);
+export async function arrayBufferFromUrl(url) {
+    return await fetch(url)
+        .then(response => response.arrayBuffer())
+        .then(buffer => new AudioContext().decodeAudioData(buffer));
 }
 
 export async function playBuffer({ audioBuffer }) {
@@ -19,9 +17,9 @@ export async function playBuffer({ audioBuffer }) {
     return sampleSource;
 }
 
-export async function getF0({ audioBuffer }) {
+export async function getF0(audioBuffer) {
     const detectPitch = PitchFinder.YIN({ sampleRate: audioBuffer.sampleRate });
-    const float32Array = new Float32Array(audioBuffer.getChannelData(0));
+    const float32Array = new Float32Array([...audioBuffer.getChannelData(0)]);
     const bufferSize = 2048;
 
     let p = [];
@@ -35,6 +33,20 @@ export async function getF0({ audioBuffer }) {
         p.push(pitch);
     }
     return p;
+}
+
+export function removeNulls(x) {
+    const xs = [];
+    const ys = [];
+
+    x.forEach((v, i) => {
+        if (v && typeof v === "number") {
+            xs.push(v);
+            ys.push(i);
+        }
+    });
+
+    return [xs, ys];
 }
 
 export function minMaxScale(series) {

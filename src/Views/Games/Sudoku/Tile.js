@@ -31,6 +31,6 @@ function Tile({ value }) {
 
 Tile.displayName = "Tile";
 Tile.propTypes = {
-    value: PropTypes.number
+    value: PropTypes.any
 };
 export default Tile;

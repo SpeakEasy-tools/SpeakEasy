@@ -14,7 +14,7 @@ import {
     YAxis
 } from "recharts";
 import { arrayBufferFromUrl } from "../../../FeatureExtraction";
-import { getF0, minMaxScale } from "../../../FeatureExtraction/AudioProcessing";
+import { getF0, minMaxScale } from "../../../FeatureExtraction";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({

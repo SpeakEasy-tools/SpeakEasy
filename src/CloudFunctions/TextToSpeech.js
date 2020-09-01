@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/functions";
+import "firebase/storage";
 import { translate } from "./Translate";
 
 const Synthesize = firebase.functions().httpsCallable("synthesize");
@@ -8,8 +10,13 @@ const storageRef = firebase.storage().ref();
 export async function synthesizeSpeech(text, language) {
     return await Promise.resolve(
         Synthesize({ text: text, languageCode: language })
-            .then(res => storageRef.child(res.data))
-            .then(child => child.getDownloadURL())
+            .then(r => {
+                if (r.data.includes("INVALID")) {
+                    return "";
+                } else {
+                    return storageRef.child(r.data).getDownloadURL();
+                }
+            })
             .catch(() => "404")
     );
 }

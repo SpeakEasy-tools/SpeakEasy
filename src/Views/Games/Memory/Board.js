@@ -1,172 +1,120 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { v4 as uuid } from "uuid";
-import PlayingCard from "./PlayingCard";
-import shuffle from "../../../utils/Shuffle";
+import Typography from "@material-ui/core/Typography";
+import Tile from "./Tile";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        flex: "1 1 100%",
+    content: {
+        flex: 1,
         display: "flex",
-        flexFlow: "row wrap"
+        flexFlow: "column noWrap",
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        overflow: "hidden",
+        backgroundColor: theme.palette.secondary.light,
+        borderRadius: 10
+    },
+    row: {
+        width: "auto",
+        display: "flex",
+        flexFlow: "row noWrap",
+        justifyContent: "center",
+        alignItems: "center",
+        margin: theme.spacing(1),
+        borderRadius: 10
+    },
+    title: {
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.primary.main
     },
     pad: {
         margin: theme.spacing(1),
-        flex: "1 1 auto",
-        width: 150
+        padding: theme.spacing(1)
     },
-    matched: {
-        opacity: 0.5
+    tile: {
+        flex: "1 1 20%"
     }
 }));
 
-function Board({ tiles, language, setScore, setTime }) {
+function Board({ tiles, handleFlip }) {
     const classes = useStyles(Theme);
 
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
-
-    const [board, setBoard] = useState(null);
-    const [flipped, setFlipped] = useState(null);
-    const [matched, setMatched] = useState(null);
-
-    useEffect(() => {
-        if (!tiles) return;
-        let t = shuffle([...tiles].concat([...tiles]));
-        setBoard(t);
-        setFlipped(Array(t.length).fill(false));
-        setMatched(Array(t.length).fill(false));
-    }, [tiles]);
-
-    const incrementScore = () => {
-        setScore(prevState => prevState + 2);
-    };
-
-    const handleMatch = async () => {
-        const flippedIndices = await flipped.reduce(
-            (out, bool, index) => (bool ? out.concat(index) : out),
-            []
-        );
-        if (flippedIndices.length === 2) {
-            if (board[flippedIndices[0]].id === board[flippedIndices[1]].id) {
-                const prevMatched = [...matched];
-                prevMatched[flippedIndices[0]] = true;
-                prevMatched[flippedIndices[1]] = true;
-                setMatched(prevMatched);
-                incrementScore();
-            }
-            setTimeout(clearFlipped, 0.75 * 1000);
-        }
-    };
-
-    const clearFlipped = () => {
-        setFlipped(Array(board.length).fill(false));
-    };
-
-    const flip = async i => {
-        await setFlipped(prevState => {
-            prevState[i] = !prevState[i];
-            return [...prevState];
-        });
-        await handleMatch();
-    };
-
-    const handleFlip = i => {
-        const flipCount = flipped.filter(e => e).length;
-        if (!startTime) {
-            setStartTime(new Date());
-        }
-        if (
-            !flipped[i] &&
-            (flipCount === 1 || flipCount === 0) &&
-            !matched[i]
-        ) {
-            flip(i);
-            setTimeout(console.log, 0.2 * 1000, false);
-        } else {
-            clearFlipped();
-        }
-    };
-
-    useEffect(() => {
-        if (!matched) return;
-        const matchCount = matched.filter(e => e).length;
-        if (matchCount >= matched.length) {
-            setEndTime(new Date());
-        }
-    }, [matched]);
-
-    useEffect(() => {
-        if (!(startTime && endTime)) return;
-        setTime((endTime - startTime) / 1000);
-    }, [startTime, endTime, setTime]);
+    function handleClick(t) {
+        console.log("click");
+        handleFlip(t["id"]);
+    }
 
     return (
-        <div className={clsx(classes.root)}>
-            {board &&
-                language &&
-                board.map((b, i) => (
-                    <div
-                        onClick={() => handleFlip(i)}
-                        key={uuid()}
-                        className={clsx(classes.pad, {
-                            [classes.matched]: matched[i]
-                        })}
-                    >
-                        {language === "Chaos" ? (
-                            <PlayingCard
-                                topText={
-                                    b[
-                                        ["chinese", "english", "pinyin"][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    ]
-                                }
-                                middleText={
-                                    b[
-                                        ["chinese", "english", "pinyin"][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    ]
-                                }
-                                bottomText={
-                                    b[
-                                        ["chinese", "english", "pinyin"][
-                                            Math.floor(Math.random() * 3)
-                                        ]
-                                    ]
-                                }
-                                flipped={flipped[i] || matched[i]}
-                            />
-                        ) : (
-                            <PlayingCard
-                                topText={language === "Hybrid" && b.english}
-                                middleText={
-                                    language === "Chinese"
-                                        ? b.chinese
-                                        : language === "English"
-                                        ? b.english
-                                        : language === "Pinyin"
-                                        ? b.pinyin
-                                        : b.chinese
-                                }
-                                bottomText={language === "Hybrid" && b.pinyin}
-                                flipped={flipped[i] || matched[i]}
-                            />
+        <div className={clsx(classes.content)}>
+            <div className={clsx(classes.row, classes.title)}>
+                {tiles && Boolean(tiles.length) && (
+                    <>
+                        <div className={clsx(classes.pad)}>
+                            <Typography
+                                variant="h6"
+                                color="primary"
+                                align="center"
+                            >
+                                Matches{" "}
+                                {Math.floor(
+                                    tiles.filter(d => d["isMatched"]).length / 2
+                                )}{" "}
+                                of {Math.floor(Object.keys(tiles).length / 2)}
+                            </Typography>
+                        </div>
+                        {Math.floor(
+                            tiles.filter(d => d["isMatched"]).length / 2
+                        ) === Math.floor(Object.keys(tiles).length / 2) && (
+                            <div className={clsx(classes.pad)}>
+                                <Checkbox
+                                    checked={true}
+                                    style={{
+                                        color: Theme.palette.primary.main
+                                    }}
+                                />
+                            </div>
                         )}
-                    </div>
-                ))}
+                    </>
+                )}
+            </div>
+            {tiles && Boolean(tiles.length) && (
+                <div
+                    style={{
+                        flex: "1 1 20%",
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexFlow: "row wrap",
+                        overflow: "auto",
+                        margin: Theme.spacing(1),
+                        padding: Theme.spacing(1),
+                        backgroundColor: Theme.palette.secondary.dark,
+                        borderRadius: 10
+                    }}
+                >
+                    {tiles &&
+                        tiles.map(t => (
+                            <div
+                                className={clsx(classes.tile)}
+                                key={`${t.id}_board`}
+                                onClick={() => handleClick(t)}
+                            >
+                                <Tile tile={t} />
+                            </div>
+                        ))}
+                </div>
+            )}
         </div>
     );
 }
+
 Board.displayName = "Board";
 Board.propTypes = {
-    tiles: PropTypes.any,
-    language: PropTypes.any,
-    setScore: PropTypes.any,
-    setTime: PropTypes.any
+    tiles: PropTypes.array.isRequired,
+    handleFlip: PropTypes.func.isRequired
 };
 export default Board;

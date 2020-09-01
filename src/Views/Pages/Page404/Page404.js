@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Theme } from "../../../utils";
 import { Typography } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,7 +29,12 @@ function Page404() {
     return (
         <div className={clsx(classes.pad)}>
             <Typography color="secondary" variant="h4">
-                Sorry, the page you were looking for couldn&#39;t be found.
+                Sorry, we couldn&#39;t translate. If you clicked a link, try
+                refreshing the page or pressing back and clicking the clink
+                again. If you typed in an address, check that it was entered
+                correctly. If the problem persists, please see the{" "}
+                <Link to="/contact">contacts</Link> for details on how to report
+                the issue.
             </Typography>
         </div>
     );

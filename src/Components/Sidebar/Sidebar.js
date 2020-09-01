@@ -2,35 +2,37 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../utils";
 import clsx from "clsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    Build,
-    BurstMode,
-    Casino,
-    Contacts,
-    CropFree,
-    ExitToApp,
-    GridOn,
-    Help,
-    Info,
-    KeyboardArrowLeft,
-    ListAlt,
-    MoreHoriz,
-    Notes,
-    PersonOutline,
-    RecentActors,
-    Search,
-    ShowChart,
-    SupervisorAccount,
-    ViewComfy,
-    Visibility
-} from "@material-ui/icons";
+    faAddressCard,
+    faBook,
+    faCaretLeft,
+    faDice,
+    faEllipsisH,
+    faEye,
+    faGripHorizontal,
+    faImages,
+    faInfo,
+    faList,
+    faListOl,
+    faQuestion,
+    faQuestionCircle,
+    faSignOutAlt,
+    faStickyNote,
+    faTh,
+    faToolbox,
+    faUser,
+    faUserCog,
+    faUserGraduate,
+    faUsers
+} from "@fortawesome/free-solid-svg-icons";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { ListItemIcon } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../Firebase";
+import { FirebaseUI, useAuth } from "../../Firebase";
 import Avatar from "@material-ui/core/Avatar";
-import { FirebaseUI } from "../../Firebase";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,6 +60,7 @@ function Sidebar() {
 
     const auth = useAuth();
     const [user, setUser] = useState(null);
+    const [allowedRoles, setAllowedRoles] = useState(null);
 
     const [signIn, setSignIn] = useState(null);
     const [selected, setSelected] = useState(null);
@@ -95,10 +98,11 @@ function Sidebar() {
     };
 
     useEffect(() => {
-        if (!(auth && auth.user)) return;
-        setUser(auth.user);
+        if (auth && auth.user && auth.allowedRoles) {
+            setUser(auth.user);
+            setAllowedRoles(auth.allowedRoles);
+        }
     }, [auth]);
-
     return (
         <div className={clsx(classes.root)}>
             <div className={clsx(classes.column)}>
@@ -117,24 +121,49 @@ function Sidebar() {
                                     />
                                 </Avatar>
                             </ListItemIcon>
+                            <ListItemText primary="User" />
                         </ListItem>
                     ) : (
                         <ListItem button onClick={handleSignIn}>
                             <ListItemIcon>
-                                <PersonOutline className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faUser}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Sign In" />
                         </ListItem>
                     )}
                     <ListItem button onClick={() => handleSelection("games")}>
                         <ListItemIcon>
-                            <Casino className={clsx(classes.icon)} />
+                            <FontAwesomeIcon
+                                className={clsx(classes.icon)}
+                                size="lg"
+                                icon={faDice}
+                            />
                         </ListItemIcon>
+                        <ListItemText primary="Games" />
                     </ListItem>
                     <ListItem button onClick={() => handleSelection("tools")}>
-                        <Build className={clsx(classes.icon)} />
+                        <ListItemIcon>
+                            <FontAwesomeIcon
+                                className={clsx(classes.icon)}
+                                size="lg"
+                                icon={faToolbox}
+                            />
+                        </ListItemIcon>
+                        <ListItemText primary="Tools" />
                     </ListItem>
                     <ListItem button onClick={() => handleSelection("more")}>
-                        <MoreHoriz className={clsx(classes.icon)} />
+                        <ListItemIcon>
+                            <FontAwesomeIcon
+                                className={clsx(classes.icon)}
+                                size="lg"
+                                icon={faEllipsisH}
+                            />
+                        </ListItemIcon>
+                        <ListItemText primary="More" />
                     </ListItem>
                 </List>
             </div>
@@ -143,10 +172,13 @@ function Sidebar() {
                     <List>
                         <ListItem button onClick={() => setSignIn(false)}>
                             <ListItemIcon>
-                                <KeyboardArrowLeft
+                                <FontAwesomeIcon
                                     className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faCaretLeft}
                                 />
                             </ListItemIcon>
+                            <ListItemText primary="Close" />
                         </ListItem>
                     </List>
                     <FirebaseUI />
@@ -157,29 +189,51 @@ function Sidebar() {
                     <List>
                         <ListItem button onClick={handleSelection}>
                             <ListItemIcon>
-                                <KeyboardArrowLeft
+                                <FontAwesomeIcon
                                     className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faCaretLeft}
                                 />
                             </ListItemIcon>
+                            <ListItemText primary="Close" />
                         </ListItem>
                         <ListItem button component={Link} to="/profile">
                             <ListItemIcon>
-                                <PersonOutline className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faUserCog}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Profile" />
                         </ListItem>
-                        {user && user["instructor"] && (
-                            <ListItem button component={Link} to="/instructor">
-                                <ListItemIcon>
-                                    <SupervisorAccount
-                                        className={clsx(classes.icon)}
-                                    />
-                                </ListItemIcon>
-                            </ListItem>
-                        )}
+                        {user &&
+                            allowedRoles &&
+                            allowedRoles.includes("instructor") && (
+                                <ListItem
+                                    button
+                                    component={Link}
+                                    to="/instructor"
+                                >
+                                    <ListItemIcon>
+                                        <FontAwesomeIcon
+                                            className={clsx(classes.icon)}
+                                            size="lg"
+                                            icon={faUserGraduate}
+                                        />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Instructor" />
+                                </ListItem>
+                            )}
                         <ListItem button onClick={() => auth.signOut()}>
                             <ListItemIcon>
-                                <ExitToApp className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faSignOutAlt}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Sign Out" />
                         </ListItem>
                     </List>
                 </div>
@@ -189,26 +243,43 @@ function Sidebar() {
                     <List>
                         <ListItem button onClick={handleSelection}>
                             <ListItemIcon>
-                                <KeyboardArrowLeft
+                                <FontAwesomeIcon
                                     className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faCaretLeft}
                                 />
                             </ListItemIcon>
+                            <ListItemText primary="Close" />
                         </ListItem>
                         <ListItem button component={Link} to="/2048">
                             <ListItemIcon>
-                                <ViewComfy className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faTh}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="2048" />
                         </ListItem>
                         <ListItem button component={Link} to="/eye_spy">
                             <ListItemIcon>
-                                <Visibility className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faEye}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Eye-Spy" />
                         </ListItem>
-                        <ListItem button component={Link} to="/tile_slider">
-                            <CropFree />
-                        </ListItem>
-                        <ListItem button component={Link} to="/sudoku">
-                            <GridOn />
+                        <ListItem button component={Link} to="/memory">
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faGripHorizontal}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="Memory" />
                         </ListItem>
                         <ListItem button component={Link} to="/kakuro">
                             <GridOn />
@@ -221,32 +292,55 @@ function Sidebar() {
                     <List>
                         <ListItem button onClick={handleSelection}>
                             <ListItemIcon>
-                                <KeyboardArrowLeft
+                                <FontAwesomeIcon
                                     className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faCaretLeft}
                                 />
                             </ListItemIcon>
+                            <ListItemText primary="Close" />
                         </ListItem>
 
                         <ListItem button component={Link} to="/coco_explorer">
                             <ListItemIcon>
-                                <BurstMode className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faImages}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Coco Explorer" />
                         </ListItem>
+
                         <ListItem button component={Link} to="/dictionary">
                             <ListItemIcon>
-                                <Search className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faBook}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Dictionary" />
                         </ListItem>
                         <ListItem button component={Link} to="/flashcards">
                             <ListItemIcon>
-                                <Notes className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faStickyNote}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="Flashcards" />
                         </ListItem>
                         <ListItem button component={Link} to="/pop_quiz">
-                            <ListAlt />
-                        </ListItem>
-                        <ListItem button component={Link} to="/tone_trainer">
-                            <ShowChart />
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faListOl}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="Pop Quiz" />
                         </ListItem>
                     </List>
                 </div>
@@ -256,25 +350,73 @@ function Sidebar() {
                     <List>
                         <ListItem button onClick={handleSelection}>
                             <ListItemIcon>
-                                <KeyboardArrowLeft
+                                <FontAwesomeIcon
                                     className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faCaretLeft}
                                 />
                             </ListItemIcon>
+                            <ListItemText primary="Close" />
                         </ListItem>
                         <ListItem button component={Link} to="/about">
                             <ListItemIcon>
-                                <RecentActors className={clsx(classes.icon)} />
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faInfo}
+                                />
                             </ListItemIcon>
+                            <ListItemText primary="About Us" />
                         </ListItem>
-
+                        <ListItem button component={Link} to="/attributions">
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faList}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="Attributions" />
+                        </ListItem>
                         <ListItem button component={Link} to="/contact">
-                            <Contacts />
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faAddressCard}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="Contact" />
                         </ListItem>
                         <ListItem button component={Link} to="/faq">
-                            <Help />
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faQuestion}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="FAQ" />
                         </ListItem>
                         <ListItem button component={Link} to="/help">
-                            <Info />
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faQuestionCircle}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="Help" />
+                        </ListItem>
+                        <ListItem button component={Link} to="/people">
+                            <ListItemIcon>
+                                <FontAwesomeIcon
+                                    className={clsx(classes.icon)}
+                                    size="lg"
+                                    icon={faUsers}
+                                />
+                            </ListItemIcon>
+                            <ListItemText primary="People" />
                         </ListItem>
                     </List>
                 </div>
@@ -282,5 +424,6 @@ function Sidebar() {
         </div>
     );
 }
+
 Sidebar.displayName = "Sidebar";
 export default Sidebar;

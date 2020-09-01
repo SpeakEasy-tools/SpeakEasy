@@ -9,7 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextToSpeech } from "../../CloudFunctions";
 import Button from "@material-ui/core/Button";
-import { LanguageSelect } from "../LanguageSelect";
+import { useUser } from "../../UserProvider";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,6 +41,8 @@ const useStyles = makeStyles(theme => ({
 function SearchBar({ results }) {
     const classes = useStyles(Theme);
 
+    const user = useUser();
+
     const [loading, setLoading] = useState(false);
     const [language, setLanguage] = useState({});
     const [text, setText] = useState("");
@@ -53,6 +55,15 @@ function SearchBar({ results }) {
             .finally(() => setLoading(false));
     }
 
+    useEffect(() => {
+        if (
+            user &&
+            !user.loading &&
+            Boolean(Object.keys(user.translationLanguage).length)
+        ) {
+            setLanguage(user.translationLanguage);
+        }
+    }, [user]);
     useEffect(() => {
         if (sample) {
             results({ ...sample });
@@ -78,7 +89,6 @@ function SearchBar({ results }) {
                         style={{ width: 200 }}
                     />
                 </div>
-                <LanguageSelect setLanguage={setLanguage} />
                 <div className={clsx(classes.pad)}>
                     <Button onClick={handleSearch}>
                         <Typography color="secondary">Translate</Typography>

@@ -6,29 +6,32 @@ import clsx from "clsx";
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: "100%",
-        height: "100%",
+        flex: "1 1 100%",
+        width: "auto",
+        height: "auto",
         position: "relative",
-        overflow: "auto",
-        margin: theme.spacing(1)
-    },
-    row: {
-        flex: "1 1 auto",
-        width: "98%",
         display: "flex",
-        flexFlow: "row noWrap",
+        flexFlow: "column noWrap",
         alignItems: "center",
         justifyContent: "center",
-        margin: theme.spacing(1)
+        overflow: "hidden",
+        borderRadius: 10,
+        border: `2px solid ${theme.palette.primary.main}`
     },
-    pad: {
-        padding: theme.spacing(1),
-        border: `5px solid ${theme.palette.secondary.main}`,
-        borderRadius: "10px",
-        background: theme.palette.primary.dark,
-        flex: 0
+    column: {
+        flex: 1,
+        width: "auto",
+        height: "auto",
+        display: "flex",
+        flexFlow: "column noWrap",
+        overflow: "hidden",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 10
     },
-    canvas: {},
+    canvas: {
+        borderRadius: 10
+    },
     hit: { display: "none" },
     image: { display: "none" }
 }));
@@ -137,11 +140,9 @@ function ClickableImage({ image, segments, found, handleFound }) {
 
     return (
         <div className={clsx(classes.root)}>
-            <div className={clsx(classes.row)}>
-                <div className={clsx(classes.pad)}>
-                    <canvas ref={canvasRef} className={clsx(classes.canvas)} />
-                    <canvas ref={hitRef} className={clsx(classes.hit)} />
-                </div>
+            <div className={clsx(classes.column)}>
+                <canvas ref={canvasRef} className={clsx(classes.canvas)} />
+                <canvas ref={hitRef} className={clsx(classes.hit)} />
             </div>
         </div>
     );

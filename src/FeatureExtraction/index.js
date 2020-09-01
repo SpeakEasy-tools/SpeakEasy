@@ -1,1 +1,6 @@
-export { arrayBufferFromUrl } from "./AudioProcessing";
+export {
+    arrayBufferFromUrl,
+    getF0,
+    minMaxScale,
+    playBuffer
+} from "./AudioProcessing";

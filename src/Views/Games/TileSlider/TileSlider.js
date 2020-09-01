@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Shuffle, Theme } from "../../../utils";
 import clsx from "clsx";
 import Tile from "./Tile";
-import { ControlBar } from "../../../Components/ControlBar";
+import { ControlBar } from "../../../Components";
 import { getTranslations } from "../../../CloudFunctions/Translate";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";

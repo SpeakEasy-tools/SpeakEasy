@@ -1,12 +1,12 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../utils";
 import React, { useEffect, useState } from "react";
-import { listLanguages } from "../../CloudFunctions/Translate";
+import { ListLanguages } from "../../CloudFunctions";
 import clsx from "clsx";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import PropTypes from "prop-types";
+import { UserProfile } from "../../UserProfile";
+import { LoadingBar } from "../LoadingBar";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,18 +32,40 @@ const useStyles = makeStyles(theme => ({
     },
     pad: {
         padding: theme.spacing(1)
+    },
+    autocomplete: {
+        color: theme.palette.primary.main,
+        "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: theme.palette.primary.main
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: theme.palette.primary.light
+        },
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: theme.palette.primary.dark
+        }
+    },
+    label: {
+        color: theme.palette.primary.main
     }
 }));
 
-function LanguageSelect({ setLanguage }) {
+function LanguageSelect() {
     const classes = useStyles(Theme);
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [languages, setLanguages] = useState([]);
+
+    const [selectedLanguage, setSelectedLanguage] = useState();
+    const { profile, updateSecondLanguage } = UserProfile();
+
+    function handleChange(e, v) {
+        updateSecondLanguage(v).then();
+    }
 
     async function getLanguages() {
         setLoading(true);
-        return await Promise.resolve(listLanguages())
+        return await Promise.resolve(ListLanguages())
             .then(l => setLanguages(l))
             .finally(() => setLoading(false));
     }
@@ -51,30 +73,57 @@ function LanguageSelect({ setLanguage }) {
     useEffect(() => {
         getLanguages().finally();
     }, []);
-
+    useEffect(() => {
+        if (
+            profile &&
+            Boolean(Object.keys(profile).length) &&
+            Boolean(Object.keys(profile).includes("secondLanguage")) &&
+            Boolean(
+                Object.keys(profile["secondLanguage"]).includes("code") &&
+                    languages &&
+                    languages.some(
+                        l => l.code === profile["secondLanguage"].code
+                    )
+            )
+        ) {
+            setSelectedLanguage(
+                languages.filter(
+                    l => l.code === profile["secondLanguage"].code
+                )[0]
+            );
+        }
+    }, [profile, languages]);
     return (
         <>
             {loading ? (
                 <div className={clsx(classes.pad)}>
-                    <CircularProgress color="secondary" />
+                    <LoadingBar label="Languages" />
                 </div>
             ) : (
                 languages &&
-                Boolean(languages.length) && (
+                Boolean(languages.length) &&
+                Boolean(selectedLanguage) && (
                     <div className={clsx(classes.pad)}>
                         <Autocomplete
+                            value={selectedLanguage}
                             options={languages}
-                            getOptionLabel={option => option.name}
+                            classes={{ inputRoot: clsx(classes.autocomplete) }}
+                            getOptionLabel={option => option.name || ""}
                             renderInput={params => (
                                 <TextField
                                     {...params}
-                                    label="Target language"
+                                    InputLabelProps={{
+                                        className: clsx(classes.label)
+                                    }}
+                                    label="Language to learn"
                                     placeholder="e.g. Spanish"
                                     variant="outlined"
                                 />
                             )}
-                            onChange={(e, v) => setLanguage(v)}
-                            style={{ width: 200 }}
+                            style={{
+                                width: 200
+                            }}
+                            onChange={handleChange}
                         />
                     </div>
                 )
@@ -84,7 +133,4 @@ function LanguageSelect({ setLanguage }) {
 }
 
 LanguageSelect.displayName = "LanguageSelect";
-LanguageSelect.propTypes = {
-    setLanguage: PropTypes.func.isRequired
-};
 export default LanguageSelect;

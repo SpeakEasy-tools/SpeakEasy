@@ -1,28 +1,7 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Route } from "react-router";
-import {
-    TwentyFortyEight,
-    About,
-    CocoExplorer,
-    Contact,
-    Dictionary,
-    EyeSpy,
-    FAQ,
-    Flashcards,
-    Help,
-    Home,
-    Instructor,
-    Memory,
-    Modules,
-    Page404,
-    PopQuiz,
-    Profile,
-    Sudoku,
-    TileSlider,
-    TimeSeries,
-    ToneTrainerView,
-    WordSearch
-} from "../Views";
+
+import Home from "../Views/Pages/Home/Home";
 
 /*
  * This file populates your router. Import a view, add it to the routes, and it will be available in the router.
@@ -38,82 +17,121 @@ export const HOME = { path: "/home", name: "HOME", component: Home };
 export const INSTRUCTOR = {
     path: "/instructor",
     name: "Instructor",
-    component: Instructor
+    component: lazy(() => import("../Views/Pages/Instructor/Instructor"))
 };
 
 export const TWENTY_FORTY_EIGHT = {
     path: "/2048",
     name: "2048",
-    component: TwentyFortyEight
+    component: lazy(() =>
+        import("../Views/Games/TwentyFortyEight/TwentyFortyEight")
+    )
 };
-export const EYE_SPY = { path: "/eye_spy", name: "Eye Spy", component: EyeSpy };
-export const MEMORY = { path: "/memory", name: "Memory", component: Memory };
-export const SUDOKU = { path: "/sudoku", name: "Sudoku", component: Sudoku };
+export const EYE_SPY = {
+    path: "/eye_spy",
+    name: "Eye Spy",
+    component: lazy(() => import("../Views/Games/EyeSpy/EyeSpy"))
+};
+export const MEMORY = {
+    path: "/memory",
+    name: "Memory",
+    component: lazy(() => import("../Views/Games/Memory/Memory"))
+};
+export const SUDOKU = {
+    path: "/sudoku",
+    name: "Sudoku",
+    component: lazy(() => import("../Views/Games/Sudoku/Sudoku"))
+};
 export const TILE_SLIDER = {
     path: "/tile_slider",
     name: "Tile Slider",
-    component: TileSlider
+    component: lazy(() => import("../Views/Games/TileSlider/TileSlider"))
 };
 
-export const ABOUT = { path: "/about", name: "About", component: About };
+export const ABOUT = {
+    path: "/about",
+    name: "About",
+    component: lazy(() => import("../Views/Pages/About/About"))
+};
+
+export const ATTRIBUTIONS = {
+    path: "/attributions",
+    name: "Attributions",
+    component: lazy(() => import("../Views/Pages/Attributions/Attributions"))
+};
 export const CONTACT = {
     path: "/contact",
     name: "Contact",
-    component: Contact
+    component: lazy(() => import("../Views/Pages/Contact/Contact"))
 };
-export const FAQS = { path: "/faq", name: "FAQ", component: FAQ };
-export const HELP = { path: "/help", name: "Help", component: Help };
+export const FAQS = {
+    path: "/faq",
+    name: "FAQ",
+    component: lazy(() => import("../Views/Pages/FAQ/FAQ"))
+};
+export const HELP = {
+    path: "/help",
+    name: "Help",
+    component: lazy(() => import("../Views/Pages/Help/Help"))
+};
+export const PEOPLE = {
+    path: "/people",
+    name: "People",
+    component: lazy(() => import("../Views/Pages/People/People"))
+};
 export const PROFILE = {
     path: "/profile",
     name: "Profile",
-    component: Profile
+    component: lazy(() => import("../Views/Pages/Profile/Profile"))
 };
 export const COCO_EXPLORER = {
     path: "/coco_explorer",
     name: "Coco Explorer",
-    component: CocoExplorer
+    component: lazy(() => import("../Views/Tools/CocoExplorer/CocoExplorer"))
 };
 export const DICTIONARY = {
     path: "/dictionary",
     name: "Dictionary",
-    component: Dictionary
+    component: lazy(() => import("../Views/Tools/Dictionary/Dictionary"))
 };
 export const FLASHCARDS = {
     path: "/flashcards",
     name: "Flashcards",
-    component: Flashcards
+    component: lazy(() => import("../Views/Tools/Flashcards/Flashcards"))
 };
 export const POP_QUIZ = {
     path: "/pop_quiz",
     name: "Pop Quiz",
-    component: PopQuiz
+    component: lazy(() => import("../Views/Tools/PopQuiz/PopQuizView"))
 };
 export const TIME_SERIES = {
     path: "/time_series",
     name: "Time Series Analyzer",
-    component: TimeSeries
+    component: lazy(() => import("../Views/Tools/TimeSeries/TimeSeries"))
 };
 export const TONE_TRAINER = {
     path: "/tone_trainer",
     name: "Tone Trainer",
-    component: ToneTrainerView
+    component: lazy(() =>
+        import("../Views/Tools/ToneTrainerView/ToneTrainerView")
+    )
 };
 export const WORD_SEARCH = {
     path: "/word_search",
     name: "Word Search",
-    component: WordSearch
+    component: lazy(() => import("../Views/Games/WordSearch/WordSearch"))
 };
 
 export const MODULES = {
     path: "/modules",
     name: "Module management",
-    component: Modules
+    component: lazy(() => import("../Views/Pages/Modules/Modules"))
 };
 
 export const PAGE404 = {
     path: "*",
     name: "404",
-    component: Page404
+    component: lazy(() => import("../Views/Pages/Page404/Page404"))
 };
 
 const routes = [
@@ -125,10 +143,12 @@ const routes = [
     SUDOKU,
     TILE_SLIDER,
     ABOUT,
+    ATTRIBUTIONS,
     CONTACT,
     FAQS,
     HELP,
     HOME,
+    PEOPLE,
     PROFILE,
     COCO_EXPLORER,
     DICTIONARY,
@@ -142,19 +162,20 @@ const routes = [
 const devRoutes = [MODULES];
 const adminRoutes = [INSTRUCTOR];
 
-export const Routes = userRole => {
+export const Routes = allowedRoles => {
     let newRoutes = [...routes];
-    if (userRole === "admin") {
-        newRoutes = [...newRoutes].concat([...adminRoutes]);
+    if (allowedRoles.includes("admin")) {
+        newRoutes = newRoutes.concat(adminRoutes);
     }
-    if (process.env.NODE_ENV === "production") {
-        return [...newRoutes].concat([PAGE404]);
+    if (allowedRoles.includes("dev")) {
+        newRoutes = newRoutes.concat(devRoutes);
     }
-    return [...newRoutes].concat([...devRoutes]).concat([PAGE404]);
+    newRoutes.push(PAGE404);
+    return newRoutes;
 };
 
-export const BuildRoutes = userRole =>
-    Routes(userRole).map((route, index) => {
+export const BuildRoutes = allowedRoles =>
+    Routes(allowedRoles).map((route, index) => {
         return (
             <Route
                 key={index}

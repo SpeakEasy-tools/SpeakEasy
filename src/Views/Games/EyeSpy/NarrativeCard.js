@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "../../../utils";
 import clsx from "clsx";
-import { Card } from "../../../Components/Card";
+import { Card } from "../../../Components";
 import Typography from "@material-ui/core/Typography";
 import { Fab, IconButton } from "@material-ui/core";
 import { ArrowBack, ArrowForward, Done, Subtitles } from "@material-ui/icons";

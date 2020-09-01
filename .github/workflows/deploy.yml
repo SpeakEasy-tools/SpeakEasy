@@ -30,7 +30,7 @@ jobs:
       env:
         pass: ${{ secrets.ENCPASS }}
 
-    - run: yarn build
+    - run: GENERATE_SOURCEMAP=false yarn build
 
     - name: Copy file via scp
       uses: appleboy/scp-action@master

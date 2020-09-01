@@ -42,4 +42,4 @@ jobs:
       env:
         pass: ${{ secrets.ENCPASS }}
 
-    - run: yarn build
+    - run: GENERATE_SOURCEMAP=false yarn build

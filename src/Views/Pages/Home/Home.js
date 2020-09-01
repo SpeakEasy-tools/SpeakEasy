@@ -41,28 +41,66 @@ function Home() {
                 <div className={clsx(classes.pad)}>
                     {user ? (
                         <Typography variant="h4" color="secondary">
-                            Welcome back {user.displayName.split(" ")[0]}! To
-                            coninue learning, select a tool or game from the
-                            menu.
+                            Welcome back {user.displayName.split(" ")[0]}!
                         </Typography>
                     ) : (
-                        <Typography variant="h6" color="secondary">
-                            SpeakEasy.tools is a data-driven web application for
-                            helping people learn a second language through
-                            artificial intelligence, data science, immersion,
-                            and gamification. SpeakEasy.tools has a portable and
-                            unique combination of tone training, fun and
-                            educational games, and informative progress tracking
-                            allows you to learn to read a language faster and
-                            learn more accurate pronunciation than the average
-                            language learning program. To get started, please
-                            log in or create an account by clicking the profile
-                            icon in the top left.
+                        <Typography variant="h4" color="secondary">
+                            Welcome, to SpeakEasy.tools!
                         </Typography>
                     )}
                     <Divider />
                 </div>
             </div>
+            <div className={clsx(classes.row)} style={{ width: 400 }}>
+                <div className={clsx(classes.pad)}>
+                    {user ? (
+                        <Typography variant="subtitle1" color="secondary">
+                            Pick up where you left off by selecting a game or
+                            tool from the menus on the left.
+                        </Typography>
+                    ) : (
+                        <Typography
+                            variant="subtitle1"
+                            color="secondary"
+                            align="justify"
+                        >
+                            SpeakEasy.tools is a data-driven web application for
+                            helping people learn a second language through
+                            artificial intelligence, data science, immersion,
+                            and gamification. SpeakEasy.tools utilizes a unique
+                            combination of multi-modal feedback, fun and
+                            educational games, and informative progress tracking
+                            to aide you in learning a new language.
+                        </Typography>
+                    )}
+                </div>
+            </div>
+            {!user && (
+                <>
+                    <div className={clsx(classes.row)}>
+                        <div className={classes.pad}>
+                            <Typography variant="h4" color="secondary">
+                                AI Technologies
+                            </Typography>
+                        </div>
+                    </div>
+                    <div className={clsx(classes.row)}>
+                        <div className={clsx(classes.pad)}>
+                            <Typography>Natural Language Processing</Typography>
+                        </div>
+                    </div>
+                    <div className={clsx(classes.row)}>
+                        <div className={clsx(classes.pad)}>
+                            <Typography>Speech Recognition</Typography>
+                        </div>
+                    </div>
+                    <div className={clsx(classes.row)}>
+                        <div className={clsx(classes.pad)}>
+                            <Typography>Image Recognition</Typography>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

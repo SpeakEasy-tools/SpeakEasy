@@ -2,7 +2,7 @@
  * This file is your actual application.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useAuth } from "./Firebase";
 import { useUser } from "./UserProvider";
 import { Switch } from "react-router";
@@ -146,7 +146,9 @@ export default () => {
                             margin: Theme.spacing(1)
                         }}
                     >
-                        <Switch>{BuildRoutes(allowedRoles)}</Switch>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <Switch>{BuildRoutes(allowedRoles)}</Switch>
+                        </Suspense>
                     </div>
                     <div
                         className={clsx(classes.row)}

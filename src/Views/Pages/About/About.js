@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { Theme } from "../../../utils";
 import Typography from "@material-ui/core/Typography";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Accordian from "@material-ui/core/Accordion";
+import AccordianSummary from "@material-ui/core/AccordionSummary";
+import AccordianDetails from "@material-ui/core/AccordionDetails";
 import { ExpandMore } from "@material-ui/icons";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 
 const useStyles = makeStyles(theme => ({
     root: {

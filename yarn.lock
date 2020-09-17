@@ -10575,11 +10575,6 @@ react-smooth@^1.0.5:
     raf "^3.4.0"
     react-transition-group "^2.5.0"
 
-react-timer-hook@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-timer-hook/-/react-timer-hook-2.0.2.tgz#4dd917447ea561abb3dfde9ac58a88aaaaace60a"
-  integrity sha512-EolK7yDDQolAMYE9tK3Uc3B0uYQgJXi+ExfHT26QFmJNvN/hm7MreW/IoTv0jufVOCYQ1gSab9Jp3lHf+m0mgQ==
-
 react-to-print@^2.0.0-alpha.7:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.9.0.tgz#98ab01df49208f35f2e2329a988b0cc11f72720d"

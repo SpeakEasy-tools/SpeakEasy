@@ -6,11 +6,9 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useAuth } from "./Firebase";
 import { useUser } from "./UserProvider";
 import { Switch } from "react-router";
-import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
-import { setContext } from "apollo-link-context";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { setContext } from "@apollo/client/link/context";
+import { ApolloClient, ApolloProvider, HttpLink } from "@apollo/client";
+import { InMemoryCache } from "@apollo/client/cache";
 import { CssBaseline, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 

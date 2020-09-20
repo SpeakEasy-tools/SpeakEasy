@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation, useQuery, gql } from "@apollo/client";
 
 export const GetCourses = userId => {
     const COURSES = gql`

@@ -1,7 +1,6 @@
 /* Get configurations that pertain to the panorama */
-import gql from "graphql-tag";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation, useQuery, gql } from "@apollo/client";
 
 export const GetConfigs = moduleId => {
     /* The graphQL query */

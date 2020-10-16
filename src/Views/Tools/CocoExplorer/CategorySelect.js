@@ -60,7 +60,9 @@ function CategorySelect({ selectedCategory }) {
     useEffect(() => {
         if (cocoCategories && Boolean(cocoCategories.length)) {
             setOptions(
-                cocoCategories.sort((a, b) => -b.name.localeCompare(a.name))
+                cocoCategories
+                    .slice()
+                    .sort((a, b) => -b.name.localeCompare(a.name))
             );
             setIsLoading(false);
         }

@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
 import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, gql } from "@apollo/client";
 
 export const GetCocoImagesByCategory = ({ category, limit, offset }) => {
     const COCO_IMAGES = gql`
